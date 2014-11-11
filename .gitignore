@@ -3,5 +3,5 @@
 .RData
 README.md
 R_VALUE.Rproj
-.ignore
+ignore
 .Rbuildignore
