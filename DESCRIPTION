@@ -1,0 +1,20 @@
+Package: downscaleR
+Depends:
+    rJava,
+    R(>= 3.0.0)
+Imports:
+    abind
+Type: Package
+Title: Climate data validation in the framework of the COST action VALUE 
+Version: 0.0-0
+Date: 05-Nov-2014
+Authors@R: as.person(c(
+    "Joaquin Bedia <bediaj@unican.es> [aut, cre]",
+    "Sixto Herrera <sixto@predictia.es> [aut]",
+    "Daniel San Martin <dani@predictia.es> [aut]",
+    "Max Tuni <max@predictia.es> [aut]"))
+BugReports: https://github.com/SantanderMetGroup/R_VALUE/issues
+Description: Load climate and weather data into R and performs climate data
+    validatino using the tools developed in the COST action VALUE.
+License: GPL (>= 3)
+LazyData: true
