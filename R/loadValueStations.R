@@ -30,6 +30,8 @@
 #' 
 #' @export
 #' 
+#' @importFrom utils unzip
+#' 
 #' @author J. Bedia \email{joaquin.bedia@@gmail.com}
 #'  
 #' @family loading
@@ -75,7 +77,9 @@ loadValueStations <- function(dataset, var, stationID = NULL, lonLim = NULL, lat
       if(length(fileInd) == 0) {
             stop("[", Sys.time(),"] Variable requested not found")
       }
-      timeString <- read.csv(zipFileContents[fileInd], colClasses = "character")[ ,1]
+      
+      zipFileContents[fileInd]
+      timeString <- read.csv(unz(dataset, zipFileContents[fileInd]), colClasses = "character")[ ,1]
       if (nchar(timeString[1]) == 8) {
             timeDates <- strptime(timeString, "%Y%m%d", tz = tz)  
       }
@@ -85,7 +89,7 @@ loadValueStations <- function(dataset, var, stationID = NULL, lonLim = NULL, lat
       timeString <- NULL
       timePars <- getTimeDomainValueStations(timeDates, season, years)
       ## missing data code
-      vars <- read.csv(zipFileContents[grep("variables", zipFileContents, ignore.case = TRUE)])
+      vars <- read.csv(unz(dataset, zipFileContents[grep("variables", zipFileContents, ignore.case = TRUE)]))
       miss.col <- grep("missing_code", names(vars), ignore.case = TRUE)
       if(length(miss.col) > 0) {
             na.string <- vars[grep(var, vars[ , grep("variable", names(vars), ignore.case = TRUE)]), miss.col]
@@ -96,7 +100,7 @@ loadValueStations <- function(dataset, var, stationID = NULL, lonLim = NULL, lat
       }
       # Data retrieval
       message("[", Sys.time(), "] Loading data ...", sep = "")
-      Data <- unname(as.matrix(read.csv(zipFileContents[fileInd], na.strings = na.string)[timePars$timeInd, stInd + 1]))
+      Data <- unname(as.matrix(read.csv(unz(dataset, zipFileContents[fileInd]), na.strings = na.string)[timePars$timeInd, stInd + 1]))
       # Metadata
       message("[", Sys.time(), "] Retrieving metadata ...", sep = "")
       # Assumes that at least station ids must exist, and therefore meta.list is never empty
@@ -116,8 +120,6 @@ loadValueStations <- function(dataset, var, stationID = NULL, lonLim = NULL, lat
       return(out)
 }
 # End      
-
-
 
 
 
@@ -161,8 +163,6 @@ getLatLonDomainValueStations <- function(lonLim, latLim, lons, lats) {
 
 
 
-
-
 #' @title Time  index positions for station dataset selections
 #' 
 #' @description Get time index positions for loading VALUE ascii station data
@@ -196,7 +196,7 @@ getTimeDomainValueStations <- function(timeDates, season, years) {
             warning("Last year in dataset: ", endYear,". Only available years will be returned")
             years <- years[1]:endYear
       }
-      # Year-crossing seasons - year to take the initialization
+      # Year-crossing seasons
       if (!identical(season, sort(season))) {
             if (years[1] == startYear) { 
                   warning(paste("First forecast day in dataset: ", timeDates[1], ".\nRequested seasonal data for ", startYear," not available", sep=""))
