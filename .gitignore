@@ -1,7 +1,7 @@
 .Rproj.user
 .Rhistory
 .RData
-README.md
 R_VALUE.Rproj
 ignore
 .Rbuildignore
+.Rprofile
