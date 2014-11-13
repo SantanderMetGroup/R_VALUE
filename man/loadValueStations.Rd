@@ -77,4 +77,7 @@ J. Bedia \email{joaquin.bedia@gmail.com}
 \url{https://github.com/SantanderMetGroup/downscaleR/wiki/Observation-Data-format}
 \url{http://stackoverflow.com/questions/12460938/r-reading-in-a-zip-data-file-without-unzipping-it}
 }
+\seealso{
+Other loading: \code{\link{loadValuePredictions}}
+}
 

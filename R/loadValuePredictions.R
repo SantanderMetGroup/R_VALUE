@@ -20,6 +20,7 @@
 #' @export
 #' 
 #' @importFrom utils unzip
+#' @importFrom abind abind
 #'  
 #' @family loading
 #'
