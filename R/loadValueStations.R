@@ -77,15 +77,8 @@ loadValueStations <- function(dataset, var, stationID = NULL, lonLim = NULL, lat
       if(length(fileInd) == 0) {
             stop("[", Sys.time(),"] Variable requested not found")
       }
-      
-      zipFileContents[fileInd]
       timeString <- read.csv(unz(dataset, zipFileContents[fileInd]), colClasses = "character")[ ,1]
-      if (nchar(timeString[1]) == 8) {
-            timeDates <- strptime(timeString, "%Y%m%d", tz = tz)  
-      }
-      if (nchar(timeString[1]) == 10) {
-            timeDates <- strptime(timeString, "%Y%m%d%H", tz = tz)
-      }
+      timeDates <- string2date(timeString, tz = tz)
       timeString <- NULL
       timePars <- getTimeDomainValueStations(timeDates, season, years)
       ## missing data code
