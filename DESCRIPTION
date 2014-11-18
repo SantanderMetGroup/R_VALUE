@@ -1,4 +1,4 @@
-Package: downscaleR
+Package: devtools::install_github('SantanderMetGroup/R_VALUE')
 Depends:
     R(>= 3.0.0)
 Imports:
