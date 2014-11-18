@@ -47,7 +47,7 @@ loadValueStations <- function(dataset, var, stationID = NULL, lonLim = NULL, lat
       stations.file <- grep("stations\\.", zipFileContents, ignore.case = TRUE, value = TRUE)
       aux <- read.csv(unz(dataset, stations.file), stringsAsFactors = FALSE, strip.white = TRUE)
       # Station codes
-      stids <- read.csv(unz(dataset, "stations.txt"), colClasses = "character")[ ,grep("station_id", names(aux), ignore.case = TRUE)]
+      stids <- read.csv(unz(dataset, stations.file), colClasses = "character")[ ,grep("station_id", names(aux), ignore.case = TRUE)]
       if (!is.null(stationID)) {
             stInd <- match(stationID, stids)
             if (any(is.na(stInd))) {
