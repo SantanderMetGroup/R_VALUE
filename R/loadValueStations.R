@@ -44,7 +44,7 @@ loadValueStations <- function(dataset, var, stationID = NULL, lonLim = NULL, lat
             warning("lonLim/latLim arguments ignored as Station Codes have been specified.")
       }
       # Reading stations from zip file
-      stations.file <- grep("^stations\\.", zipFileContents, ignore.case = TRUE, value = TRUE)
+      stations.file <- grep("stations\\.", zipFileContents, ignore.case = TRUE, value = TRUE)
       aux <- read.csv(unz(dataset, stations.file), stringsAsFactors = FALSE, strip.white = TRUE)
       # Station codes
       stids <- read.csv(unz(dataset, "stations.txt"), colClasses = "character")[ ,grep("station_id", names(aux), ignore.case = TRUE)]
