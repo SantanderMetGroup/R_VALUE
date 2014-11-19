@@ -8,13 +8,9 @@ loadValueStations(dataset, var, stationID = NULL, lonLim = NULL,
 }
 \arguments{
 \item{dataset}{A character string indicating the database to be accessed. This is usually a path to a local file or a URL
-pointing to a netCDF or NcML file in the case of netCDF and/or gridded datasets. For station data in standard ASCII format,
-this is the path to the directory the dataset lives in.}
+pointing to a standard ASCII file (.txt) or a .zip file containing station or predictions data.}
 
-\item{var}{Variable code (character string). This is the name of the variable according to the R standard naming
-(see the next argument). For variables with vertical levels, the vertical level is specified next to the variable name followed
- by the \dQuote{@} symbol (e.g. \code{var = "z@700"} for geopotential heigth at 700 mb isobaric surface pressure level).
- It is also possible to enter the variable name as originally coded in the dataset to skip data homogenization.}
+\item{var}{Variable code (character string).}
 
 \item{lonLim}{Vector of length = 2, with minimum and maximum longitude coordinates, in decimal degrees, of the bounding box selected.
 For single-point queries, a numeric value with the longitude coordinate. If \code{NULL} (default), the whole longitudinal range
