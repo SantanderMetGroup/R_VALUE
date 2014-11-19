@@ -100,14 +100,7 @@ loadValueStations <- function(dataset, var, stationID = NULL, lonLim = NULL, lat
       ind.meta <- c(1:length(names(aux)))[-pmatch(c("longitude", "latitude"), names(aux))]
       meta.list <- as.list(aux[stInd,ind.meta])
       aux <- NULL  
-      out <- list("Variable" = list("varName" = var), "Data" = Data, "xyCoords" = coords, "Dates" = timePars$timeDates, "Metadata" = meta.list)
-      varTimeStep <- difftime(out$Dates[2], out$Dates[1])
-      dateSliceStart <- as.POSIXct(out$Dates)
-      dateSliceEnd <- as.POSIXct(as.POSIXlt(out$Dates + varTimeStep))
-      usetz <- ifelse(identical(tz, ""), FALSE, TRUE)
-      dateSliceStart <- format.POSIXct(dateSliceStart, "%Y-%m-%d %H:%M:%S", usetz = usetz)
-      dateSliceEnd <- format.POSIXct(dateSliceEnd, "%Y-%m-%d %H:%M:%S", usetz = usetz)
-      out$Dates <- list("start" = dateSliceStart, "end" = dateSliceEnd)
+      out <- list("Variable" = list("varName" = var), "Data" = Data, "xyCoords" = coords, "Dates" = timeBoundsValue(timePars$timeDates, tz), "Metadata" = meta.list)
       attr(out$Data, "dimensions") <- c("time", "station")
       message(paste("[", Sys.time(), "] Done.", sep = ""))
       return(out)
