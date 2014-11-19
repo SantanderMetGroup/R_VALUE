@@ -85,3 +85,23 @@ string2date <- function(timeString, tz = tz) {
 
 
 
+#' @title Compute time bounds
+#' @description Compute start/end verification time bounds from a vector of dates.
+#' @param timeDates A POSIXlt vector of dates
+#' @param tz Time zone
+#' @keywords internal
+#' @return A list with components start and end, of POSIXct dates
+#' @export
+#' 
+
+timeBoundsValue <- function(timeDates, tz) {
+      varTimeStep <- difftime(timeDates[2], timeDates[1])
+      dateSliceStart <- as.POSIXct(timeDates)
+      dateSliceEnd <- as.POSIXct(as.POSIXlt(timeDates + varTimeStep))
+      usetz <- ifelse(identical(tz, ""), FALSE, TRUE)
+      dateSliceStart <- format.POSIXct(dateSliceStart, "%Y-%m-%d %H:%M:%S", usetz = usetz, tz = tz)
+      dateSliceEnd <- format.POSIXct(dateSliceEnd, "%Y-%m-%d %H:%M:%S", usetz = usetz, tz = tz)
+      return(list("start" = dateSliceStart, "end" = dateSliceEnd))
+}
+# End
+
