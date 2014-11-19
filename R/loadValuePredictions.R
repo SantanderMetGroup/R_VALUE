@@ -45,7 +45,7 @@ loadValuePredictions <- function(stationObj, predictions.file, tz = "") {
             colNums <- match(stids, names(read.csv(unz(dataset, zipFileContents[1]))))
             member.list <- lapply(1:n.members, function(x) {
                   read.csv(unz(dataset, zipFileContents[x]))[timePars$timeInd, colNums]
-            })            
+            })
             aux <- drop(do.call("abind", c(member.list, along = -1)))
             member.list <- NULL
       } else { # Deterministic case, txt file      
@@ -61,12 +61,13 @@ loadValuePredictions <- function(stationObj, predictions.file, tz = "") {
             aux <- as.matrix(read.csv(dataset)[timePars$timeInd, colNums])
       }
       # Set the dimensions attribute
-      if (length(dim(aux) == 2)) {
+      if (length(dim(aux)) == 2) {
             dimensions <- c("time", "station")
       } else {
             dimensions <- c("member", "time", "station")
       }
       aux[which(aux == -9999)] <- NA
+      aux <- unname(aux) 
       attr(aux, "dimensions") <- dimensions
       stationObj$Data <- aux
       stationObj$Dates <- timeBoundsValue(timePars$timeDates, tz)
