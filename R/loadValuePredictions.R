@@ -39,7 +39,7 @@ loadValuePredictions <- function(stationObj, predictions.file, tz = "") {
             timeDates <- string2date(timeString, tz)
             timeString <- NULL
             timePars <- getTimeDomainValueStations(timeDates, season, years)
-            if (length(timePars$timeInd) != length(stationObj$Dates$start)) {
+            if (length(intersect(timePars$timeDates, as.POSIXlt(stationObj$Dates$start))) == 0) {
                   stop("Temporal mismatch between predictions and observations")
             }
             colNums <- match(stids, names(read.csv(unz(dataset, zipFileContents[1]))))
@@ -54,7 +54,7 @@ loadValuePredictions <- function(stationObj, predictions.file, tz = "") {
             timeDates <- string2date(timeString, tz)
             timeString <- NULL
             timePars <- getTimeDomainValueStations(timeDates, season, years)
-            if (length(timePars$timeInd) != length(stationObj$Dates$start)) {
+            if (length(intersect(timePars$timeDates, as.POSIXlt(stationObj$Dates$start))) == 0) {
                   stop("Temporal mismatch between predictions and observations")
             }
             colNums <- match(stids, names(read.csv(dataset)))
