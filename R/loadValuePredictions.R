@@ -72,8 +72,15 @@ loadValuePredictions <- function(stationObj, predictions.file, tz = "") {
       aux[which(aux == -9999)] <- NA
       attr(aux, "dimensions") <- dimensions
       stationObj$Data <- aux
+      stationObj$Dates <- timeBoundsValue(timePars$timeDates, tz)
       attr(stationObj, "datatype") <- "predictions"
       return(stationObj)
 }
 # End
+
+
+
+
+
+
 
