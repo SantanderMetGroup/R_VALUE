@@ -30,6 +30,7 @@ loadValuePredictions <- function(stationObj, predictions.file, tz = "") {
       season <- getSeason(stationObj)
       years <- unique(getYearsAsINDEX(stationObj))
       stids <- stationObj$Metadata$station_id
+      dataset <- predictions.file
       # Multimember case, ZIP file
       if (grepl("\\.zip$", dataset)) {
             zipFileContents <- unzip(dataset, list = TRUE)$Name
