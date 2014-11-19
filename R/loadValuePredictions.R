@@ -58,12 +58,9 @@ loadValuePredictions <- function(stationObj, predictions.file, tz = "") {
                   stop("Temporal mismatch between predictions and observations")
             }
             colNums <- match(stids, names(read.csv(dataset)))
-            aux <- read.csv(dataset)[timePars$timeInd, colNums]
+            aux <- as.matrix(read.csv(dataset)[timePars$timeInd, colNums])
       }
       # Set the dimensions attribute
-      if (is.null(dim(aux))) {
-            aux <- as.matrix(aux)
-      }
       if (length(dim(aux) == 2)) {
             dimensions <- c("time", "station")
       } else {
