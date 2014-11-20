@@ -24,6 +24,19 @@
 #'  
 #' @family loading
 #'
+#'@examples
+#' #Example predictions
+#' obs.dataset <- file.path(find.package("R.VALUE"), "example-observations.zip")
+#' obs <- loadValueStations(obs.dataset, "tmin", season = 6:8, years = 2001)
+#' # Loading deterministic predictions
+#' pred.file1 <- file.path(find.package("R.VALUE"), "example-prediction.txt")
+#' pred <- loadValuePredictions(obs, pred.file1)
+#' str(pred$Data) # 2D array
+#' # Loading stochastic predictions (several realizations)
+#' pred.file2 <- file.path(find.package("R.VALUE"), "example-prediction-multimember.zip")
+#' pred2 <- loadValuePredictions(obs, pred.file2)
+#' str(pred2$Data) # 3D array with 'member' dimension
+#'
 
 loadValuePredictions <- function(stationObj, predictions.file, tz = "") {
       stationObj$Data <- NULL

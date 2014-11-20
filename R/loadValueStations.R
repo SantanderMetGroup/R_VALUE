@@ -25,8 +25,9 @@
 #' @note Unlike gridded datasets, station data do not use a dictionary for variable homogenization. Thus, users
 #' must take care of variable units and eventual conversions when necessary.
 #' 
-#' @references \url{https://github.com/SantanderMetGroup/downscaleR/wiki/Observation-Data-format} 
-#' \url{http://stackoverflow.com/questions/12460938/r-reading-in-a-zip-data-file-without-unzipping-it}
+#' @references VALUE's standard ASCII format reference: 
+#' \url{https://github.com/SantanderMetGroup/downscaleR/wiki/Observation-Data-format} 
+# \url{http://stackoverflow.com/questions/12460938/r-reading-in-a-zip-data-file-without-unzipping-it}
 #' 
 #' @export
 #' 
@@ -35,6 +36,24 @@
 #' @author J. Bedia \email{joaquin.bedia@@gmail.com}
 #'  
 #' @family loading
+#' 
+#' @examples
+#' obs.dataset <- file.path(find.package("R.VALUE"), "example-observations.zip")
+#' # All data
+#' obs <- loadValueStations(dataset = obs.dataset, var = "tmean")
+#' # Selection by lon-lat
+#' obs1 <- loadValueStations(dataset = obs.dataset, var = "tmax", lonLim = -3, latLim = 42)
+#' obs1$Metadata
+#' # Selection by station code
+#' obs2 <- loadValueStations(dataset = obs.dataset, var = "tmax", stationID = "SP000008181")
+#' obs2$Metadata
+#' # Several stations within a rectangular domain
+#' obs3 <- loadValueStations(obs.dataset, "precip", lonLim = c(-5, 2), latLim = c(38, 43))
+#' obs3$Metadata
+#' # Winter data for 1991-2000
+#' win <- loadValueStations(dataset = obs.dataset, var = "tmin", season = c(12, 1, 2), years = 1991:2000)
+#' # Note that winter 1991 encompasses Dec 1990 + Jan 1991 + Feb 1991 (year-crossing season)
+#'
 
 loadValueStations <- function(dataset, var, stationID = NULL, lonLim = NULL, latLim = NULL, season = NULL, years = NULL, tz = "") {
       zipFileContents <- unzip(dataset, list = TRUE)$Name

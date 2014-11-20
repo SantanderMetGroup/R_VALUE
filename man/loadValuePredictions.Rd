@@ -28,6 +28,19 @@ The idea of this function is to rely on the previously loaded observations data,
  the information required to define the predictions subset (time and station codes) is retrieved from
  the observations data subset.
 }
+\examples{
+#Example predictions
+obs.dataset <- file.path(find.package("R.VALUE"), "example-observations.zip")
+obs <- loadValueStations(obs.dataset, "tmin", season = 6:8, years = 2001)
+# Loading deterministic predictions
+pred.file1 <- file.path(find.package("R.VALUE"), "example-prediction.txt")
+pred <- loadValuePredictions(obs, pred.file1)
+str(pred$Data) # 2D array
+# Loading stochastic predictions (several realizations)
+pred.file2 <- file.path(find.package("R.VALUE"), "example-prediction-multimember.zip")
+pred2 <- loadValuePredictions(obs, pred.file2)
+str(pred2$Data) # 3D array with 'member' dimension
+}
 \seealso{
 Other loading: \code{\link{loadValueStations}}
 }
