@@ -1,4 +1,31 @@
-validationTmean <- function(obs, prd, warm.threshold = 25, cold.threshold = 15, lag.max = 3, lowVarPeriod = 1, Nbins = 100) {
+#' @title ValidationTemp
+#' 
+#' @description Calculation of the indicators and scores defined for each variable in the VALUE Action Cost.
+#' 
+#' @param obs
+#' @param prd
+#' 
+#' @return A validation object.
+#' 
+#' @export
+#'  
+#' @family validation
+#'
+#'@examples
+#' #Example predictions
+#' obs.dataset <- file.path(find.package("R.VALUE"), "example-observations.zip")
+#' obs <- loadValueStations(obs.dataset, "tmin", season = 6:8, years = 2001)
+#' # Loading deterministic predictions
+#' pred.file1 <- file.path(find.package("R.VALUE"), "example-prediction.txt")
+#' pred <- loadValuePredictions(obs, pred.file1)
+#' str(pred$Data) # 2D array
+#' # Loading stochastic predictions (several realizations)
+#' pred.file2 <- file.path(find.package("R.VALUE"), "example-prediction-multimember.zip")
+#' pred2 <- loadValuePredictions(obs, pred.file2)
+#' str(pred2$Data) # 3D array with 'member' dimension
+#'
+
+validationTemp <- function(obs, prd, warm.threshold = 25, cold.threshold = 15, lag.max = 3, lowVarPeriod = 1, Nbins = 100) {
       # Tmean: warm.threshold = 25, cold.threshold = 15
       # Tmin: warm.threshold = 20, cold.threshold = 0
       # Tmax: warm.threshold = 30, cold.threshold = 0
