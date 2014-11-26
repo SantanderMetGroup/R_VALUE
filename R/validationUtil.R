@@ -42,7 +42,7 @@ getMean <- function(obj){
       }
     }
   }
-  return{meanObj}
+  return(meanObj)
 }
 
 #' @title Get annual and seasonal variance from a station or field object
@@ -89,7 +89,7 @@ getVar <- function(obj){
       }
     }
   }
-  return{meanObj}
+  return(meanObj)
 }
 
 #' @title Get annual and seasonal skewness from a station or field object
@@ -152,7 +152,7 @@ getSkew <- function(obj){
       }
     }
   }
-  return{meanObj}
+  return(meanObj)
 }
 
 #' @title Get annual and seasonal amount of days above of a predefined threshold from a station or field object
@@ -217,7 +217,7 @@ getFreqGT <- function(obj, threshold){
       }
     }
   }
-  return{meanObj}
+  return(meanObj)
 }
 
 #' @title Get annual and seasonal amount of days greater or equal than a predefined threshold from a station or field object
@@ -282,7 +282,7 @@ getFreqGET <- function(obj, threshold){
       }
     }
   }
-  return{meanObj}
+  return(meanObj)
 }
 
 #' @title Get annual and seasonal amount of days below of a predefined threshold from a station or field object
@@ -347,7 +347,7 @@ getFreqLT <- function(obj, threshold){
       }
     }
   }
-  return{meanObj}
+  return(meanObj)
 }
 
 #' @title Get annual and seasonal 98th percentile from a station or field object
@@ -394,7 +394,7 @@ get98th <- function(obj){
       }
     }
   }
-  return{meanObj}
+  return(meanObj)
 }
 
 #' @title Get annual and seasonal Autocorrelation from a station or field object
@@ -465,7 +465,7 @@ getACF <- function(obj, lag.max){
       }
     }
   }
-  return{meanObj}
+  return(meanObj)
 }
 
 #' @title Get annual and seasonal 1/prob return value from a station or field object
@@ -538,7 +538,7 @@ getReturnValue <- function(obj, prob){
       }
     }
   }
-  return{meanObj}
+  return(meanObj)
 }
 
 #' @title Get annual cicles indicators from a station or field object
@@ -568,7 +568,7 @@ getAnnualCicle <- function(obj){
     meanObj[1,,,3] <- (apply(mean.x, MARGIN = c(obj.station.index, obj.member.index), FUN = max, na.rm = TRUE)-apply(mean.x, MARGIN = c(obj.station.index, obj.member.index), FUN = min, na.rm = TRUE))
     meanObj[1,,,4] <- 100*(apply(mean.x, MARGIN = c(obj.station.index, obj.member.index), FUN = max, na.rm = TRUE)-apply(mean.x, MARGIN = c(obj.station.index, obj.member.index), FUN = min, na.rm = TRUE))/apply(mean.x, MARGIN = c(obj.station.index, obj.member.index), FUN = mean, na.rm = TRUE)
   }
-  return{meanObj}
+  return(meanObj)
 }
 
 #' @title Get annual and seasonal above of a predefined threshold Spell Length Distribution from a station or field object
@@ -576,7 +576,6 @@ getAnnualCicle <- function(obj){
 #' @keywords internal
 
 # Above Spell Length Distribution
-
 getGTsld <- function(obj, threshold){
   date.vec <- as.POSIXlt(obj$Dates$start, tz = "GMT")
   yo <- date.vec$year
@@ -675,7 +674,7 @@ getGTsld <- function(obj, threshold){
       }
     }
   }
-  return{meanObj}
+  return(meanObj)
 }
 
 #' @title Get annual and seasonal Below of a predefined threshold Spell Length Distribution from a station or field object
@@ -683,7 +682,6 @@ getGTsld <- function(obj, threshold){
 #' @keywords internal
 
 # Below Spell Length Distribution
-
 getLTsld <- function(obj, threshold){
   date.vec <- as.POSIXlt(obj$Dates$start, tz = "GMT")
   yo <- date.vec$year
@@ -782,36 +780,35 @@ getLTsld <- function(obj, threshold){
       }
     }
   }
-  return{meanObj}
+  return(meanObj)
 }
 
-  # sign of low pass filtered signal  x	x		signOfLowPassSignal	Does not distinguish between temporal scales
-  # dt <- 1
-  # smoothingperiod <- 11
-  # xAnnual <- apply(obsPr$Data, MARGIN = 2, FUN = function(x, INDEX = INDEX){tapply(x, INDEX = INDEX, FUN = mean, na.rm = TRUE)}, INDEX = yo)
-  # wf <- 0.001
-  # f <- 1 / smoothingperiod
-  # fny <- 1 / (2 * dt)
-  # N <- dim(xAnnual)[1]
-  # if (floor(N/2) != N/2){
-  # N <- N-1
-  # }
-  # df <- fny / (N / 2)
-  # fs <- c(1 : (N / 2), c(N / 2) : 1) * df
-  # Hf <- 0.5 + atan(-(fs - f) / wf) / (pi)
-  # aux <- apply(xAnnual[1:N,], MARGIN = 2, FUN = fft)
-  # xlow <- 1 / N * Re(apply(aux * Hf, MARGIN = 2, fft, inverse = TRUE))
-  # xlowanom <- xlow - apply(xlow, MARGIN = 2, FUN = mean, na.rm = TRUE)
-  # xbin <- xlowanom
-  # xbin[xlowanom > 0] <- 1
-  # xbin[xlowanom < 0] <- -1
-  
+# sign of low pass filtered signal  x	x		signOfLowPassSignal	Does not distinguish between temporal scales
+# dt <- 1
+# smoothingperiod <- 11
+# xAnnual <- apply(obsPr$Data, MARGIN = 2, FUN = function(x, INDEX = INDEX){tapply(x, INDEX = INDEX, FUN = mean, na.rm = TRUE)}, INDEX = yo)
+# wf <- 0.001
+# f <- 1 / smoothingperiod
+# fny <- 1 / (2 * dt)
+# N <- dim(xAnnual)[1]
+# if (floor(N/2) != N/2){
+# N <- N-1
+# }
+# df <- fny / (N / 2)
+# fs <- c(1 : (N / 2), c(N / 2) : 1) * df
+# Hf <- 0.5 + atan(-(fs - f) / wf) / (pi)
+# aux <- apply(xAnnual[1:N,], MARGIN = 2, FUN = fft)
+# xlow <- 1 / N * Re(apply(aux * Hf, MARGIN = 2, fft, inverse = TRUE))
+# xlowanom <- xlow - apply(xlow, MARGIN = 2, FUN = mean, na.rm = TRUE)
+# xbin <- xlowanom
+# xbin[xlowanom > 0] <- 1
+# xbin[xlowanom < 0] <- -1
+
 #' @title Get annual and seasonal proportion of variance in low frequency
 #' @export
 #' @keywords internal
 
 # Proportion of variance in low frequency
-
 getVarLF <- function(obj, lowVarPeriod){
   date.vec <- as.POSIXlt(obj$Dates$start, tz = "GMT")
   yo <- date.vec$year
@@ -882,7 +879,7 @@ getVarLF <- function(obj, lowVarPeriod){
       
     }
   }
-  return{meanObj}
+  return(meanObj)
 }
 
 #' @title Get annual and seasonal Cramer von Misses index
@@ -1037,7 +1034,7 @@ getCM <- function(objRef, obj, Nbins = 100){
       }
     }
   }
-  return{meanObj}
+  return(meanObj)
 }
 
 #' Especific function for precipitation
@@ -1089,7 +1086,7 @@ getAmountFreqGT <- function(obj, threshold){
       callObj <- as.call(c(list(as.name("["),quote(aux)), indices))
       yoS <- date.vec$year[indSeason]
       if (length(obj.member.index)==0){
-        mean.x <- apply(eval(callObj)), MARGIN = obj.station.index, FUN = function(x, INDEX = INDEX){tapply(x, INDEX = INDEX, FUN = sum, na.rm = TRUE)}, INDEX = yoS)
+        mean.x <- apply(eval(callObj), MARGIN = obj.station.index, FUN = function(x, INDEX = INDEX){tapply(x, INDEX = INDEX, FUN = sum, na.rm = TRUE)}, INDEX = yoS)
         if (length(unique(yoS))>1){
           meanObj[s+1,,1,1] <- apply(mean.x, MARGIN = obj.station.index, FUN = mean, na.rm = TRUE)
         }else{
@@ -1105,7 +1102,7 @@ getAmountFreqGT <- function(obj, threshold){
       }
     }
   }
-  return{meanObj}
+  return(meanObj)
 }
 
 #' @title Get annual and seasonal 98th percentile of the wet days from a station or field object
@@ -1154,7 +1151,7 @@ getWet98th <- function(obj, threshold){
       }
     }
   }
-  return{meanObj}
+  return(meanObj)
 }
 
 #' @title Get annual and seasonal transition probabilities from a station or field object
@@ -1216,7 +1213,7 @@ getFreqWW <- function(obj, threshold){
       }
     }
   }
-  return{meanObj}
+  return(meanObj)
 }
 
 #' @title Get annual and seasonal transition probabilities from a station or field object
@@ -1278,7 +1275,7 @@ getFreqWD <- function(obj, threshold){
       }
     }
   }
-  return{meanObj}
+  return(meanObj)
 }
 
 #' @title Get annual and seasonal transition probabilities from a station or field object
@@ -1340,7 +1337,7 @@ getFreqDD <- function(obj, threshold){
       }
     }
   }
-  return{meanObj}
+  return(meanObj)
 }
 
 #' @title Get annual and seasonal transition probabilities from a station or field object
@@ -1402,7 +1399,7 @@ getFreqDW <- function(obj, threshold){
       }
     }
   }
-  return{meanObj}
+  return(meanObj)
 }
 
 #' @title Get annual and seasonal above of a predefined threshold Spell Length Distribution from a station or field object
@@ -1525,5 +1522,5 @@ getWDsld <- function(obj, threshold){
       }
     }
   }
-  return{meanObj}
+  return(meanObj)
 }
