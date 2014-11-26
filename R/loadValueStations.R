@@ -64,6 +64,9 @@ loadValueStations <- function(dataset, var, stationID = NULL, lonLim = NULL, lat
       }
       # Reading stations from zip file
       stations.file <- grep("stations\\.", zipFileContents, ignore.case = TRUE, value = TRUE)
+      if (any(grepl("MACOSX", stations.file))) {
+            stations.file <- stations.file[-grep("MACOSX", stations.file)]
+      }      
       aux <- read.csv(unz(dataset, stations.file), stringsAsFactors = FALSE, strip.white = TRUE)
       # Station codes
       stids <- read.csv(unz(dataset, stations.file), colClasses = "character")[ ,grep("station_id", names(aux), ignore.case = TRUE)]
@@ -92,7 +95,8 @@ loadValueStations <- function(dataset, var, stationID = NULL, lonLim = NULL, lat
       stids <- stids[stInd]
       dimnames(coords) <- list(stids, c("longitude", "latitude"))
       ## Time dimension
-      fileInd <- grep(paste("^", var, "\\.txt", sep = ""), zipFileContents)
+      # TODO - fix potential MACOSX errors
+      fileInd <- grep(paste(var, "\\.txt", sep = ""), zipFileContents)
       if(length(fileInd) == 0) {
             stop("[", Sys.time(),"] Variable requested not found")
       }
@@ -116,8 +120,13 @@ loadValueStations <- function(dataset, var, stationID = NULL, lonLim = NULL, lat
       # Metadata
       message("[", Sys.time(), "] Retrieving metadata ...", sep = "")
       # Assumes that at least station ids must exist, and therefore meta.list is never empty
-      ind.meta <- c(1:length(names(aux)))[-pmatch(c("longitude", "latitude"), names(aux))]
-      meta.list <- as.list(aux[stInd,ind.meta])
+      ind.meta <- c(1:length(names(aux)))[-pmatch(c("longitude", "latitude", "station_id"), names(aux))]
+      meta.list <- list()
+      meta.list[[1]] <- stids
+      for (i in 1:length(ind.meta)) {
+            meta.list[[i + 1]] <- aux[stInd, ind.meta[i]]
+      }
+      names(meta.list) <- c("station_id", names(aux)[ind.meta])
       aux <- NULL  
       out <- list("Variable" = list("varName" = var), "Data" = Data, "xyCoords" = coords, "Dates" = timeBoundsValue(timePars$timeDates, tz), "Metadata" = meta.list)
       attr(out$Data, "dimensions") <- c("time", "station")
