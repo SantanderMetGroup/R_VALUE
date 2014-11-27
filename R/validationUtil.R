@@ -1,16 +1,32 @@
-#' @title Get annual and seasonal mean from a station or field object
+#' @title datevec
+#' @author S. Herrera
+#' @export
+#' @keywords internal
+
+getVectorialDates <- function(obj){
+  date.vec <- as.POSIXlt(obj$Dates$start, tz = "GMT")
+  vectorialDates <- array(data = NA, dim = c(length(date.vec),3)) 
+  vectorialDates[,1] <- date.vec$year
+  vectorialDates[,2] <- date.vec$mon+1
+  vectorialDates[,3] <- date.vec$mon+1
+  vectorialDates[which(!is.na(match(vectorialDates[,2], c(12,1,2)))),3] <- 1
+  vectorialDates[which(!is.na(match(vectorialDates[,2], c(3,4,5)))),3] <- 2
+  vectorialDates[which(!is.na(match(vectorialDates[,2], c(6,7,8)))),3] <- 3
+  vectorialDates[which(!is.na(match(vectorialDates[,2], c(9,10,11)))),3] <- 4
+  return(vectorialDates)
+}
+
+#' @title Mean
+#' @description Get annual and seasonal mean from a station or field object
+#' @author Ole Roessler \email{ole.roessler@@giub.unibe.ch} and J. Bedia and S. Herrera
 #' @export
 #' @keywords internal
 
 # Mean:
 getMean <- function(obj){
-  date.vec <- as.POSIXlt(obj$Dates$start, tz = "GMT")
-  mo <- date.vec$mon+1
-  so <- mo
-  so[which(!is.na(match(mo, c(12,1,2))))] <- 1
-  so[which(!is.na(match(mo, c(3,4,5))))] <- 2
-  so[which(!is.na(match(mo, c(6,7,8))))] <- 3
-  so[which(!is.na(match(mo, c(9,10,11))))] <- 4
+  vectorialDates <- getVectorialDates(obj)
+  mo <- vectorialDates[,2]
+  so <- vectorialDates[,3]
   dimObj <- dim(obj$Data)
   obj.time.index <- grep("^time$", attr(obj$Data, "dimensions"))
   obj.station.index <- grep("^station$", attr(obj$Data, "dimensions"))
@@ -46,18 +62,15 @@ getMean <- function(obj){
 }
 
 #' @title Get annual and seasonal variance from a station or field object
+#' @author Ole Roessler \email{ole.roessler@@giub.unibe.ch} and J. Bedia and S. Herrera
 #' @export
 #' @keywords internal
 
 # Variance:
 getVar <- function(obj){
-  date.vec <- as.POSIXlt(obj$Dates$start, tz = "GMT")
-  mo <- date.vec$mon+1
-  so <- mo
-  so[which(!is.na(match(mo, c(12,1,2))))] <- 1
-  so[which(!is.na(match(mo, c(3,4,5))))] <- 2
-  so[which(!is.na(match(mo, c(6,7,8))))] <- 3
-  so[which(!is.na(match(mo, c(9,10,11))))] <- 4
+  vectorialDates <- getVectorialDates(obj)
+  mo <- vectorialDates[,2]
+  so <- vectorialDates[,3]
   dimObj <- dim(obj$Data)
   obj.time.index <- grep("^time$", attr(obj$Data, "dimensions"))
   obj.station.index <- grep("^station$", attr(obj$Data, "dimensions"))
@@ -93,18 +106,15 @@ getVar <- function(obj){
 }
 
 #' @title Get annual and seasonal skewness from a station or field object
+#' @author Ole Roessler \email{ole.roessler@@giub.unibe.ch} and J. Bedia and S. Herrera
 #' @export
 #' @keywords internal
 
 # Skewness:
 getSkew <- function(obj){
-  date.vec <- as.POSIXlt(obj$Dates$start, tz = "GMT")
-  mo <- date.vec$mon+1
-  so <- mo
-  so[which(!is.na(match(mo, c(12,1,2))))] <- 1
-  so[which(!is.na(match(mo, c(3,4,5))))] <- 2
-  so[which(!is.na(match(mo, c(6,7,8))))] <- 3
-  so[which(!is.na(match(mo, c(9,10,11))))] <- 4
+  vectorialDates <- getVectorialDates(obj)
+  mo <- vectorialDates[,2]
+  so <- vectorialDates[,3]
   dimObj <- dim(obj$Data)
   obj.time.index <- grep("^time$", attr(obj$Data, "dimensions"))
   obj.station.index <- grep("^station$", attr(obj$Data, "dimensions"))
@@ -156,19 +166,16 @@ getSkew <- function(obj){
 }
 
 #' @title Get annual and seasonal amount of days above of a predefined threshold from a station or field object
+#' @author Dougals Maraun \email{dmaraun@@geomar.de} and J. Bedia and S. Herrera
 #' @export
 #' @keywords internal
 
 # Above-threshold frequency
 getFreqGT <- function(obj, threshold){
-  date.vec <- as.POSIXlt(obj$Dates$start, tz = "GMT")
-  yo <- date.vec$year
-  mo <- date.vec$mon+1
-  so <- mo
-  so[which(!is.na(match(mo, c(12,1,2))))] <- 1
-  so[which(!is.na(match(mo, c(3,4,5))))] <- 2
-  so[which(!is.na(match(mo, c(6,7,8))))] <- 3
-  so[which(!is.na(match(mo, c(9,10,11))))] <- 4
+  vectorialDates <- getVectorialDates(obj)
+  yo <- vectorialDates[,1]
+  mo <- vectorialDates[,2]
+  so <- vectorialDates[,3]
   dimObj <- dim(obj$Data)
   obj.time.index <- grep("^time$", attr(obj$Data, "dimensions"))
   obj.station.index <- grep("^station$", attr(obj$Data, "dimensions"))
@@ -221,19 +228,17 @@ getFreqGT <- function(obj, threshold){
 }
 
 #' @title Get annual and seasonal amount of days greater or equal than a predefined threshold from a station or field object
+#' @description Function to calculate the average number of days/season  with measurable precipitation (e.g. precipitation > 1mm).
+#' @author Elke Hertig \email{elke.hertig@@geo.uni-augsburg.de} and J. Bedia and S. Herrera
 #' @export
 #' @keywords internal
 
 # Above-equal threshold frequency
 getFreqGET <- function(obj, threshold){
-  date.vec <- as.POSIXlt(obj$Dates$start, tz = "GMT")
-  yo <- date.vec$year
-  mo <- date.vec$mon+1
-  so <- mo
-  so[which(!is.na(match(mo, c(12,1,2))))] <- 1
-  so[which(!is.na(match(mo, c(3,4,5))))] <- 2
-  so[which(!is.na(match(mo, c(6,7,8))))] <- 3
-  so[which(!is.na(match(mo, c(9,10,11))))] <- 4
+  vectorialDates <- getVectorialDates(obj)
+  yo <- vectorialDates[,1]
+  mo <- vectorialDates[,2]
+  so <- vectorialDates[,3]
   dimObj <- dim(obj$Data)
   obj.time.index <- grep("^time$", attr(obj$Data, "dimensions"))
   obj.station.index <- grep("^station$", attr(obj$Data, "dimensions"))
@@ -286,19 +291,16 @@ getFreqGET <- function(obj, threshold){
 }
 
 #' @title Get annual and seasonal amount of days below of a predefined threshold from a station or field object
+#' @author Dougals Maraun \email{dmaraun@@geomar.de} and J. Bedia and S. Herrera
 #' @export
 #' @keywords internal
 
 # Below-threshold frequency
 getFreqLT <- function(obj, threshold){
-  date.vec <- as.POSIXlt(obj$Dates$start, tz = "GMT")
-  yo <- date.vec$year
-  mo <- date.vec$mon+1
-  so <- mo
-  so[which(!is.na(match(mo, c(12,1,2))))] <- 1
-  so[which(!is.na(match(mo, c(3,4,5))))] <- 2
-  so[which(!is.na(match(mo, c(6,7,8))))] <- 3
-  so[which(!is.na(match(mo, c(9,10,11))))] <- 4
+  vectorialDates <- getVectorialDates(obj)
+  yo <- vectorialDates[,1]
+  mo <- vectorialDates[,2]
+  so <- vectorialDates[,3]
   dimObj <- dim(obj$Data)
   obj.time.index <- grep("^time$", attr(obj$Data, "dimensions"))
   obj.station.index <- grep("^station$", attr(obj$Data, "dimensions"))
@@ -350,66 +352,62 @@ getFreqLT <- function(obj, threshold){
   return(meanObj)
 }
 
-#' @title Get annual and seasonal 98th percentile from a station or field object
+#' @title 98th percentile
+#' @description Get annual and seasonal 98th percentile from a station or field object
+#' @author Neyko Neykov \email{neyko.neykov@@meteo.bg} and J. Bedia and S. Herrera
 #' @export
 #' @keywords internal
 
 # 98th percentile
-get98th <- function(obj){
-  date.vec <- as.POSIXlt(obj$Dates$start, tz = "GMT")
-  mo <- date.vec$mon+1
-  so <- mo
-  so[which(!is.na(match(mo, c(12,1,2))))] <- 1
-  so[which(!is.na(match(mo, c(3,4,5))))] <- 2
-  so[which(!is.na(match(mo, c(6,7,8))))] <- 3
-  so[which(!is.na(match(mo, c(9,10,11))))] <- 4
-  dimObj <- dim(obj$Data)
-  obj.time.index <- grep("^time$", attr(obj$Data, "dimensions"))
-  obj.station.index <- grep("^station$", attr(obj$Data, "dimensions"))
-  obj.member.index <- grep("^member$", attr(obj$Data, "dimensions"))
-  if (length(obj.member.index)==0){
-    meanObj <- array(data = NA, dim = c(5,dim(obj$Data)[obj.station.index],1,1))
-    mean.x <- apply(obj$Data, MARGIN = obj.station.index, FUN = function(x, probs = probs, type = type){quantile(x, probs = probs, type = type, na.rm = TRUE)}, probs = 0.98, type = 7)
-    meanObj[1,,1,1] <- mean.x
-  }else{
-    meanObj <- array(data = NA, dim = c(5,dim(obj$Data)[obj.station.index],dim(obj$Data)[obj.member.index],1))
-    mean.x <- apply(obj$Data, MARGIN = c(obj.station.index, obj.member.index), FUN = function(x, probs = probs, type = type){quantile(x, probs = probs, type = type, na.rm = TRUE)}, probs = 0.98, type = 7)
-    meanObj[1,,,1] <- mean.x
-  }
-  for (s in 1:4){
-    indSeason <- which(so == s)
-    if (length(indSeason)>0){
-      indices <- rep(list(bquote()), length(dimObj))
-      for (d in 1:length(dimObj)){
-        indices[[d]] <- 1:dimObj[d]
-      }
-      indices[[obj.time.index]] <- indSeason
-      callObj <- as.call(c(list(as.name("["),quote(obj$Data)), indices))
-      if (length(obj.member.index)==0){
-        mean.x <- apply(eval(callObj), MARGIN = obj.station.index, FUN = function(x, probs = probs, type = type){quantile(x, probs = probs, type = type, na.rm = TRUE)}, probs = 0.98, type = 7)
-        meanObj[s+1,,1,1] <- mean.x
-      }else{
-        mean.x <- apply(eval(callObj), MARGIN = c(obj.station.index, obj.member.index), FUN = function(x, probs = probs, type = type){quantile(x, probs = probs, type = type, na.rm = TRUE)}, probs = 0.98, type = 7)
-        meanObj[s+1,,,1] <- mean.x
+  get98th <- function(obj){
+    vectorialDates <- getVectorialDates(obj)
+    mo <- vectorialDates[,2]
+    so <- vectorialDates[,3]
+    dimObj <- dim(obj$Data)
+    obj.time.index <- grep("^time$", attr(obj$Data, "dimensions"))
+    obj.station.index <- grep("^station$", attr(obj$Data, "dimensions"))
+    obj.member.index <- grep("^member$", attr(obj$Data, "dimensions"))
+    if (length(obj.member.index)==0){
+      meanObj <- array(data = NA, dim = c(5,dim(obj$Data)[obj.station.index],1,1))
+      mean.x <- apply(obj$Data, MARGIN = obj.station.index, FUN = function(x, probs = probs, type = type){quantile(x, probs = probs, type = type, na.rm = TRUE)}, probs = 0.98, type = 7)
+      meanObj[1,,1,1] <- mean.x
+    }else{
+      meanObj <- array(data = NA, dim = c(5,dim(obj$Data)[obj.station.index],dim(obj$Data)[obj.member.index],1))
+      mean.x <- apply(obj$Data, MARGIN = c(obj.station.index, obj.member.index), FUN = function(x, probs = probs, type = type){quantile(x, probs = probs, type = type, na.rm = TRUE)}, probs = 0.98, type = 7)
+      meanObj[1,,,1] <- mean.x
+    }
+    for (s in 1:4){
+      indSeason <- which(so == s)
+      if (length(indSeason)>0){
+        indices <- rep(list(bquote()), length(dimObj))
+        for (d in 1:length(dimObj)){
+          indices[[d]] <- 1:dimObj[d]
+        }
+        indices[[obj.time.index]] <- indSeason
+        callObj <- as.call(c(list(as.name("["),quote(obj$Data)), indices))
+        if (length(obj.member.index)==0){
+          mean.x <- apply(eval(callObj), MARGIN = obj.station.index, FUN = function(x, probs = probs, type = type){quantile(x, probs = probs, type = type, na.rm = TRUE)}, probs = 0.98, type = 7)
+          meanObj[s+1,,1,1] <- mean.x
+        }else{
+          mean.x <- apply(eval(callObj), MARGIN = c(obj.station.index, obj.member.index), FUN = function(x, probs = probs, type = type){quantile(x, probs = probs, type = type, na.rm = TRUE)}, probs = 0.98, type = 7)
+          meanObj[s+1,,,1] <- mean.x
+        }
       }
     }
+    return(meanObj)
   }
-  return(meanObj)
-}
 
-#' @title Get annual and seasonal Autocorrelation from a station or field object
+#' @title Autocorrelation
+#' @description Get annual and seasonal Autocorrelation at pre-defined lags from a station or field object
+#' @author Neyko Neykov \email{neyko.neykov@@meteo.bg} and J. Bedia and S. Herrera
 #' @export
 #' @keywords internal
 
 # Autocorrelation lag 1, 2 and 3:
 getACF <- function(obj, lag.max){
-  date.vec <- as.POSIXlt(obj$Dates$start, tz = "GMT")
-  mo <- date.vec$mon+1
-  so <- mo
-  so[which(!is.na(match(mo, c(12,1,2))))] <- 1
-  so[which(!is.na(match(mo, c(3,4,5))))] <- 2
-  so[which(!is.na(match(mo, c(6,7,8))))] <- 3
-  so[which(!is.na(match(mo, c(9,10,11))))] <- 4
+  vectorialDates <- getVectorialDates(obj)
+  mo <- vectorialDates[,2]
+  so <- vectorialDates[,3]
   dimObj <- dim(obj$Data)
   obj.time.index <- grep("^time$", attr(obj$Data, "dimensions"))
   obj.station.index <- grep("^station$", attr(obj$Data, "dimensions"))
@@ -468,20 +466,19 @@ getACF <- function(obj, lag.max){
   return(meanObj)
 }
 
-#' @title Get annual and seasonal 1/prob return value from a station or field object
+#' @title Return Value
+#' @description Get annual and seasonal 1/prob return value (left/right tail) from a station or field object. Require package - evd
+#' @author Neyko Neykov \email{neyko.neykov@@meteo.bg} and J. Bedia and S. Herrera
 #' @export
 #' @keywords internal
-
+  
 # 20-years Return value:
+require(evd)
 getReturnValue <- function(obj, prob){
-  date.vec <- as.POSIXlt(obj$Dates$start, tz = "GMT")
-  yo <- date.vec$year
-  mo <- date.vec$mon+1
-  so <- mo
-  so[which(!is.na(match(mo, c(12,1,2))))] <- 1
-  so[which(!is.na(match(mo, c(3,4,5))))] <- 2
-  so[which(!is.na(match(mo, c(6,7,8))))] <- 3
-  so[which(!is.na(match(mo, c(9,10,11))))] <- 4
+  vectorialDates <- getVectorialDates(obj)
+  yo <- vectorialDates[,1]
+  mo <- vectorialDates[,2]
+  so <- vectorialDates[,3]
   dimObj <- dim(obj$Data)
   obj.time.index <- grep("^time$", attr(obj$Data, "dimensions"))
   obj.station.index <- grep("^station$", attr(obj$Data, "dimensions"))
@@ -541,14 +538,16 @@ getReturnValue <- function(obj, prob){
   return(meanObj)
 }
 
-#' @title Get annual cicles indicators from a station or field object
+#' @title Annual Cycle
+#' @description Function to compute VALUE indices for mean annual cycle
+#' @author Sven Kotlarski and J. Bedia and S. Herrera
 #' @export
 #' @keywords internal
 
 # Annual Cicles:
 getAnnualCicle <- function(obj){
-  date.vec <- as.POSIXlt(obj$Dates$start, tz = "GMT")
-  mo <- date.vec$mon+1
+  vectorialDates <- getVectorialDates(obj)
+  mo <- vectorialDates[,2]
   dimObj <- dim(obj$Data)
   obj.time.index <- grep("^time$", attr(obj$Data, "dimensions"))
   obj.station.index <- grep("^station$", attr(obj$Data, "dimensions"))
@@ -571,21 +570,19 @@ getAnnualCicle <- function(obj){
   return(meanObj)
 }
 
-#' @title Get annual and seasonal above of a predefined threshold Spell Length Distribution from a station or field object
+#' @title Spell length distribution
+#' @description This function calculates pre-defined quantiles of a spell-distribution and the median of annual maximum consecutive spells
+#' @author Neyko Neykov \email{neyko.neykov@@meteo.bg} and J. Bedia and S. Herrera
 #' @export
 #' @keywords internal
 
 # Above Spell Length Distribution
 getGTsld <- function(obj, threshold){
-  date.vec <- as.POSIXlt(obj$Dates$start, tz = "GMT")
-  yo <- date.vec$year
+  vectorialDates <- getVectorialDates(obj)
+  yo <- vectorialDates[,1]
+  mo <- vectorialDates[,2]
+  so <- vectorialDates[,3]
   yoS <- unique(yo)
-  mo <- date.vec$mon+1
-  so <- mo
-  so[which(!is.na(match(mo, c(12,1,2))))] <- 1
-  so[which(!is.na(match(mo, c(3,4,5))))] <- 2
-  so[which(!is.na(match(mo, c(6,7,8))))] <- 3
-  so[which(!is.na(match(mo, c(9,10,11))))] <- 4
   dimObj <- dim(obj$Data)
   obj.time.index <- grep("^time$", attr(obj$Data, "dimensions"))
   obj.station.index <- grep("^station$", attr(obj$Data, "dimensions"))
@@ -683,15 +680,11 @@ getGTsld <- function(obj, threshold){
 
 # Below Spell Length Distribution
 getLTsld <- function(obj, threshold){
-  date.vec <- as.POSIXlt(obj$Dates$start, tz = "GMT")
-  yo <- date.vec$year
+  vectorialDates <- getVectorialDates(obj)
+  yo <- vectorialDates[,1]
+  mo <- vectorialDates[,2]
+  so <- vectorialDates[,3]
   yoS <- unique(yo)
-  mo <- date.vec$mon+1
-  so <- mo
-  so[which(!is.na(match(mo, c(12,1,2))))] <- 1
-  so[which(!is.na(match(mo, c(3,4,5))))] <- 2
-  so[which(!is.na(match(mo, c(6,7,8))))] <- 3
-  so[which(!is.na(match(mo, c(9,10,11))))] <- 4
   dimObj <- dim(obj$Data)
   obj.time.index <- grep("^time$", attr(obj$Data, "dimensions"))
   obj.station.index <- grep("^station$", attr(obj$Data, "dimensions"))
@@ -805,19 +798,17 @@ getLTsld <- function(obj, threshold){
 # xbin[xlowanom < 0] <- -1
 
 #' @title Get annual and seasonal proportion of variance in low frequency
+#' @description Proportion of variance in low frequency
+#' @author Dougals Maraun \email{dmaraun@@geomar.de} and J. Bedia and S. Herrera
 #' @export
 #' @keywords internal
 
 # Proportion of variance in low frequency
 getVarLF <- function(obj, lowVarPeriod){
-  date.vec <- as.POSIXlt(obj$Dates$start, tz = "GMT")
-  yo <- date.vec$year
-  mo <- date.vec$mon+1
-  so <- mo
-  so[which(!is.na(match(mo, c(12,1,2))))] <- 1
-  so[which(!is.na(match(mo, c(3,4,5))))] <- 2
-  so[which(!is.na(match(mo, c(6,7,8))))] <- 3
-  so[which(!is.na(match(mo, c(9,10,11))))] <- 4
+  vectorialDates <- getVectorialDates(obj)
+  yo <- vectorialDates[,1]
+  mo <- vectorialDates[,2]
+  so <- vectorialDates[,3]
   dimObj <- dim(obj$Data)
   obj.time.index <- grep("^time$", attr(obj$Data, "dimensions"))
   obj.station.index <- grep("^station$", attr(obj$Data, "dimensions"))
@@ -883,19 +874,15 @@ getVarLF <- function(obj, lowVarPeriod){
 }
 
 #' @title Get annual and seasonal Cramer von Misses index
+#' @author Ole Roessler \email{ole.roessler@@giub.unibe.ch} and J. Bedia and S. Herrera
 #' @export
 #' @keywords internal
 
 # Cramer von Misses
-
 getCM <- function(objRef, obj, Nbins = 100){
-  date.vec <- as.POSIXlt(objRef$Dates$start, tz = "GMT")
-  mo <- date.vec$mon+1
-  so <- mo
-  so[which(!is.na(match(mo, c(12,1,2))))] <- 1
-  so[which(!is.na(match(mo, c(3,4,5))))] <- 2
-  so[which(!is.na(match(mo, c(6,7,8))))] <- 3
-  so[which(!is.na(match(mo, c(9,10,11))))] <- 4
+  vectorialDates <- getVectorialDates(obj)
+  mo <- vectorialDates[,2]
+  so <- vectorialDates[,3]
   dimObjRef <- dim(objRef$Data)
   objRef.time.index <- grep("^time$", attr(objRef$Data, "dimensions"))
   objRef.station.index <- grep("^station$", attr(objRef$Data, "dimensions"))
@@ -1038,20 +1025,18 @@ getCM <- function(objRef, obj, Nbins = 100){
 }
 
 #' Especific function for precipitation
-#' @title Get annual and seasonal amount falling in heavy rainy days from a station or field object
+#' @title Amount from events above threshold
+#' @description Get annual and seasonal amount falling in heavy rainy days from a station or field object
+#' @author Neyko Neykov \email{neyko.neykov@@meteo.bg} and J. Bedia and S. Herrera
 #' @export
 #' @keywords internal
 
 # Amount falling in heavy rainy days
 getAmountFreqGT <- function(obj, threshold){
-  date.vec <- as.POSIXlt(obj$Dates$start, tz = "GMT")
-  yo <- date.vec$year
-  mo <- date.vec$mon+1
-  so <- mo
-  so[which(!is.na(match(mo, c(12,1,2))))] <- 1
-  so[which(!is.na(match(mo, c(3,4,5))))] <- 2
-  so[which(!is.na(match(mo, c(6,7,8))))] <- 3
-  so[which(!is.na(match(mo, c(9,10,11))))] <- 4
+  vectorialDates <- getVectorialDates(obj)
+  yo <- vectorialDates[,1]
+  mo <- vectorialDates[,2]
+  so <- vectorialDates[,3]
   dimObj <- dim(obj$Data)
   obj.time.index <- grep("^time$", attr(obj$Data, "dimensions"))
   obj.station.index <- grep("^station$", attr(obj$Data, "dimensions"))
@@ -1111,13 +1096,9 @@ getAmountFreqGT <- function(obj, threshold){
 
 # 98th percentile
 getWet98th <- function(obj, threshold){
-  date.vec <- as.POSIXlt(obj$Dates$start, tz = "GMT")
-  mo <- date.vec$mon+1
-  so <- mo
-  so[which(!is.na(match(mo, c(12,1,2))))] <- 1
-  so[which(!is.na(match(mo, c(3,4,5))))] <- 2
-  so[which(!is.na(match(mo, c(6,7,8))))] <- 3
-  so[which(!is.na(match(mo, c(9,10,11))))] <- 4
+  vectorialDates <- getVectorialDates(obj)
+  mo <- vectorialDates[,2]
+  so <- vectorialDates[,3]
   dimObj <- dim(obj$Data)
   obj.time.index <- grep("^time$", attr(obj$Data, "dimensions"))
   obj.station.index <- grep("^station$", attr(obj$Data, "dimensions"))
@@ -1154,20 +1135,18 @@ getWet98th <- function(obj, threshold){
   return(meanObj)
 }
 
-#' @title Get annual and seasonal transition probabilities from a station or field object
+#' @title Wet-wet probability
+#' @description Get annual and seasonal wet-wet-probability from a station or field object
+#' @author Neyko Neykov \email{neyko.neykov@@meteo.bg} and J. Bedia and S. Herrera
 #' @export
 #' @keywords internal
 
 # Transition probabilities: Wet-Wet
 getFreqWW <- function(obj, threshold){
-  date.vec <- as.POSIXlt(obj$Dates$start, tz = "GMT")
-  yo <- date.vec$year
-  mo <- date.vec$mon+1
-  so <- mo
-  so[which(!is.na(match(mo, c(12,1,2))))] <- 1
-  so[which(!is.na(match(mo, c(3,4,5))))] <- 2
-  so[which(!is.na(match(mo, c(6,7,8))))] <- 3
-  so[which(!is.na(match(mo, c(9,10,11))))] <- 4
+  vectorialDates <- getVectorialDates(obj)
+  yo <- vectorialDates[,1]
+  mo <- vectorialDates[,2]
+  so <- vectorialDates[,3]
   dimObj <- dim(obj$Data)
   obj.time.index <- grep("^time$", attr(obj$Data, "dimensions"))
   obj.station.index <- grep("^station$", attr(obj$Data, "dimensions"))
@@ -1216,20 +1195,18 @@ getFreqWW <- function(obj, threshold){
   return(meanObj)
 }
 
-#' @title Get annual and seasonal transition probabilities from a station or field object
+#' @title Wet-dry probability
+#' @description Get annual and seasonal wet-dry-probability from a station or field object
+#' @author Neyko Neykov \email{neyko.neykov@@meteo.bg} and J. Bedia and S. Herrera
 #' @export
 #' @keywords internal
 
 # Transition probabilities: Wet-Dry
 getFreqWD <- function(obj, threshold){
-  date.vec <- as.POSIXlt(obj$Dates$start, tz = "GMT")
-  yo <- date.vec$year
-  mo <- date.vec$mon+1
-  so <- mo
-  so[which(!is.na(match(mo, c(12,1,2))))] <- 1
-  so[which(!is.na(match(mo, c(3,4,5))))] <- 2
-  so[which(!is.na(match(mo, c(6,7,8))))] <- 3
-  so[which(!is.na(match(mo, c(9,10,11))))] <- 4
+  vectorialDates <- getVectorialDates(obj)
+  yo <- vectorialDates[,1]
+  mo <- vectorialDates[,2]
+  so <- vectorialDates[,3]
   dimObj <- dim(obj$Data)
   obj.time.index <- grep("^time$", attr(obj$Data, "dimensions"))
   obj.station.index <- grep("^station$", attr(obj$Data, "dimensions"))
@@ -1278,20 +1255,18 @@ getFreqWD <- function(obj, threshold){
   return(meanObj)
 }
 
-#' @title Get annual and seasonal transition probabilities from a station or field object
+#' @title Dry-dry probability
+#' @description Get annual and seasonal dry-dry-probability from a station or field object
+#' @author Neyko Neykov \email{neyko.neykov@@meteo.bg} and J. Bedia and S. Herrera
 #' @export
 #' @keywords internal
 
 # Transition probabilities: Dry-Dry
 getFreqDD <- function(obj, threshold){
-  date.vec <- as.POSIXlt(obj$Dates$start, tz = "GMT")
-  yo <- date.vec$year
-  mo <- date.vec$mon+1
-  so <- mo
-  so[which(!is.na(match(mo, c(12,1,2))))] <- 1
-  so[which(!is.na(match(mo, c(3,4,5))))] <- 2
-  so[which(!is.na(match(mo, c(6,7,8))))] <- 3
-  so[which(!is.na(match(mo, c(9,10,11))))] <- 4
+  vectorialDates <- getVectorialDates(obj)
+  yo <- vectorialDates[,1]
+  mo <- vectorialDates[,2]
+  so <- vectorialDates[,3]
   dimObj <- dim(obj$Data)
   obj.time.index <- grep("^time$", attr(obj$Data, "dimensions"))
   obj.station.index <- grep("^station$", attr(obj$Data, "dimensions"))
@@ -1340,20 +1315,18 @@ getFreqDD <- function(obj, threshold){
   return(meanObj)
 }
 
-#' @title Get annual and seasonal transition probabilities from a station or field object
+#' @title Dry-wet probability
+#' @description Get annual and seasonal dry-wet-probability from a station or field object
+#' @author Neyko Neykov \email{neyko.neykov@@meteo.bg} and J. Bedia and S. Herrera
 #' @export
 #' @keywords internal
 
 # Transition probabilities: Dry-Wet
 getFreqDW <- function(obj, threshold){
-  date.vec <- as.POSIXlt(obj$Dates$start, tz = "GMT")
-  yo <- date.vec$year
-  mo <- date.vec$mon+1
-  so <- mo
-  so[which(!is.na(match(mo, c(12,1,2))))] <- 1
-  so[which(!is.na(match(mo, c(3,4,5))))] <- 2
-  so[which(!is.na(match(mo, c(6,7,8))))] <- 3
-  so[which(!is.na(match(mo, c(9,10,11))))] <- 4
+  vectorialDates <- getVectorialDates(obj)
+  yo <- vectorialDates[,1]
+  mo <- vectorialDates[,2]
+  so <- vectorialDates[,3]
   dimObj <- dim(obj$Data)
   obj.time.index <- grep("^time$", attr(obj$Data, "dimensions"))
   obj.station.index <- grep("^station$", attr(obj$Data, "dimensions"))
@@ -1409,15 +1382,11 @@ getFreqDW <- function(obj, threshold){
 # Wet/Dry Spell Length Distribution
 
 getWDsld <- function(obj, threshold){
-  date.vec <- as.POSIXlt(obj$Dates$start, tz = "GMT")
-  yo <- date.vec$year
+  vectorialDates <- getVectorialDates(obj)
+  yo <- vectorialDates[,1]
+  mo <- vectorialDates[,2]
+  so <- vectorialDates[,3]
   yoS <- unique(yo)
-  mo <- date.vec$mon+1
-  so <- mo
-  so[which(!is.na(match(mo, c(12,1,2))))] <- 1
-  so[which(!is.na(match(mo, c(3,4,5))))] <- 2
-  so[which(!is.na(match(mo, c(6,7,8))))] <- 3
-  so[which(!is.na(match(mo, c(9,10,11))))] <- 4
   dimObj <- dim(obj$Data)
   obj.time.index <- grep("^time$", attr(obj$Data, "dimensions"))
   obj.station.index <- grep("^station$", attr(obj$Data, "dimensions"))
