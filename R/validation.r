@@ -1,11 +1,16 @@
 #' @title Validation
 #' 
-#' @description Calculation of the indicators and scores defined for each variable in the VALUE Action Cost.
+#' @description Function to compute VALUE indices and scores for each variable.
+#'
+#' @param obs A field or station data containing the observed climate data
+#' @param prd A field containing the simulated climate by the model
+#'
+#' @param Optional: lag.max maximum lags considered for the autocorrelation. Default = 3
+#' @param Optional: lowVarPeriod (low pass filter). Default = 1
+#' @param Optional: Nbins Number of intervals considered in the calculation of the Cramer Von Misses. Default = 100
+#' @param Optional: prob Inverse of the return period. Default = 1/20 corresponding with the 20 years return value.
 #' 
-#' @param obs
-#' @param prd
-#' 
-#' @return A validation object.
+#' @return A validation object. A 4-D array (season, station, member, index) with the indices and scores obtained for each season (DJF, MAM, JJA, SON and Annual), location and member.
 #' 
 #' @export
 #'  
