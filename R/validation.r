@@ -110,7 +110,7 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
   if (any(grepl(obs$Variable$varName,c("pr","tp","precipitation","precip")))){
     pr.threshold <- 1
     r10.threshold <- 10
-    validation <- validationPrecip(obs, prd, pr.threshold = 1, r10.threshold = 10, lag.max = lag.max, lowVarPeriod = lowVarPeriod, Nbins = Nbins)
+#     validation <- validationPrecip(obs, prd, pr.threshold = 1, r10.threshold = 10, lag.max = lag.max, lowVarPeriod = lowVarPeriod, Nbins = Nbins)
     if (length(prd.member.index)==0){
       validation <- array(data = NA, dim = c(5,dim(obs$Data)[obs.station.index],1,55), dimnames = list(season = c("Annual","DJF","MAM","JJA","SON"), stations = dimnames(obs$xyCoords)[[1]], realizations = 1, score = c("obsMean","obsVar","obsSkewness","obsR01","obsR10","obsR10p","obsR98p","obsACF1","obsACF2","obsACF3","obsRV20lb","obsRV20ub","obsWWProb","obsWDProb","obsDWProb","obsDDProb","obsMinAC","obsMaxAC","obsAmpAC","obsRelAmpAC","obsWetSpell50","obsWetSpell90","obsMaxWetSpell","obsDrySpell50","obsDrySpell90","obsMaxDrySpell","obsProVarLowFreq","cmIndex","prdMean","prdVar","prdSkewness","prdR01","prdR10","prdR10p","prdR98p","prdACF1","prdACF2","prdACF3","prdRV20lb","prdRV20ub","prdWWProb","prdWDProb","prdDWProb","prdDDProb","prdMinAC","prdMaxAC","prdAmpAC","prdRelAmpAC","prdWetSpell50","prdWetSpell90","prdMaxWetSpell","prdDrySpell50","prdDrySpell90","prdDryWetSpell","prdProVarLowFreq")))
     }else{
