@@ -215,10 +215,10 @@ getGTsld <- function(data, threshold, INDEX = 1:dim(data)[1]){
 
 # Below Spell Length Distribution
 getLTsld <- function(data, threshold, INDEX = 1:dim(data)[1]){
-      yoS <- unique(yo)
-      bin.data <- obj$Data
-      bin.data[obj$Data < threshold] <- 1
-      bin.data[obj$Data >= threshold] <- 0
+      yoS <- unique(INDEX)
+      bin.data <- data
+      bin.data[data < threshold] <- 1
+      bin.data[data >= threshold] <- 0
       meanObj <- array(data = NA, dim = c(1,dim(data)[2],1,3))
       mean.x <- apply(bin.data, MARGIN = 2, FUN = rle)
       for (i in 1:dim(data)[2]){
@@ -364,9 +364,9 @@ getWet98th <- function(data, threshold, MARGIN = 1:length(dim(data))){
 getFreqWW <- function(data, threshold){
       indToday <- rep(list(bquote()), length(dim(data)))
       indTomorrow <- rep(list(bquote()), length(dim(data)))
-      for (d in 1:length(dimObj)){
-            indToday[[d]] <- 1:dimObj[d]
-            indTomorrow[[d]] <- 1:dimObj[d]
+      for (d in 1:length(dim(data))){
+            indToday[[d]] <- 1:dim(data)[d]
+            indTomorrow[[d]] <- 1:dim(data)[d]
       }
       indToday[[1]] <- 1:(dim(data)[1]-1)
       indTomorrow[[1]] <- 2:dim(data)[1]
@@ -386,9 +386,9 @@ getFreqWW <- function(data, threshold){
 getFreqWD <- function(data, threshold){
       indToday <- rep(list(bquote()), length(dim(data)))
       indTomorrow <- rep(list(bquote()), length(dim(data)))
-      for (d in 1:length(dimObj)){
-            indToday[[d]] <- 1:dimObj[d]
-            indTomorrow[[d]] <- 1:dimObj[d]
+      for (d in 1:length(dim(data))){
+            indToday[[d]] <- 1:dim(data)[d]
+            indTomorrow[[d]] <- 1:dim(data)[d]
       }
       indToday[[1]] <- 1:(dim(data)[1]-1)
       indTomorrow[[1]] <- 2:dim(data)[1]
@@ -405,12 +405,12 @@ getFreqWD <- function(data, threshold){
 #' @keywords internal
 
 # Transition probabilities: Dry-Dry
-getFreqDD <- function(obj, threshold){
+getFreqDD <- function(data, threshold){
       indToday <- rep(list(bquote()), length(dim(data)))
       indTomorrow <- rep(list(bquote()), length(dim(data)))
-      for (d in 1:length(dimObj)){
-            indToday[[d]] <- 1:dimObj[d]
-            indTomorrow[[d]] <- 1:dimObj[d]
+      for (d in 1:length(dim(data))){
+            indToday[[d]] <- 1:dim(data)[d]
+            indTomorrow[[d]] <- 1:dim(data)[d]
       }
       indToday[[1]] <- 1:(dim(data)[1]-1)
       indTomorrow[[1]] <- 2:dim(data)[1]
@@ -427,12 +427,12 @@ getFreqDD <- function(obj, threshold){
 #' @keywords internal
 
 # Transition probabilities: Dry-Wet
-getFreqDW <- function(obj, threshold){
+getFreqDW <- function(data, threshold){
       indToday <- rep(list(bquote()), length(dim(data)))
       indTomorrow <- rep(list(bquote()), length(dim(data)))
-      for (d in 1:length(dimObj)){
-            indToday[[d]] <- 1:dimObj[d]
-            indTomorrow[[d]] <- 1:dimObj[d]
+      for (d in 1:length(dim(data))){
+            indToday[[d]] <- 1:dim(data)[d]
+            indTomorrow[[d]] <- 1:dim(data)[d]
       }
       indToday[[1]] <- 1:(dim(data)[1]-1)
       indTomorrow[[1]] <- 2:dim(data)[1]

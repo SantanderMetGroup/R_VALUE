@@ -137,7 +137,7 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
     for (s in 1:4){
       indSeason <- which(so == s)
       if (length(indSeason)>0){
-        yoSS <- date.vec$year[indSeason]
+        yoSS <- yo[indSeason]
         indObs <- rep(list(bquote()), length(dimObs))
         for (d in 1:length(dimObs)){
           indObs[[d]] <- 1:dimObs[d]
@@ -262,8 +262,8 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
     for (s in 1:4){
       indSeason <- which(so == s)
       if (length(indSeason)>0){
-        yoSS <- date.vec$year[indSeason]
-        yoSSS <- date.vec$year[indSeason]
+        yoSS <- yo[indSeason]
+        yoSSS <- unique(yoSS)
         indObs <- rep(list(bquote()), length(dimObs))
         for (d in 1:length(dimObs)){
           indObs[[d]] <- 1:dimObs[d]
@@ -296,7 +296,7 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
         indPrd[[prd.time.index]] <- indSeason
         callPrd <- as.call(c(list(as.name("["),quote(prd$Data)), indPrd))
         validation[s+1,,,29] <- getMean(eval(callPrd), marginValidation)
-        validation[s+1,,,30] <- getVar(peval(callPrd), marginValidation)
+        validation[s+1,,,30] <- getVar(eval(callPrd), marginValidation)
         validation[s+1,,,31] <- getSkew(eval(callPrd), marginValidation)
         aux <- getFreqGET(eval(callPrd), pr.threshold, MARGIN = marginValidation)
         validation[s+1,,,32] <- aux/length(yoSSS)
