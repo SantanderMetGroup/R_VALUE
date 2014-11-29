@@ -15,20 +15,17 @@
 #'  
 #' @family validation
 #'
-# @examples
-# #Example predictions
-# obs.dataset <- file.path(find.package("R.VALUE"), "example-observations.zip")
-# obs <- loadValueStations(obs.dataset, "tmin", season = 6:8, years = 2001)
-# # Loading deterministic predictions
-# pred.file1 <- file.path(find.package("R.VALUE"), "example-prediction.txt")
-# pred <- loadValuePredictions(obs, pred.file1)
-# str(pred$Data) # 2D array
-# valDetPrediction <- validation(obs, pred, lag.max = 3, lowVarPeriod = 1, Nbins = 100, prob = 1/20)
-# # Loading stochastic predictions (several realizations)
-# pred.file2 <- file.path(find.package("R.VALUE"), "example-prediction-multimember.zip")
-# pred2 <- loadValuePredictions(obs, pred.file2)
-# str(pred2$Data) # 3D array with 'member' dimension
-# valStoPrediction <- validation(obs, pred2, lag.max = 3, lowVarPeriod = 1, Nbins = 100, prob = 1/20)
+#' @examples
+#' Precipitation
+#' data(precipIberiaECA)
+#' obs <- precipIberiaECA$observations
+#' prd <- precipIberiaECA$predictions
+#' valObject <- validation(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, prob = 1/20) 
+#' Maximum Temperature
+#' data(tasmaxIberiaECA)
+#' obs <- tasmaxIberiaECA$observations
+#' prd <- tasmaxIberiaECA$predictions
+#' valObject <- validation(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, prob = 1/20)
 
 validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, prob = 1/20) {
   vectorialDates <- getVectorialDates(obs)
