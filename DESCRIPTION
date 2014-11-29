@@ -1,9 +1,12 @@
 Package: R.VALUE
 Depends:
     R(>= 3.0.0)
+Suggests:
+    downscaleR
 Imports:
     utils,
-    abind
+    abind,
+    evd
 Type: Package
 Title: Climate data validation in the framework of the COST action VALUE
 Version: 0.0-0
@@ -15,7 +18,8 @@ Authors@R: as.person(c(
     "Daniel San Martin <dani@predictia.es> [ctb]",
     "Max Tuni <max@predictia.es> [ctb, cre]"))
 BugReports: https://github.com/SantanderMetGroup/R_VALUE/issues
-Description: Load climate and weather data into R and performs climate data
-    validatino using the tools developed in the COST action VALUE.
+Description: Load climate and weather data into R, compute several indices and
+    perform climate data validation using the tools developed in the COST
+    action VALUE.
 License: GPL (>= 3)
 LazyData: true

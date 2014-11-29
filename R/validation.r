@@ -4,11 +4,10 @@
 #'
 #' @param obs A field or station data containing the observed climate data
 #' @param prd A field containing the simulated climate by the model
-#'
-#' @param Optional: lag.max maximum lags considered for the autocorrelation. Default = 3
-#' @param Optional: lowVarPeriod (low pass filter). Default = 1
-#' @param Optional: Nbins Number of intervals considered in the calculation of the Cramer Von Misses. Default = 100
-#' @param Optional: prob Inverse of the return period. Default = 1/20 corresponding with the 20 years return value.
+#' @param lag.max Optional. Maximum lags considered for the autocorrelation. Default = 3
+#' @param lowVarPeriod Optional. Low pass filter. Default = 1
+#' @param Nbins Optional. Number of intervals considered in the calculation of the Cramer Von Misses. Default = 100
+#' @param prob Optional. Inverse of the return period. Default = 1/20 corresponding with the 20 years return value.
 #' 
 #' @return A validation object. A 4-D array (season, station, member, index) with the indices and scores obtained for each season (DJF, MAM, JJA, SON and Annual), location and member.
 #' 
@@ -16,21 +15,20 @@
 #'  
 #' @family validation
 #'
-#'@examples
-#' #Example predictions
-#' obs.dataset <- file.path(find.package("R.VALUE"), "example-observations.zip")
-#' obs <- loadValueStations(obs.dataset, "tmin", season = 6:8, years = 2001)
-#' # Loading deterministic predictions
-#' pred.file1 <- file.path(find.package("R.VALUE"), "example-prediction.txt")
-#' pred <- loadValuePredictions(obs, pred.file1)
-#' str(pred$Data) # 2D array
-#' valDetPrediction <- validation(obs, pred, lag.max = 3, lowVarPeriod = 1, Nbins = 100, prob = 1/20)
-#' # Loading stochastic predictions (several realizations)
-#' pred.file2 <- file.path(find.package("R.VALUE"), "example-prediction-multimember.zip")
-#' pred2 <- loadValuePredictions(obs, pred.file2)
-#' str(pred2$Data) # 3D array with 'member' dimension
-#' valStoPrediction <- validation(obs, pred2, lag.max = 3, lowVarPeriod = 1, Nbins = 100, prob = 1/20)
-#'
+# @examples
+# #Example predictions
+# obs.dataset <- file.path(find.package("R.VALUE"), "example-observations.zip")
+# obs <- loadValueStations(obs.dataset, "tmin", season = 6:8, years = 2001)
+# # Loading deterministic predictions
+# pred.file1 <- file.path(find.package("R.VALUE"), "example-prediction.txt")
+# pred <- loadValuePredictions(obs, pred.file1)
+# str(pred$Data) # 2D array
+# valDetPrediction <- validation(obs, pred, lag.max = 3, lowVarPeriod = 1, Nbins = 100, prob = 1/20)
+# # Loading stochastic predictions (several realizations)
+# pred.file2 <- file.path(find.package("R.VALUE"), "example-prediction-multimember.zip")
+# pred2 <- loadValuePredictions(obs, pred.file2)
+# str(pred2$Data) # 3D array with 'member' dimension
+# valStoPrediction <- validation(obs, pred2, lag.max = 3, lowVarPeriod = 1, Nbins = 100, prob = 1/20)
 
 validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, prob = 1/20) {
   vectorialDates <- getVectorialDates(obs)

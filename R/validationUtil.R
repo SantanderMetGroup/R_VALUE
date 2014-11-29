@@ -4,16 +4,16 @@
 #' @keywords internal
 
 getVectorialDates <- function(obj){
-  date.vec <- as.POSIXlt(obj$Dates$start, tz = "GMT")
-  vectorialDates <- array(data = NA, dim = c(length(date.vec),3)) 
-  vectorialDates[,1] <- date.vec$year
-  vectorialDates[,2] <- date.vec$mon+1
-  vectorialDates[,3] <- date.vec$mon+1
-  vectorialDates[which(!is.na(match(vectorialDates[,2], c(12,1,2)))),3] <- 1
-  vectorialDates[which(!is.na(match(vectorialDates[,2], c(3,4,5)))),3] <- 2
-  vectorialDates[which(!is.na(match(vectorialDates[,2], c(6,7,8)))),3] <- 3
-  vectorialDates[which(!is.na(match(vectorialDates[,2], c(9,10,11)))),3] <- 4
-  return(vectorialDates)
+      date.vec <- as.POSIXlt(obj$Dates$start, tz = "GMT")
+      vectorialDates <- array(data = NA, dim = c(length(date.vec),3)) 
+      vectorialDates[,1] <- date.vec$year
+      vectorialDates[,2] <- date.vec$mon+1
+      vectorialDates[,3] <- date.vec$mon+1
+      vectorialDates[which(!is.na(match(vectorialDates[,2], c(12,1,2)))),3] <- 1
+      vectorialDates[which(!is.na(match(vectorialDates[,2], c(3,4,5)))),3] <- 2
+      vectorialDates[which(!is.na(match(vectorialDates[,2], c(6,7,8)))),3] <- 3
+      vectorialDates[which(!is.na(match(vectorialDates[,2], c(9,10,11)))),3] <- 4
+      return(vectorialDates)
 }
 
 #' @title Sum
@@ -24,8 +24,8 @@ getVectorialDates <- function(obj){
 
 # Sum:
 getSum <- function(data, MARGIN){
-  meanObj <- apply(data, MARGIN = MARGIN, FUN = sum, na.rm = TRUE)
-  return(meanObj)
+      meanObj <- apply(data, MARGIN = MARGIN, FUN = sum, na.rm = TRUE)
+      return(meanObj)
 }
 
 #' @title Mean
@@ -36,8 +36,8 @@ getSum <- function(data, MARGIN){
 
 # Mean:
 getMean <- function(data, MARGIN){
-  meanObj <- apply(data, MARGIN = MARGIN, FUN = mean, na.rm = TRUE)
-  return(meanObj)
+      meanObj <- apply(data, MARGIN = MARGIN, FUN = mean, na.rm = TRUE)
+      return(meanObj)
 }
 
 #' @title Get annual and seasonal variance from a station or field object
@@ -47,8 +47,8 @@ getMean <- function(data, MARGIN){
 
 # Variance:
 getVar <- function(data, MARGIN){
-  meanObj <- apply(data, MARGIN = MARGIN, FUN = var, na.rm = TRUE)
-  return(meanObj)
+      meanObj <- apply(data, MARGIN = MARGIN, FUN = var, na.rm = TRUE)
+      return(meanObj)
 }
 
 #' @title Get annual and seasonal skewness from a station or field object
@@ -58,12 +58,12 @@ getVar <- function(data, MARGIN){
 
 # Skewness:
 getSkew <- function(data, MARGIN){
-  mean.x <- apply(data, MARGIN = MARGIN, FUN = mean, na.rm = TRUE)
-  std.x <- apply(data, MARGIN = MARGIN, FUN = sd, na.rm = TRUE)
-  auxObj <- (data - mean.x) / std.x
-  auxObj <- apply(auxObj**3, MARGIN = MARGIN, FUN = mean, na.rm = TRUE)
-  meanObj <- auxObj
-  return(meanObj)
+      mean.x <- apply(data, MARGIN = MARGIN, FUN = mean, na.rm = TRUE)
+      std.x <- apply(data, MARGIN = MARGIN, FUN = sd, na.rm = TRUE)
+      auxObj <- (data - mean.x) / std.x
+      auxObj <- apply(auxObj**3, MARGIN = MARGIN, FUN = mean, na.rm = TRUE)
+      meanObj <- auxObj
+      return(meanObj)
 }
 
 #' @title Get annual and seasonal amount of days above of a predefined threshold from a station or field object
@@ -73,8 +73,8 @@ getSkew <- function(data, MARGIN){
 
 # Above-threshold frequency
 getFreqGT <- function(data, threshold, MARGIN = NULL){
-  meanObj <- apply((data>threshold), MARGIN = MARGIN, FUN = sum, na.rm = TRUE)
-  return(meanObj)
+      meanObj <- apply((data>threshold), MARGIN = MARGIN, FUN = sum, na.rm = TRUE)
+      return(meanObj)
 }
 
 #' @title Get annual and seasonal amount of days greater or equal than a predefined threshold from a station or field object
@@ -85,8 +85,8 @@ getFreqGT <- function(data, threshold, MARGIN = NULL){
 
 # Above-equal threshold frequency
 getFreqGET <- function(data, threshold, MARGIN = NULL){
-  meanObj <- apply((data>=threshold), MARGIN = MARGIN, FUN = sum, na.rm = TRUE)
-  return(meanObj)
+      meanObj <- apply((data>=threshold), MARGIN = MARGIN, FUN = sum, na.rm = TRUE)
+      return(meanObj)
 }
 
 #' @title Get annual and seasonal amount of days below of a predefined threshold from a station or field object
@@ -96,8 +96,8 @@ getFreqGET <- function(data, threshold, MARGIN = NULL){
 
 # Below-threshold frequency
 getFreqLT <- function(data, threshold, MARGIN = NULL){
-  meanObj <- apply((data<threshold), MARGIN = MARGIN, FUN = sum, na.rm = TRUE)
-  return(meanObj)
+      meanObj <- apply((data<threshold), MARGIN = MARGIN, FUN = sum, na.rm = TRUE)
+      return(meanObj)
 }
 
 #' @title 98th percentile
@@ -108,27 +108,28 @@ getFreqLT <- function(data, threshold, MARGIN = NULL){
 
 # 98th percentile
 get98th <- function(data, MARGIN){
-  meanObj <- apply(data, MARGIN = MARGIN, FUN = function(x, probs = probs, type = type){quantile(x, probs = probs, type = type, na.rm = TRUE)}, probs = 0.98, type = 7)
-  return(meanObj)
+      meanObj <- apply(data, MARGIN = MARGIN, FUN = function(x, probs = probs, type = type){quantile(x, probs = probs, type = type, na.rm = TRUE)}, probs = 0.98, type = 7)
+      return(meanObj)
 }
 
 #' @title Autocorrelation
 #' @description Get annual and seasonal Autocorrelation at pre-defined lags from a station or field object
-#' @author Neyko Neykov \email{neyko.neykov@@meteo.bg} and J. Bedia
+#' @author Neyko Neykov \email{neyko.neykov@@meteo.bg}, S. Herrera and J. Bedia
 #' @export
 #' @keywords internal
 
+
 # Autocorrelation lag 1, 2 and 3:
 getACF <- function(data, lag.max){
-  meanObj <- array(data = NA, dim = c(1,dim(data)[2],1,lag.max))
-  mean.x <- apply(obj$Data, MARGIN = 2, FUN = acf, na.action = na.pass, plot = FALSE, lag.max = lag.max)
-  for (i in 1:dim(data)[2]){
-    index <- which(mean.x[[i]]$lag %in% c(1:lag.max))
-    if (length(index)>0){
-      meanObj[1,i,1,1:length(index)] <- mean.x[[i]]$acf[index]
-    }
-  }
-  return(meanObj)
+      meanObj <- array(dim = c(1,dim(data)[2],1,lag.max))
+      mean.x <- apply(data, MARGIN = 2, FUN = acf, na.action = na.pass, plot = FALSE, lag.max = lag.max)
+      for (i in 1:dim(data)[2]){
+            index <- which(mean.x[[i]]$lag %in% c(1:lag.max))
+            if (length(index)>0){
+                  meanObj[1,i,1,1:length(index)] <- mean.x[[i]]$acf[index]
+            }
+      }
+      return(meanObj)
 }
 
 #' @title Return Value
@@ -136,36 +137,37 @@ getACF <- function(data, lag.max){
 #' @author Neyko Neykov \email{neyko.neykov@@meteo.bg} and J. Bedia
 #' @export
 #' @keywords internal
+#' @importFrom evd fgev
 
 # 20-years Return value:
-require(evd)
+
 getReturnValue <- function(data, prob, INDEX = 1:dim(data)[1]){
-  meanObj <- array(data = NA, dim = c(1,dim(data)[2],1,2))
-  mean.x <- apply(data, MARGIN = 2, FUN = function(x, INDEX = INDEX){tapply(x, INDEX = INDEX, FUN = max, na.rm = TRUE)}, INDEX = INDEX)
-  for (i in 1:dim(data)[2]){
-    estim <- fgev(mean.x[,i], prob = prob, std.err = FALSE)
-    meanObj[1,i,1,1] <- estim$param[1]
-    estim <- fgev(mean.x[,i], prob = 1 - prob, std.err = FALSE)
-    meanObj[1,i,1,2] <- estim$param[1]
-  }
-  return(meanObj)
+      meanObj <- array(data = NA, dim = c(1,dim(data)[2],1,2))
+      mean.x <- apply(data, MARGIN = 2, FUN = function(x, INDEX = INDEX){tapply(x, INDEX = INDEX, FUN = max, na.rm = TRUE)}, INDEX = INDEX)
+      for (i in 1:dim(data)[2]){
+            estim <- fgev(mean.x[,i], prob = prob, std.err = FALSE)
+            meanObj[1,i,1,1] <- estim$param[1]
+            estim <- fgev(mean.x[,i], prob = 1 - prob, std.err = FALSE)
+            meanObj[1,i,1,2] <- estim$param[1]
+      }
+      return(meanObj)
 }
 
 #' @title Annual Cycle
 #' @description Function to compute VALUE indices for mean annual cycle
-#' @author Sven Kotlarski and J. Bedia and S. Herrera
+#' @author Sven Kotlarski \email{sven.kotlarski@@env.ethz.ch}, J. Bedia and S. Herrera
 #' @export
 #' @keywords internal
 
 # Annual Cicles:
 getAnnualCicle <- function(data, INDEX = 1:dim(data)[1]){
-  meanObj <- array(data = NA, dim = c(1,dim(data)[2],1,4))
-  mean.x <- apply(data, MARGIN = 2, FUN = function(x, INDEX = INDEX){tapply(x, INDEX = INDEX, FUN = mean, na.rm = TRUE)}, INDEX = INDEX)
-  meanObj[1,,1,1] <- apply(mean.x, MARGIN = 2, FUN = min, na.rm = TRUE)
-  meanObj[1,,1,2] <- apply(mean.x, MARGIN = 2, FUN = max, na.rm = TRUE)
-  meanObj[1,,1,3] <- (apply(mean.x, MARGIN = 2, FUN = max, na.rm = TRUE)-apply(mean.x, MARGIN = 2, FUN = min, na.rm = TRUE))
-  meanObj[1,,1,4] <- 100*(apply(mean.x, MARGIN = 2, FUN = max, na.rm = TRUE)-apply(mean.x, MARGIN = 2, FUN = min, na.rm = TRUE))/apply(mean.x, MARGIN = 2, FUN = mean, na.rm = TRUE)
-  return(meanObj)
+      meanObj <- array(data = NA, dim = c(1,dim(data)[2],1,4))
+      mean.x <- apply(data, MARGIN = 2, FUN = function(x, INDEX = INDEX){tapply(x, INDEX = INDEX, FUN = mean, na.rm = TRUE)}, INDEX = INDEX)
+      meanObj[1,,1,1] <- apply(mean.x, MARGIN = 2, FUN = min, na.rm = TRUE)
+      meanObj[1,,1,2] <- apply(mean.x, MARGIN = 2, FUN = max, na.rm = TRUE)
+      meanObj[1,,1,3] <- (apply(mean.x, MARGIN = 2, FUN = max, na.rm = TRUE)-apply(mean.x, MARGIN = 2, FUN = min, na.rm = TRUE))
+      meanObj[1,,1,4] <- 100*(apply(mean.x, MARGIN = 2, FUN = max, na.rm = TRUE)-apply(mean.x, MARGIN = 2, FUN = min, na.rm = TRUE))/apply(mean.x, MARGIN = 2, FUN = mean, na.rm = TRUE)
+      return(meanObj)
 }
 
 #' @title Spell length distribution
@@ -176,35 +178,35 @@ getAnnualCicle <- function(data, INDEX = 1:dim(data)[1]){
 
 # Above Spell Length Distribution
 getGTsld <- function(data, threshold, INDEX = 1:dim(data)[1]){
-  yoS <- unique(INDEX)
-  bin.data <- data
-  bin.data[data > threshold] <- 1
-  bin.data[data <= threshold] <- 0
-  meanObj <- array(data = NA, dim = c(1,dim(data)[2],1,3))
-  mean.x <- apply(bin.data, MARGIN = 2, FUN = rle)
-  for (i in 1:dim(data)[2]){
-    index <- which(mean.x[[i]]$values == 1)
-    meanObj[1,i,1,1:2] <- quantile(mean.x[[i]]$lengths[index], probs = c(0.5,0.9), type = 7)
-  }
-  aux <- array(data = NA, dim = c(length(yoS),dim(data)[2]))
-  for (y in 1:length(yoS)){
-    indYear <- which(INDEX == yoS[y])
-    if (length(indYear)>0){
-      indices <- rep(list(bquote()), length(dim(data)))
-      for (d in 1:length(dim(data))){
-        indices[[d]] <- 1:dim(data)[d]
-      }
-      indices[[1]] <- indYear
-      callObj <- as.call(c(list(as.name("["),quote(bin.data)), indices))
-      mean.x <- apply(eval(callObj), MARGIN = 2, FUN = rle)
+      yoS <- unique(INDEX)
+      bin.data <- data
+      bin.data[data > threshold] <- 1
+      bin.data[data <= threshold] <- 0
+      meanObj <- array(data = NA, dim = c(1,dim(data)[2],1,3))
+      mean.x <- apply(bin.data, MARGIN = 2, FUN = rle)
       for (i in 1:dim(data)[2]){
-        index <- which(mean.x[[i]]$values == 1)
-        aux[y,i] <- max(mean.x[[i]]$lengths[index])
+            index <- which(mean.x[[i]]$values == 1)
+            meanObj[1,i,1,1:2] <- quantile(mean.x[[i]]$lengths[index], probs = c(0.5,0.9), type = 7)
       }
-    }
-  }
-  meanObj[1,,1,3] <- apply(aux, MARGIN = 2, FUN = median, na.rm = TRUE)
-  return(meanObj)
+      aux <- array(data = NA, dim = c(length(yoS),dim(data)[2]))
+      for (y in 1:length(yoS)){
+            indYear <- which(INDEX == yoS[y])
+            if (length(indYear)>0){
+                  indices <- rep(list(bquote()), length(dim(data)))
+                  for (d in 1:length(dim(data))){
+                        indices[[d]] <- 1:dim(data)[d]
+                  }
+                  indices[[1]] <- indYear
+                  callObj <- as.call(c(list(as.name("["),quote(bin.data)), indices))
+                  mean.x <- apply(eval(callObj), MARGIN = 2, FUN = rle)
+                  for (i in 1:dim(data)[2]){
+                        index <- which(mean.x[[i]]$values == 1)
+                        aux[y,i] <- max(mean.x[[i]]$lengths[index])
+                  }
+            }
+      }
+      meanObj[1,,1,3] <- apply(aux, MARGIN = 2, FUN = median, na.rm = TRUE)
+      return(meanObj)
 }
 
 #' @title Get annual and seasonal Below of a predefined threshold Spell Length Distribution from a station or field object
@@ -213,35 +215,35 @@ getGTsld <- function(data, threshold, INDEX = 1:dim(data)[1]){
 
 # Below Spell Length Distribution
 getLTsld <- function(data, threshold, INDEX = 1:dim(data)[1]){
-  yoS <- unique(yo)
-  bin.data <- obj$Data
-  bin.data[obj$Data < threshold] <- 1
-  bin.data[obj$Data >= threshold] <- 0
-  meanObj <- array(data = NA, dim = c(1,dim(data)[2],1,3))
-  mean.x <- apply(bin.data, MARGIN = 2, FUN = rle)
-  for (i in 1:dim(data)[2]){
-    index <- which(mean.x[[i]]$values == 1)
-    meanObj[1,i,1,1:2] <- quantile(mean.x[[i]]$lengths[index], probs = c(0.5,0.9), type = 7)
-  }
-  aux <- array(data = NA, dim = c(length(yoS),dim(data)[2]))
-  for (y in 1:length(yoS)){
-    indYear <- which(INDEX == yoS[y])
-    if (length(indYear)>0){
-      indices <- rep(list(bquote()), length(dim(data)))
-      for (d in 1:length(dim(data))){
-        indices[[d]] <- 1:dim(data)[d]
-      }
-      indices[[1]] <- indYear
-      callObj <- as.call(c(list(as.name("["),quote(bin.data)), indices))
-      mean.x <- apply(eval(callObj), MARGIN = 2, FUN = rle)
+      yoS <- unique(yo)
+      bin.data <- obj$Data
+      bin.data[obj$Data < threshold] <- 1
+      bin.data[obj$Data >= threshold] <- 0
+      meanObj <- array(data = NA, dim = c(1,dim(data)[2],1,3))
+      mean.x <- apply(bin.data, MARGIN = 2, FUN = rle)
       for (i in 1:dim(data)[2]){
-        index <- which(mean.x[[i]]$values == 1)
-        aux[y,i] <- max(mean.x[[i]]$lengths[index])
+            index <- which(mean.x[[i]]$values == 1)
+            meanObj[1,i,1,1:2] <- quantile(mean.x[[i]]$lengths[index], probs = c(0.5,0.9), type = 7)
       }
-    }
-  }
-  meanObj[1,,1,3] <- apply(aux, MARGIN = 2, FUN = median, na.rm = TRUE)
-  return(meanObj)
+      aux <- array(data = NA, dim = c(length(yoS),dim(data)[2]))
+      for (y in 1:length(yoS)){
+            indYear <- which(INDEX == yoS[y])
+            if (length(indYear)>0){
+                  indices <- rep(list(bquote()), length(dim(data)))
+                  for (d in 1:length(dim(data))){
+                        indices[[d]] <- 1:dim(data)[d]
+                  }
+                  indices[[1]] <- indYear
+                  callObj <- as.call(c(list(as.name("["),quote(bin.data)), indices))
+                  mean.x <- apply(eval(callObj), MARGIN = 2, FUN = rle)
+                  for (i in 1:dim(data)[2]){
+                        index <- which(mean.x[[i]]$values == 1)
+                        aux[y,i] <- max(mean.x[[i]]$lengths[index])
+                  }
+            }
+      }
+      meanObj[1,,1,3] <- apply(aux, MARGIN = 2, FUN = median, na.rm = TRUE)
+      return(meanObj)
 }
 
 # sign of low pass filtered signal  x  x		signOfLowPassSignal	Does not distinguish between temporal scales
@@ -273,16 +275,16 @@ getLTsld <- function(data, threshold, INDEX = 1:dim(data)[1]){
 
 # Proportion of variance in low frequency
 getVarLF <- function(obj, lowVarPeriod, INDEX = 1:dim(data)[1]){
-  meanObj <- array(data = NA, dim = c(1,dim(data)[2],1,1))
-  mean.x <- apply(data, MARGIN = 2, FUN = function(x, INDEX = INDEX){tapply(x, INDEX = INDEX, FUN = mean, na.rm = TRUE)}, INDEX = INDEX)
-  specVar <- apply(mean.x, MARGIN = 2, FUN = spec.pgram, na.action = na.exclude, plot = FALSE)
-  for (i in 1:dim(data)[2]){
-    T <- 1 / specVar[[i]]$freq
-    lowfreqvar <- sum(specVar[[i]]$spec[1 / specVar[[i]]$freq >= lowVarPeriod], na.rm = TRUE)
-    totalvar <- sum(specVar[[i]]$spec, na.rm = TRUE)
-    meanObj[1,i,1,1] <- lowfreqvar / totalvar
-  }
-  return(meanObj)
+      meanObj <- array(data = NA, dim = c(1,dim(data)[2],1,1))
+      mean.x <- apply(data, MARGIN = 2, FUN = function(x, INDEX = INDEX){tapply(x, INDEX = INDEX, FUN = mean, na.rm = TRUE)}, INDEX = INDEX)
+      specVar <- apply(mean.x, MARGIN = 2, FUN = spec.pgram, na.action = na.exclude, plot = FALSE)
+      for (i in 1:dim(data)[2]){
+            T <- 1 / specVar[[i]]$freq
+            lowfreqvar <- sum(specVar[[i]]$spec[1 / specVar[[i]]$freq >= lowVarPeriod], na.rm = TRUE)
+            totalvar <- sum(specVar[[i]]$spec, na.rm = TRUE)
+            meanObj[1,i,1,1] <- lowfreqvar / totalvar
+      }
+      return(meanObj)
 }
 
 #' @title Get annual and seasonal Cramer von Misses index
@@ -292,36 +294,35 @@ getVarLF <- function(obj, lowVarPeriod, INDEX = 1:dim(data)[1]){
 
 # Cramer von Misses
 getCM <- function(dataRef, data, Nbins = 100){
-  meanObj <- array(data = NA, dim = c(1,dim(dataRef)[2],1,1))
-  for (i in 1:dim(dataRef)[2]){
-    indObjRef <- rep(list(bquote()), length(dim(dataRef)))
-    for (d in 1:length(dim(dataRef))){
-      indObjRef[[d]] <- 1:dim(dataRef)[d]
-    }
-    indObjRef[[2]] <- i
-    callObjRef <- as.call(c(list(as.name("["),quote(dataRef)), indObjRef))
-    x <- eval(callObjRef)
-    
-    indObj <- rep(list(bquote()), length(dim(data)))
-    for (d in 1:length(dim(data))){
-      indObj[[d]] <- 1:dim(data)[d]
-    }
-    indObj[[2]] <- i
-    callObj <- as.call(c(list(as.name("["),quote(data)), indObj))
-    y <- eval(callObj)
-    seq.all <- range(c(x, y), na.rm = TRUE)
-    breaks <- (seq.all[2]-seq.all[1])/(Nbins+1)
-    breaks.s <- seq(from = seq.all[1] - breaks, to = seq.all[2] + breaks, by = breaks)
-    breaks.r <- seq(from = seq.all[1] - breaks, to = seq.all[2] + breaks, by = breaks)
-    term1 <- (length(x) * length(y)) / (length(x) + length(y)) ** 2
-    hm.s <- hist(x, breaks = breaks.s, plot = FALSE)
-    hm.r <- hist(y, breaks = breaks.r, plot = FALSE)
-    fs <- cumsum(hm.s$counts) / length(x)
-    gr <- cumsum(hm.r$counts) / length(y)
-    term2 <- sum((hm.s$counts + hm.r$counts) * ((fs - gr) ** 2))
-    meanObj[1,i,1,1] <- term1 * term2
-  }
-  return(meanObj)
+      meanObj <- array(data = NA, dim = c(1,dim(dataRef)[2],1,1))
+      for (i in 1:dim(dataRef)[2]){
+            indObjRef <- rep(list(bquote()), length(dim(dataRef)))
+            for (d in 1:length(dim(dataRef))){
+                  indObjRef[[d]] <- 1:dim(dataRef)[d]
+            }
+            indObjRef[[2]] <- i
+            callObjRef <- as.call(c(list(as.name("["),quote(dataRef)), indObjRef))
+            x <- eval(callObjRef)
+            indObj <- rep(list(bquote()), length(dim(data)))
+            for (d in 1:length(dim(data))){
+                  indObj[[d]] <- 1:dim(data)[d]
+            }
+            indObj[[2]] <- i
+            callObj <- as.call(c(list(as.name("["),quote(data)), indObj))
+            y <- eval(callObj)
+            seq.all <- range(c(x, y), na.rm = TRUE)
+            breaks <- (seq.all[2]-seq.all[1])/(Nbins+1)
+            breaks.s <- seq(from = seq.all[1] - breaks, to = seq.all[2] + breaks, by = breaks)
+            breaks.r <- seq(from = seq.all[1] - breaks, to = seq.all[2] + breaks, by = breaks)
+            term1 <- (length(x) * length(y)) / (length(x) + length(y)) ** 2
+            hm.s <- hist(x, breaks = breaks.s, plot = FALSE)
+            hm.r <- hist(y, breaks = breaks.r, plot = FALSE)
+            fs <- cumsum(hm.s$counts) / length(x)
+            gr <- cumsum(hm.r$counts) / length(y)
+            term2 <- sum((hm.s$counts + hm.r$counts) * ((fs - gr) ** 2))
+            meanObj[1,i,1,1] <- term1 * term2
+      }
+      return(meanObj)
 }
 
 #' Especific function for precipitation
@@ -333,10 +334,10 @@ getCM <- function(dataRef, data, Nbins = 100){
 
 # Amount falling in heavy rainy days
 getAmountFreqGT <- function(data, threshold, MARGIN = NULL){
-  aux <- data
-  aux[data<=threshold] <- NA
-  meanObj <- apply(data, MARGIN = MARGIN, FUN = sum, na.rm = TRUE)
-  return(meanObj)
+      aux <- data
+      aux[data<=threshold] <- NA
+      meanObj <- apply(data, MARGIN = MARGIN, FUN = sum, na.rm = TRUE)
+      return(meanObj)
 }
 
 #' @title 98th percentile
@@ -347,10 +348,10 @@ getAmountFreqGT <- function(data, threshold, MARGIN = NULL){
 
 # 98th percentile
 getWet98th <- function(data, threshold, MARGIN = 1:length(dim(data))){
-  aux <- data
-  aux[data<threshold] <- NA
-  meanObj <- apply(aux, MARGIN = MARGIN, FUN = function(x, probs = probs, type = type){quantile(x, probs = probs, type = type, na.rm = TRUE)}, probs = 0.98, type = 7)
-  return(meanObj)
+      aux <- data
+      aux[data<threshold] <- NA
+      meanObj <- apply(aux, MARGIN = MARGIN, FUN = function(x, probs = probs, type = type){quantile(x, probs = probs, type = type, na.rm = TRUE)}, probs = 0.98, type = 7)
+      return(meanObj)
 }
 
 #' @title Wet-wet probability
@@ -361,18 +362,18 @@ getWet98th <- function(data, threshold, MARGIN = 1:length(dim(data))){
 
 # Transition probabilities: Wet-Wet
 getFreqWW <- function(data, threshold){
-  indToday <- rep(list(bquote()), length(dim(data)))
-  indTomorrow <- rep(list(bquote()), length(dim(data)))
-  for (d in 1:length(dimObj)){
-    indToday[[d]] <- 1:dimObj[d]
-    indTomorrow[[d]] <- 1:dimObj[d]
-  }
-  indToday[[1]] <- 1:(dim(data)[1]-1)
-  indTomorrow[[1]] <- 2:dim(data)[1]
-  callToday <- as.call(c(list(as.name("["),quote(data)), indToday))
-  callTomorrow <- as.call(c(list(as.name("["),quote(data)), indTomorrow))
-  meanObj <- apply((eval(callToday) >= threshold)*(eval(callTomorrow) >= threshold), MARGIN = 2, FUN = mean, na.rm = TRUE)
-  return(meanObj)
+      indToday <- rep(list(bquote()), length(dim(data)))
+      indTomorrow <- rep(list(bquote()), length(dim(data)))
+      for (d in 1:length(dimObj)){
+            indToday[[d]] <- 1:dimObj[d]
+            indTomorrow[[d]] <- 1:dimObj[d]
+      }
+      indToday[[1]] <- 1:(dim(data)[1]-1)
+      indTomorrow[[1]] <- 2:dim(data)[1]
+      callToday <- as.call(c(list(as.name("["),quote(data)), indToday))
+      callTomorrow <- as.call(c(list(as.name("["),quote(data)), indTomorrow))
+      meanObj <- apply((eval(callToday) >= threshold)*(eval(callTomorrow) >= threshold), MARGIN = 2, FUN = mean, na.rm = TRUE)
+      return(meanObj)
 }
 
 #' @title Wet-dry probability
@@ -383,18 +384,18 @@ getFreqWW <- function(data, threshold){
 
 # Transition probabilities: Wet-Dry
 getFreqWD <- function(data, threshold){
-  indToday <- rep(list(bquote()), length(dim(data)))
-  indTomorrow <- rep(list(bquote()), length(dim(data)))
-  for (d in 1:length(dimObj)){
-    indToday[[d]] <- 1:dimObj[d]
-    indTomorrow[[d]] <- 1:dimObj[d]
-  }
-  indToday[[1]] <- 1:(dim(data)[1]-1)
-  indTomorrow[[1]] <- 2:dim(data)[1]
-  callToday <- as.call(c(list(as.name("["),quote(data)), indToday))
-  callTomorrow <- as.call(c(list(as.name("["),quote(data)), indTomorrow))
-  meanObj <- apply((eval(callToday) >= threshold)*(eval(callTomorrow)< threshold), MARGIN = 2, FUN = mean, na.rm = TRUE)
-  return(meanObj)
+      indToday <- rep(list(bquote()), length(dim(data)))
+      indTomorrow <- rep(list(bquote()), length(dim(data)))
+      for (d in 1:length(dimObj)){
+            indToday[[d]] <- 1:dimObj[d]
+            indTomorrow[[d]] <- 1:dimObj[d]
+      }
+      indToday[[1]] <- 1:(dim(data)[1]-1)
+      indTomorrow[[1]] <- 2:dim(data)[1]
+      callToday <- as.call(c(list(as.name("["),quote(data)), indToday))
+      callTomorrow <- as.call(c(list(as.name("["),quote(data)), indTomorrow))
+      meanObj <- apply((eval(callToday) >= threshold)*(eval(callTomorrow)< threshold), MARGIN = 2, FUN = mean, na.rm = TRUE)
+      return(meanObj)
 }
 
 #' @title Dry-dry probability
@@ -405,18 +406,18 @@ getFreqWD <- function(data, threshold){
 
 # Transition probabilities: Dry-Dry
 getFreqDD <- function(obj, threshold){
-  indToday <- rep(list(bquote()), length(dim(data)))
-  indTomorrow <- rep(list(bquote()), length(dim(data)))
-  for (d in 1:length(dimObj)){
-    indToday[[d]] <- 1:dimObj[d]
-    indTomorrow[[d]] <- 1:dimObj[d]
-  }
-  indToday[[1]] <- 1:(dim(data)[1]-1)
-  indTomorrow[[1]] <- 2:dim(data)[1]
-  callToday <- as.call(c(list(as.name("["),quote(data)), indToday))
-  callTomorrow <- as.call(c(list(as.name("["),quote(data)), indTomorrow))
-  meanObj <- apply((eval(callToday) < threshold)*(eval(callTomorrow)< threshold), MARGIN = 2, FUN = mean, na.rm = TRUE)
-  return(meanObj)
+      indToday <- rep(list(bquote()), length(dim(data)))
+      indTomorrow <- rep(list(bquote()), length(dim(data)))
+      for (d in 1:length(dimObj)){
+            indToday[[d]] <- 1:dimObj[d]
+            indTomorrow[[d]] <- 1:dimObj[d]
+      }
+      indToday[[1]] <- 1:(dim(data)[1]-1)
+      indTomorrow[[1]] <- 2:dim(data)[1]
+      callToday <- as.call(c(list(as.name("["),quote(data)), indToday))
+      callTomorrow <- as.call(c(list(as.name("["),quote(data)), indTomorrow))
+      meanObj <- apply((eval(callToday) < threshold)*(eval(callTomorrow)< threshold), MARGIN = 2, FUN = mean, na.rm = TRUE)
+      return(meanObj)
 }
 
 #' @title Dry-wet probability
@@ -427,18 +428,18 @@ getFreqDD <- function(obj, threshold){
 
 # Transition probabilities: Dry-Wet
 getFreqDW <- function(obj, threshold){
-  indToday <- rep(list(bquote()), length(dim(data)))
-  indTomorrow <- rep(list(bquote()), length(dim(data)))
-  for (d in 1:length(dimObj)){
-    indToday[[d]] <- 1:dimObj[d]
-    indTomorrow[[d]] <- 1:dimObj[d]
-  }
-  indToday[[1]] <- 1:(dim(data)[1]-1)
-  indTomorrow[[1]] <- 2:dim(data)[1]
-  callToday <- as.call(c(list(as.name("["),quote(data)), indToday))
-  callTomorrow <- as.call(c(list(as.name("["),quote(data)), indTomorrow))
-  meanObj <- apply((eval(callToday) < threshold)*(eval(callTomorrow) >= threshold), MARGIN = 2, FUN = mean, na.rm = TRUE)
-  return(meanObj)
+      indToday <- rep(list(bquote()), length(dim(data)))
+      indTomorrow <- rep(list(bquote()), length(dim(data)))
+      for (d in 1:length(dimObj)){
+            indToday[[d]] <- 1:dimObj[d]
+            indTomorrow[[d]] <- 1:dimObj[d]
+      }
+      indToday[[1]] <- 1:(dim(data)[1]-1)
+      indTomorrow[[1]] <- 2:dim(data)[1]
+      callToday <- as.call(c(list(as.name("["),quote(data)), indToday))
+      callTomorrow <- as.call(c(list(as.name("["),quote(data)), indTomorrow))
+      meanObj <- apply((eval(callToday) < threshold)*(eval(callTomorrow) >= threshold), MARGIN = 2, FUN = mean, na.rm = TRUE)
+      return(meanObj)
 }
 
 #' @title Get annual and seasonal above of a predefined threshold Spell Length Distribution from a station or field object
@@ -449,71 +450,71 @@ getFreqDW <- function(obj, threshold){
 
 # Below Spell Length Distribution
 getLTsld <- function(data, threshold, INDEX = 1:dim(data)[1]){
-  yoS <- unique(yo)
-  bin.data <- obj$Data
-  bin.data[obj$Data < threshold] <- 1
-  bin.data[obj$Data >= threshold] <- 0
-  meanObj <- array(data = NA, dim = c(1,dim(data)[2],1,3))
-  mean.x <- apply(bin.data, MARGIN = 2, FUN = rle)
-  for (i in 1:dim(data)[2]){
-    index <- which(mean.x[[i]]$values == 1)
-    meanObj[1,i,1,1:2] <- quantile(mean.x[[i]]$lengths[index], probs = c(0.5,0.9), type = 7)
-  }
-  aux <- array(data = NA, dim = c(length(yoS),dim(data)[2]))
-  for (y in 1:length(yoS)){
-    indYear <- which(INDEX == yoS[y])
-    if (length(indYear)>0){
-      indices <- rep(list(bquote()), length(dim(data)))
-      for (d in 1:length(dim(data))){
-        indices[[d]] <- 1:dim(data)[d]
-      }
-      indices[[1]] <- indYear
-      callObj <- as.call(c(list(as.name("["),quote(bin.data)), indices))
-      mean.x <- apply(eval(callObj), MARGIN = 2, FUN = rle)
+      yoS <- unique(yo)
+      bin.data <- obj$Data
+      bin.data[obj$Data < threshold] <- 1
+      bin.data[obj$Data >= threshold] <- 0
+      meanObj <- array(data = NA, dim = c(1,dim(data)[2],1,3))
+      mean.x <- apply(bin.data, MARGIN = 2, FUN = rle)
       for (i in 1:dim(data)[2]){
-        index <- which(mean.x[[i]]$values == 1)
-        aux[y,i] <- max(mean.x[[i]]$lengths[index])
+            index <- which(mean.x[[i]]$values == 1)
+            meanObj[1,i,1,1:2] <- quantile(mean.x[[i]]$lengths[index], probs = c(0.5,0.9), type = 7)
       }
-    }
-  }
-  meanObj[1,,1,3] <- apply(aux, MARGIN = 2, FUN = median, na.rm = TRUE)
-  return(meanObj)
+      aux <- array(data = NA, dim = c(length(yoS),dim(data)[2]))
+      for (y in 1:length(yoS)){
+            indYear <- which(INDEX == yoS[y])
+            if (length(indYear)>0){
+                  indices <- rep(list(bquote()), length(dim(data)))
+                  for (d in 1:length(dim(data))){
+                        indices[[d]] <- 1:dim(data)[d]
+                  }
+                  indices[[1]] <- indYear
+                  callObj <- as.call(c(list(as.name("["),quote(bin.data)), indices))
+                  mean.x <- apply(eval(callObj), MARGIN = 2, FUN = rle)
+                  for (i in 1:dim(data)[2]){
+                        index <- which(mean.x[[i]]$values == 1)
+                        aux[y,i] <- max(mean.x[[i]]$lengths[index])
+                  }
+            }
+      }
+      meanObj[1,,1,3] <- apply(aux, MARGIN = 2, FUN = median, na.rm = TRUE)
+      return(meanObj)
 }
 
 getWDsld <- function(data, threshold, INDEX = 1:dim(data)[1]){
-  yoS <- unique(INDEX)
-  bin.data <- data
-  bin.data[data >= threshold] <- 1
-  bin.data[data < threshold] <- 0
-  meanObj <- array(data = NA, dim = c(1,dim(data)[2],1,6))
-  mean.x <- apply(bin.data, MARGIN = 2, FUN = rle)
-  for (i in 1:dim(data)[2]){
-    index <- which(mean.x[[i]]$values == 1)
-    meanObj[1,i,1,1:2] <- quantile(mean.x[[i]]$lengths[index], probs = c(0.5,0.9), type = 7)
-    index <- which(mean.x[[i]]$values == 0)
-    meanObj[1,i,1,4:5] <- quantile(mean.x[[i]]$lengths[index], probs = c(0.5,0.9), type = 7)
-  }
-  auxWet <- array(data = NA, dim = c(length(yoS),dim(data)[2]))
-  auxDry <- array(data = NA, dim = c(length(yoS),dim(data)[2]))
-  for (y in 1:length(yoS)){
-    indYear <- which(INDEX == yoS[y])
-    if (length(indYear)>0){
-      indices <- rep(list(bquote()), length(dim(data)))
-      for (d in 1:length(dim(data))){
-        indices[[d]] <- 1:dim(data)[d]
-      }
-      indices[[1]] <- indYear
-      callObj <- as.call(c(list(as.name("["),quote(bin.data)), indices))
-      mean.x <- apply(eval(callObj), MARGIN = 2, FUN = rle)
+      yoS <- unique(INDEX)
+      bin.data <- data
+      bin.data[data >= threshold] <- 1
+      bin.data[data < threshold] <- 0
+      meanObj <- array(data = NA, dim = c(1,dim(data)[2],1,6))
+      mean.x <- apply(bin.data, MARGIN = 2, FUN = rle)
       for (i in 1:dim(data)[2]){
-        index <- which(mean.x[[i]]$values == 1)
-        auxWet[y,i] <- max(mean.x[[i]]$lengths[index])
-        index <- which(mean.x[[i]]$values == 0)
-        auxDry[y,i] <- max(mean.x[[i]]$lengths[index])
+            index <- which(mean.x[[i]]$values == 1)
+            meanObj[1,i,1,1:2] <- quantile(mean.x[[i]]$lengths[index], probs = c(0.5,0.9), type = 7)
+            index <- which(mean.x[[i]]$values == 0)
+            meanObj[1,i,1,4:5] <- quantile(mean.x[[i]]$lengths[index], probs = c(0.5,0.9), type = 7)
       }
-    }
-  }
-  meanObj[1,,1,3] <- apply(auxWet, MARGIN = 2, FUN = median, na.rm = TRUE)
-  meanObj[1,,1,6] <- apply(auxDry, MARGIN = 2, FUN = median, na.rm = TRUE)
-  return(meanObj)
+      auxWet <- array(data = NA, dim = c(length(yoS),dim(data)[2]))
+      auxDry <- array(data = NA, dim = c(length(yoS),dim(data)[2]))
+      for (y in 1:length(yoS)){
+            indYear <- which(INDEX == yoS[y])
+            if (length(indYear)>0){
+                  indices <- rep(list(bquote()), length(dim(data)))
+                  for (d in 1:length(dim(data))){
+                        indices[[d]] <- 1:dim(data)[d]
+                  }
+                  indices[[1]] <- indYear
+                  callObj <- as.call(c(list(as.name("["),quote(bin.data)), indices))
+                  mean.x <- apply(eval(callObj), MARGIN = 2, FUN = rle)
+                  for (i in 1:dim(data)[2]){
+                        index <- which(mean.x[[i]]$values == 1)
+                        auxWet[y,i] <- max(mean.x[[i]]$lengths[index])
+                        index <- which(mean.x[[i]]$values == 0)
+                        auxDry[y,i] <- max(mean.x[[i]]$lengths[index])
+                  }
+            }
+      }
+      meanObj[1,,1,3] <- apply(auxWet, MARGIN = 2, FUN = median, na.rm = TRUE)
+      meanObj[1,,1,6] <- apply(auxDry, MARGIN = 2, FUN = median, na.rm = TRUE)
+      return(meanObj)
 }
