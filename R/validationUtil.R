@@ -447,6 +447,7 @@ getFreqDW <- function(data, threshold){
 #' @keywords internal
 
 # Wet/Dry Spell Length Distribution
+
 getWDsld <- function(data, threshold, INDEX = 1:dim(data)[1]){
       yoS <- unique(INDEX)
       bin.data <- data
