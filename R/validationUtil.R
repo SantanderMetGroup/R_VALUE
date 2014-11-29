@@ -274,7 +274,7 @@ getLTsld <- function(data, threshold, INDEX = 1:dim(data)[1]){
 #' @keywords internal
 
 # Proportion of variance in low frequency
-getVarLF <- function(obj, lowVarPeriod, INDEX = 1:dim(data)[1]){
+getVarLF <- function(data, lowVarPeriod, INDEX = 1:dim(data)[1]){
       meanObj <- array(data = NA, dim = c(1,dim(data)[2],1,1))
       mean.x <- apply(data, MARGIN = 2, FUN = function(x, INDEX = INDEX){tapply(x, INDEX = INDEX, FUN = mean, na.rm = TRUE)}, INDEX = INDEX)
       specVar <- apply(mean.x, MARGIN = 2, FUN = spec.pgram, na.action = na.exclude, plot = FALSE)
