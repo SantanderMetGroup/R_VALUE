@@ -120,7 +120,7 @@ get98th <- function(data, MARGIN){
 
 
 # Autocorrelation lag 1, 2 and 3:
-getACF <- function(data, lag.max){
+getACF <- function(data, lag.max = 3){
       meanObj <- array(dim = c(1,dim(data)[2],1,lag.max))
       mean.x <- apply(data, MARGIN = 2, FUN = acf, na.action = na.pass, plot = FALSE, lag.max = lag.max)
       for (i in 1:dim(data)[2]){
@@ -447,40 +447,6 @@ getFreqDW <- function(data, threshold){
 #' @keywords internal
 
 # Wet/Dry Spell Length Distribution
-
-# Below Spell Length Distribution
-getLTsld <- function(data, threshold, INDEX = 1:dim(data)[1]){
-      yoS <- unique(yo)
-      bin.data <- obj$Data
-      bin.data[obj$Data < threshold] <- 1
-      bin.data[obj$Data >= threshold] <- 0
-      meanObj <- array(data = NA, dim = c(1,dim(data)[2],1,3))
-      mean.x <- apply(bin.data, MARGIN = 2, FUN = rle)
-      for (i in 1:dim(data)[2]){
-            index <- which(mean.x[[i]]$values == 1)
-            meanObj[1,i,1,1:2] <- quantile(mean.x[[i]]$lengths[index], probs = c(0.5,0.9), type = 7)
-      }
-      aux <- array(data = NA, dim = c(length(yoS),dim(data)[2]))
-      for (y in 1:length(yoS)){
-            indYear <- which(INDEX == yoS[y])
-            if (length(indYear)>0){
-                  indices <- rep(list(bquote()), length(dim(data)))
-                  for (d in 1:length(dim(data))){
-                        indices[[d]] <- 1:dim(data)[d]
-                  }
-                  indices[[1]] <- indYear
-                  callObj <- as.call(c(list(as.name("["),quote(bin.data)), indices))
-                  mean.x <- apply(eval(callObj), MARGIN = 2, FUN = rle)
-                  for (i in 1:dim(data)[2]){
-                        index <- which(mean.x[[i]]$values == 1)
-                        aux[y,i] <- max(mean.x[[i]]$lengths[index])
-                  }
-            }
-      }
-      meanObj[1,,1,3] <- apply(aux, MARGIN = 2, FUN = median, na.rm = TRUE)
-      return(meanObj)
-}
-
 getWDsld <- function(data, threshold, INDEX = 1:dim(data)[1]){
       yoS <- unique(INDEX)
       bin.data <- data
