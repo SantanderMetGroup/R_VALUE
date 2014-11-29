@@ -9,7 +9,7 @@ getACF(data, lag.max)
 Get annual and seasonal Autocorrelation at pre-defined lags from a station or field object
 }
 \author{
-Neyko Neykov \email{neyko.neykov@meteo.bg} and J. Bedia
+Neyko Neykov \email{neyko.neykov@meteo.bg}, S. Herrera and J. Bedia
 }
 \keyword{internal}
 

@@ -18,10 +18,12 @@ pressure after PCA analysis as predictors, and the analog method considering the
 }
 \examples{
 data(tasmaxIberiaECA)
-plot(tasmaxIberiaECA$predictions$Data[ ,2], tasmaxIberiaECA$observations$Data[ ,2], asp = 1, ylab = "Obs", xlab = "Pred")
+plot(tasmaxIberiaECA$predictions$Data[ ,2], tasmaxIberiaECA$observations$Data[ ,2],
+   asp = 1, ylab = "Obs", xlab = "Pred")
 title(tasmaxIberiaECA$observations$Metadata$longname[2])
 mtext("Tmax JJA (2001-2010)")
-r2 <- format(summary(lm(tasmaxIberiaECA$predictions$Data[ ,2] ~ tasmaxIberiaECA$observations$Data[ ,2]))$adj.r.squared, digits = 2)
+r2 <- format(summary(lm(tasmaxIberiaECA$predictions$Data[ ,2] ~
+   tasmaxIberiaECA$observations$Data[ ,2]))$adj.r.squared, digits = 2)
 text(20,40, paste("Rsq =", r2))
 abline(lm(tasmaxIberiaECA$predictions$Data[ ,2] ~ tasmaxIberiaECA$observations$Data[ ,2]))
 }
