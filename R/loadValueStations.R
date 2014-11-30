@@ -51,7 +51,8 @@
 #' obs3 <- loadValueStations(obs.dataset, "precip", lonLim = c(-5, 2), latLim = c(38, 43))
 #' obs3$Metadata
 #' # Winter data for 1991-2000
-#' djf <- loadValueStations(dataset = obs.dataset, var = "tmin", season = c(12, 1, 2), years = 1991:2000)
+#' djf <- loadValueStations(dataset = obs.dataset, var = "tmin", season = c(12, 1, 2),
+#'  years = 1991:2000)
 #' # Note that winter 1991 encompasses Dec 1990 + Jan 1991 + Feb 1991 (year-crossing season)
 
 

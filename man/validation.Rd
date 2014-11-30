@@ -25,4 +25,16 @@ A validation object. A 4-D array (season, station, member, index) with the indic
 \description{
 Function to compute VALUE indices and scores for each variable.
 }
+\examples{
+# Precipitation
+data(precipIberiaECA)
+obs <- precipIberiaECA$observations
+prd <- precipIberiaECA$predictions
+valObject <- validation(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, prob = 1/20)
+# Maximum Temperature
+data(tasmaxIberiaECA)
+obs <- tasmaxIberiaECA$observations
+prd <- tasmaxIberiaECA$predictions
+valObject <- validation(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, prob = 1/20)
+}
 

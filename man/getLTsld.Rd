@@ -4,13 +4,9 @@
 \title{Get annual and seasonal Below of a predefined threshold Spell Length Distribution from a station or field object}
 \usage{
 getLTsld(data, threshold, INDEX = 1:dim(data)[1])
-
-getLTsld(data, threshold, INDEX = 1:dim(data)[1])
 }
 \description{
 Get annual and seasonal Below of a predefined threshold Spell Length Distribution from a station or field object
-
-Get annual and seasonal above of a predefined threshold Spell Length Distribution from a station or field object
 }
 \keyword{internal}
 

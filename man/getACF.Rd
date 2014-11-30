@@ -3,7 +3,7 @@
 \alias{getACF}
 \title{Autocorrelation}
 \usage{
-getACF(data, lag.max)
+getACF(data, lag.max = 3)
 }
 \description{
 Get annual and seasonal Autocorrelation at pre-defined lags from a station or field object

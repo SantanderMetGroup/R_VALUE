@@ -3,7 +3,7 @@
 \alias{getVarLF}
 \title{Get annual and seasonal proportion of variance in low frequency}
 \usage{
-getVarLF(obj, lowVarPeriod, INDEX = 1:dim(data)[1])
+getVarLF(data, lowVarPeriod, INDEX = 1:dim(data)[1])
 }
 \description{
 Proportion of variance in low frequency

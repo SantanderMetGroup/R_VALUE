@@ -3,7 +3,7 @@
 \alias{getFreqDD}
 \title{Dry-dry probability}
 \usage{
-getFreqDD(obj, threshold)
+getFreqDD(data, threshold)
 }
 \description{
 Get annual and seasonal dry-dry-probability from a station or field object

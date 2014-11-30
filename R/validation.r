@@ -16,12 +16,12 @@
 #' @family validation
 #'
 #' @examples
-#' Precipitation
+#' # Precipitation
 #' data(precipIberiaECA)
 #' obs <- precipIberiaECA$observations
 #' prd <- precipIberiaECA$predictions
 #' valObject <- validation(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, prob = 1/20) 
-#' Maximum Temperature
+#' # Maximum Temperature
 #' data(tasmaxIberiaECA)
 #' obs <- tasmaxIberiaECA$observations
 #' prd <- tasmaxIberiaECA$predictions
