@@ -7,6 +7,9 @@
 #' @param predictions.file path to the file (either text or zip) containing the predictions.
 #' @param tz Optional. A time zone specification to be used for the conversion of dates. See more details in 
 #' \code{\link{loadValueStations}}.
+#' @param na.strings Optional. a character vector of strings which are to be interpreted as \code{\link{NA}} values.
+#'  Blank fields are also considered to be missing values in logical, integer, numeric and complex fields. This argument
+#'  is passed to read.csv. Note that numeric values of -9999 will be also coerced to NAs.
 #' 
 #' @return A predictions object. This is equivalent to the stations object (see \code{\link{loadValueStations}}),
 #' but the data element may vary its shape to include the \code{"member"} dimension in case of stochastic
@@ -38,7 +41,7 @@
 #' str(pred2$Data) # 3D array with 'member' dimension
 #'
 
-loadValuePredictions <- function(stationObj, predictions.file, tz = "") {
+loadValuePredictions <- function(stationObj, predictions.file, tz = "", na.strings = "NA") {
       stationObj$Data <- NULL
       season <- getSeason(stationObj)
       years <- unique(getYearsAsINDEX(stationObj))
@@ -55,9 +58,14 @@ loadValuePredictions <- function(stationObj, predictions.file, tz = "") {
             if (length(intersect(timePars$timeDates, as.POSIXlt(stationObj$Dates$start))) == 0) {
                   stop("Temporal mismatch between predictions and observations")
             }
-            colNums <- match(stids, names(read.csv(unz(dataset, zipFileContents[1]))))
+            con <- unz(dataset, zipFileContents[1])
+            header <- readLines(con, n = 1)
+            close.connection(con)
+            header <- gsub("\\s", "", header)
+            header <- unlist(strsplit(header, split = ","))
+            colNums <- match(stids, header)
             member.list <- lapply(1:n.members, function(x) {
-                  read.csv(unz(dataset, zipFileContents[x]))[timePars$timeInd, colNums]
+                  read.csv(unz(dataset, zipFileContents[x]), na.string = na.strings)[timePars$timeInd, colNums]
             })
             aux <- drop(do.call("abind", c(member.list, along = -1)))
             member.list <- NULL
@@ -70,8 +78,11 @@ loadValuePredictions <- function(stationObj, predictions.file, tz = "") {
             if (length(intersect(timePars$timeDates, as.POSIXlt(stationObj$Dates$start))) == 0) {
                   stop("Temporal mismatch between predictions and observations")
             }
-            colNums <- match(stids, names(read.csv(dataset)))
-            aux <- as.matrix(read.csv(dataset)[timePars$timeInd, colNums])
+            header <- readLines(dataset, n = 1)
+            header <- gsub("\\s", "", header)
+            header <- unlist(strsplit(header, split = ","))
+            colNums <- match(stids, header)
+            aux <- as.matrix(read.csv(dataset, na.strings = na.strings)[timePars$timeInd, colNums])
       }
       # Set the dimensions attribute
       if (length(dim(aux)) == 2) {

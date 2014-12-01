@@ -3,7 +3,8 @@
 \alias{loadValuePredictions}
 \title{Load VALUE predictions data}
 \usage{
-loadValuePredictions(stationObj, predictions.file, tz = "")
+loadValuePredictions(stationObj, predictions.file, tz = "",
+  na.strings = "NA")
 }
 \arguments{
 \item{stationObj}{A station data object returned by \code{\link{loadValueStations}}. See details.}
@@ -12,6 +13,10 @@ loadValuePredictions(stationObj, predictions.file, tz = "")
 
 \item{tz}{Optional. A time zone specification to be used for the conversion of dates. See more details in
 \code{\link{loadValueStations}}.}
+
+\item{na.strings}{Optional. a character vector of strings which are to be interpreted as \code{\link{NA}} values.
+ Blank fields are also considered to be missing values in logical, integer, numeric and complex fields. This argument
+ is passed to read.csv. Note that numeric values of -9999 will be also coerced to NAs.}
 }
 \value{
 A predictions object. This is equivalent to the stations object (see \code{\link{loadValueStations}}),
