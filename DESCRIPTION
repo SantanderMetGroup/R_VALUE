@@ -16,7 +16,12 @@ Authors@R: as.person(c(
     "Joaquin Bedia <bediaj@unican.es> [ctb]",
     "Sixto Herrera <sixto@predictia.es> [ctb]",
     "Daniel San Martin <dani@predictia.es> [ctb]",
-    "Max Tuni <max@predictia.es> [ctb, cre]"))
+    "Max Tuni <max@predictia.es> [ctb, cre]",
+    "Sven Kotlarski <sven.kotlarski@env.ethz.ch> [ctb]",
+    "Ole Roessler <ole.roessler@giub.unibe.ch> [ctb]",
+    "Neyko Neykov <neyko.neykov@meteo.bg> [ctb]",
+    "Douglas Maraun <dmaraun@geomar.de> [ctb]",
+    "Elke Hertig <elke.hertig@geo.uni-augsburg.de> [ctb]"))
 BugReports: https://github.com/SantanderMetGroup/R_VALUE/issues
 Description: Load climate and weather data into R, compute several indices and
     perform climate data validation using the tools developed in the COST
