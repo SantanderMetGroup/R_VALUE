@@ -1,4 +1,55 @@
-#' @title datevec
+#' @title getIntersect
+#' @description Get the commons subset of the object
+#' @author S. Herrera
+#' @export
+#' @keywords internal
+
+getIntersect <- function(obs,prd){
+
+  obj <- list(obs = obs, prd = prd)
+  datesValidation <- intersect(obs$Dates$start,prd$Dates$start)
+  idValidation <-  intersect(attr(obs$xyCoords, "dimnames")[[1]],attr(prd$xyCoords, "dimnames")[[1]])
+
+  dimObs <- dim(obs$Data)
+  obs.time.index <- grep("^time$", attr(obs$Data, "dimensions"))
+  obs.station.index <- grep("^station$", attr(obs$Data, "dimensions"))
+  indObs <- which(is.element(obs$Dates$start, datesValidation))
+  indObsId <- which(is.element(attr(obs$xyCoords, "dimnames")[[1]], idValidation))
+  indVal <- rep(list(bquote()), length(dimObs))
+  for (d in 1:length(dimObs)){
+    indVal[[d]] <- 1:dimObs[d]
+  }
+  indVal[[obs.time.index]] <- indObs
+  indVal[[obs.station.index]] <- indObsId
+  callObs <- as.call(c(list(as.name("["),quote(obs$Data)), indVal))
+  obj$obs$Data <- eval(callObs)
+  attr(obj$obs$Data, "dimensions") <- attr(obs$Data, "dimensions")
+  obj$obs$Dates$start <- obs$Dates$start[indObs]
+  obj$obs$Dates$end <- obs$Dates$end[indObs]
+  obj$obs$xyCoords <- obs$xyCoords[indObsId,]
+  
+  dimPrd <- dim(prd$Data)
+  prd.time.index <- grep("^time$", attr(prd$Data, "dimensions"))
+  prd.station.index <- grep("^station$", attr(prd$Data, "dimensions"))
+  indPrd <- which(is.element(prd$Dates$start, datesValidation))
+  indPrdId <- which(is.element(attr(prd$xyCoords, "dimnames")[[1]], idValidation))
+  indVal <- rep(list(bquote()), length(dimPrd))
+  for (d in 1:length(dimPrd)){
+    indVal[[d]] <- 1:dimPrd[d]
+  }
+  indVal[[prd.time.index]] <- indPrd
+  indVal[[prd.station.index]] <- indPrdId
+  callPrd <- as.call(c(list(as.name("["),quote(prd$Data)), indVal))
+  obj$prd$Data <- eval(callPrd)
+  attr(obj$prd$Data, "dimensions") <- attr(prd$Data, "dimensions")
+  obj$prd$Dates$start <- prd$Dates$start[indPrd]
+  obj$prd$Dates$end <- prd$Dates$end[indPrd]
+  obj$prd$xyCoords <- prd$xyCoords[indPrdId,]
+  return(obj)
+}
+
+#' @title getVectorialDates
+#' @description Get the dates in vectorial format
 #' @author S. Herrera
 #' @export
 #' @keywords internal

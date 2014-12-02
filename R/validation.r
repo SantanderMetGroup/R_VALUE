@@ -28,6 +28,9 @@
 #' valObject <- validation(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, prob = 1/20)
 
 validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, prob = 1/20) {
+  obj <- getIntersect(obs,prd)
+  obs <- obj$obs
+  prd <- obj$prd
   vectorialDates <- getVectorialDates(obs)
   yo <- vectorialDates[,1]
   mo <- vectorialDates[,2]
@@ -102,18 +105,18 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
     validation[1,,,25] <- getVar(prd$Data, marginValidation)
     validation[1,,,26] <- getSkew(prd$Data, marginValidation)
     aux <- getFreqGT(prd$Data, upper.threshold, MARGIN = marginValidation)
-    validation[1,,,27] <- aux/length(yoS)
+    validation[1,,,27] <- aux/length(yPrdS)
     aux <- getFreqLT(prd$Data, upper.threshold, MARGIN = marginValidation)
-    validation[1,,,28] <- aux/length(yoS)
+    validation[1,,,28] <- aux/length(yPrdS)
     validation[1,,,29] <- get98th(prd$Data, marginValidation)
     if (length(prd.member.index)==0){
       validation[1,,,23] <- getCM(obs$Data, prd$Data, Nbins = Nbins)
       validation[1,,,30:32] <- getACF(prd$Data, lag.max)
-      validation[1,,,33:34] <- getReturnValue(prd$Data, prob, INDEX = yo)
-      validation[1,,,35:38] <- getAnnualCicle(prd$Data, INDEX = mo)
-      validation[1,,,39:41] <- getGTsld(prd$Data, upper.threshold, INDEX = yo)
-      validation[1,,,42:44] <- getLTsld(prd$Data, lower.threshold, INDEX = yo)
-      validation[1,,,45] <- getVarLF(prd$Data, lowVarPeriod, INDEX = yo)
+      validation[1,,,33:34] <- getReturnValue(prd$Data, prob, INDEX = yPrd)
+      validation[1,,,35:38] <- getAnnualCicle(prd$Data, INDEX = mPrd)
+      validation[1,,,39:41] <- getGTsld(prd$Data, upper.threshold, INDEX = yPrd)
+      validation[1,,,42:44] <- getLTsld(prd$Data, lower.threshold, INDEX = yPrd)
+      validation[1,,,45] <- getVarLF(prd$Data, lowVarPeriod, INDEX = yPrd)
     }else{
       for (m in 1:dimValidation[3]){
         indPrdMember <- rep(list(bquote()), length(dimPrd))
@@ -124,11 +127,11 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
         callPrdMember <- as.call(c(list(as.name("["),quote(prd$Data)), indPrdMember))
         validation[1,,m,23] <- getCM(eval(callObs), eval(callPrdMember), Nbins = Nbins)
         validation[1,,m,30:32] <- getACF(eval(callPrdMember), lag.max)
-        validation[1,,m,33:34] <- getReturnValue(eval(callPrdMember), prob, INDEX = yo)
-        validation[1,,m,35:38] <- getAnnualCicle(eval(callPrdMember), INDEX = mo)
-        validation[1,,m,39:41] <- getGTsld(eval(callPrdMember), upper.threshold, INDEX = yo)
-        validation[1,,m,42:44] <- getLTsld(eval(callPrdMember), lower.threshold, INDEX = yo)
-        validation[1,,m,45] <- getVarLF(eval(callPrdMember), lowVarPeriod, INDEX = yo)
+        validation[1,,m,33:34] <- getReturnValue(eval(callPrdMember), prob, INDEX = yPrd)
+        validation[1,,m,35:38] <- getAnnualCicle(eval(callPrdMember), INDEX = mPrd)
+        validation[1,,m,39:41] <- getGTsld(eval(callPrdMember), upper.threshold, INDEX = yPrd)
+        validation[1,,m,42:44] <- getLTsld(eval(callPrdMember), lower.threshold, INDEX = yPrd)
+        validation[1,,m,45] <- getVarLF(eval(callPrdMember), lowVarPeriod, INDEX = yPrd)
       }
     }
     for (s in 1:4){
