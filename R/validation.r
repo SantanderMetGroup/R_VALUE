@@ -28,6 +28,9 @@
 #' valObject <- validation(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, prob = 1/20)
 
 validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, prob = 1/20) {
+  obj <- getIntersect(obs,prd)
+  obs <- obj$obs
+  prd <- obj$prd
   vectorialDates <- getVectorialDates(obs)
   yo <- vectorialDates[,1]
   mo <- vectorialDates[,2]

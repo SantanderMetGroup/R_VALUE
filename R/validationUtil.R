@@ -1,4 +1,55 @@
-#' @title datevec
+#' @title getIntersect
+#' @description Get the commons subset of the object
+#' @author S. Herrera
+#' @export
+#' @keywords internal
+
+getIntersect <- function(obs,prd){
+
+  obj <- list(obs = obs, prd = prd)
+  datesValidation <- intersect(obs$Dates$start,prd$Dates$start)
+  idValidation <-  intersect(attr(obs$xyCoords, "dimnames")[[1]],attr(prd$xyCoords, "dimnames")[[1]])
+
+  dimObs <- dim(obs$Data)
+  obs.time.index <- grep("^time$", attr(obs$Data, "dimensions"))
+  obs.station.index <- grep("^station$", attr(obs$Data, "dimensions"))
+  indObs <- which(is.element(obs$Dates$start, datesValidation))
+  indObsId <- which(is.element(attr(obs$xyCoords, "dimnames")[[1]], idValidation))
+  indVal <- rep(list(bquote()), length(dimObs))
+  for (d in 1:length(dimObs)){
+    indVal[[d]] <- 1:dimObs[d]
+  }
+  indVal[[obs.time.index]] <- indObs
+  indVal[[obs.station.index]] <- indObsId
+  callObs <- as.call(c(list(as.name("["),quote(obs$Data)), indVal))
+  obj$obs$Data <- eval(callObs)
+  attr(obj$obs$Data, "dimensions") <- attr(obs$Data, "dimensions")
+  obj$obs$Dates$start <- obs$Dates$start[indObs]
+  obj$obs$Dates$end <- obs$Dates$end[indObs]
+  obj$obs$xyCoords <- obs$xyCoords[indObsId,]
+  
+  dimPrd <- dim(prd$Data)
+  prd.time.index <- grep("^time$", attr(prd$Data, "dimensions"))
+  prd.station.index <- grep("^station$", attr(prd$Data, "dimensions"))
+  indPrd <- which(is.element(prd$Dates$start, datesValidation))
+  indPrdId <- which(is.element(attr(prd$xyCoords, "dimnames")[[1]], idValidation))
+  indVal <- rep(list(bquote()), length(dimPrd))
+  for (d in 1:length(dimPrd)){
+    indVal[[d]] <- 1:dimPrd[d]
+  }
+  indVal[[prd.time.index]] <- indPrd
+  indVal[[prd.station.index]] <- indPrdId
+  callPrd <- as.call(c(list(as.name("["),quote(prd$Data)), indVal))
+  obj$prd$Data <- eval(callPrd)
+  attr(obj$prd$Data, "dimensions") <- attr(prd$Data, "dimensions")
+  obj$prd$Dates$start <- prd$Dates$start[indPrd]
+  obj$prd$Dates$end <- prd$Dates$end[indPrd]
+  obj$prd$xyCoords <- prd$xyCoords[indPrdId,]
+  return(obj)
+}
+
+#' @title getVectorialDates
+#' @description Get the dates in vectorial format
 #' @author S. Herrera
 #' @export
 #' @keywords internal
@@ -145,10 +196,12 @@ getReturnValue <- function(data, prob, INDEX = 1:dim(data)[1]){
       meanObj <- array(data = NA, dim = c(1,dim(data)[2],1,2))
       mean.x <- apply(data, MARGIN = 2, FUN = function(x, INDEX = INDEX){tapply(x, INDEX = INDEX, FUN = max, na.rm = TRUE)}, INDEX = INDEX)
       for (i in 1:dim(data)[2]){
-            estim <- fgev(mean.x[,i], prob = prob, std.err = FALSE)
+        if (any(is.finite(mean.x[,i]))){
+            estim <- fgev(mean.x[which(is.finite(mean.x[,i])),i], prob = prob, std.err = FALSE)
             meanObj[1,i,1,1] <- estim$param[1]
-            estim <- fgev(mean.x[,i], prob = 1 - prob, std.err = FALSE)
+            estim <- fgev(mean.x[which(is.finite(mean.x[,i])),i], prob = 1 - prob, std.err = FALSE)
             meanObj[1,i,1,2] <- estim$param[1]
+        }
       }
       return(meanObj)
 }
@@ -277,12 +330,14 @@ getLTsld <- function(data, threshold, INDEX = 1:dim(data)[1]){
 getVarLF <- function(data, lowVarPeriod, INDEX = 1:dim(data)[1]){
       meanObj <- array(data = NA, dim = c(1,dim(data)[2],1,1))
       mean.x <- apply(data, MARGIN = 2, FUN = function(x, INDEX = INDEX){tapply(x, INDEX = INDEX, FUN = mean, na.rm = TRUE)}, INDEX = INDEX)
-      specVar <- apply(mean.x, MARGIN = 2, FUN = spec.pgram, na.action = na.exclude, plot = FALSE)
       for (i in 1:dim(data)[2]){
-            T <- 1 / specVar[[i]]$freq
-            lowfreqvar <- sum(specVar[[i]]$spec[1 / specVar[[i]]$freq >= lowVarPeriod], na.rm = TRUE)
-            totalvar <- sum(specVar[[i]]$spec, na.rm = TRUE)
-            meanObj[1,i,1,1] <- lowfreqvar / totalvar
+        if (any(is.finite(mean.x[,i]))){
+          specVar <- spec.pgram(mean.x[,i], na.action = na.exclude, plot = FALSE)
+          T <- 1 / specVar$freq
+          lowfreqvar <- sum(specVar$spec[1 / specVar$freq >= lowVarPeriod], na.rm = TRUE)
+          totalvar <- sum(specVar$spec, na.rm = TRUE)
+          meanObj[1,i,1,1] <- lowfreqvar / totalvar
+        }
       }
       return(meanObj)
 }
@@ -294,35 +349,37 @@ getVarLF <- function(data, lowVarPeriod, INDEX = 1:dim(data)[1]){
 
 # Cramer von Misses
 getCM <- function(dataRef, data, Nbins = 100){
-      meanObj <- array(data = NA, dim = c(1,dim(dataRef)[2],1,1))
-      for (i in 1:dim(dataRef)[2]){
-            indObjRef <- rep(list(bquote()), length(dim(dataRef)))
-            for (d in 1:length(dim(dataRef))){
-                  indObjRef[[d]] <- 1:dim(dataRef)[d]
-            }
-            indObjRef[[2]] <- i
-            callObjRef <- as.call(c(list(as.name("["),quote(dataRef)), indObjRef))
-            x <- eval(callObjRef)
-            indObj <- rep(list(bquote()), length(dim(data)))
-            for (d in 1:length(dim(data))){
-                  indObj[[d]] <- 1:dim(data)[d]
-            }
-            indObj[[2]] <- i
-            callObj <- as.call(c(list(as.name("["),quote(data)), indObj))
-            y <- eval(callObj)
-            seq.all <- range(c(x, y), na.rm = TRUE)
-            breaks <- (seq.all[2]-seq.all[1])/(Nbins+1)
-            breaks.s <- seq(from = seq.all[1] - breaks, to = seq.all[2] + breaks, by = breaks)
-            breaks.r <- seq(from = seq.all[1] - breaks, to = seq.all[2] + breaks, by = breaks)
-            term1 <- (length(x) * length(y)) / (length(x) + length(y)) ** 2
-            hm.s <- hist(x, breaks = breaks.s, plot = FALSE)
-            hm.r <- hist(y, breaks = breaks.r, plot = FALSE)
-            fs <- cumsum(hm.s$counts) / length(x)
-            gr <- cumsum(hm.r$counts) / length(y)
-            term2 <- sum((hm.s$counts + hm.r$counts) * ((fs - gr) ** 2))
-            meanObj[1,i,1,1] <- term1 * term2
+  meanObj <- array(data = NA, dim = c(1,dim(dataRef)[2],1,1))
+  for (i in 1:dim(dataRef)[2]){
+    if (any(is.finite(dataRef[,i])) && any(is.finite(data[,i]))){
+      indObjRef <- rep(list(bquote()), length(dim(dataRef)))
+      for (d in 1:length(dim(dataRef))){
+        indObjRef[[d]] <- 1:dim(dataRef)[d]
       }
-      return(meanObj)
+      indObjRef[[2]] <- i
+      callObjRef <- as.call(c(list(as.name("["),quote(dataRef)), indObjRef))
+      x <- eval(callObjRef)
+      indObj <- rep(list(bquote()), length(dim(data)))
+      for (d in 1:length(dim(data))){
+        indObj[[d]] <- 1:dim(data)[d]
+      }
+      indObj[[2]] <- i
+      callObj <- as.call(c(list(as.name("["),quote(data)), indObj))
+      y <- eval(callObj)
+      seq.all <- range(c(x, y), na.rm = TRUE)
+      breaks <- (seq.all[2]-seq.all[1])/(Nbins+1)
+      breaks.s <- seq(from = seq.all[1] - breaks, to = seq.all[2] + breaks, by = breaks)
+      breaks.r <- seq(from = seq.all[1] - breaks, to = seq.all[2] + breaks, by = breaks)
+      term1 <- (length(x) * length(y)) / (length(x) + length(y)) ** 2
+      hm.s <- hist(x, breaks = breaks.s, plot = FALSE)
+      hm.r <- hist(y, breaks = breaks.r, plot = FALSE)
+      fs <- cumsum(hm.s$counts) / length(x)
+      gr <- cumsum(hm.r$counts) / length(y)
+      term2 <- sum((hm.s$counts + hm.r$counts) * ((fs - gr) ** 2))
+      meanObj[1,i,1,1] <- term1 * term2
+    }
+  }
+  return(meanObj)
 }
 
 #' Especific function for precipitation
