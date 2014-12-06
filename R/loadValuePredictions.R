@@ -63,7 +63,7 @@ loadValuePredictions <- function(stationObj, predictions.file, tz = "", na.strin
             close.connection(con)
             header <- gsub("\\s", "", header)
             header <- unlist(strsplit(header, split = ","))
-            colNums <- match(stids, header)
+            colNums <- match(header, stids)
             member.list <- lapply(1:n.members, function(x) {
                   read.csv(unz(dataset, zipFileContents[x]), na.string = na.strings)[timePars$timeInd, colNums]
             })
@@ -81,7 +81,7 @@ loadValuePredictions <- function(stationObj, predictions.file, tz = "", na.strin
             header <- readLines(dataset, n = 1)
             header <- gsub("\\s", "", header)
             header <- unlist(strsplit(header, split = ","))
-            colNums <- match(stids, header)
+            colNums <- match(header, stids)
             aux <- as.matrix(read.csv(dataset, na.strings = na.strings)[timePars$timeInd, colNums])
       }
       # Set the dimensions attribute
