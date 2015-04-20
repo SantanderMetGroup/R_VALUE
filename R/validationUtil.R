@@ -7,6 +7,8 @@
 getIntersect <- function(obs,prd){
 
   obj <- list(obs = obs, prd = prd)
+  obj$Dates$start <- intersect(obs$Dates$start,prd$Dates$start)
+  obj$Dates$end <- intersect(obs$Dates$end,prd$Dates$end)
   datesValidation <- intersect(obs$Dates$start,prd$Dates$start)
   idValidation <-  intersect(attr(obs$xyCoords, "dimnames")[[1]],attr(prd$xyCoords, "dimnames")[[1]])
 
@@ -15,6 +17,7 @@ getIntersect <- function(obs,prd){
   obs.station.index <- grep("^station$", attr(obs$Data, "dimensions"))
   indObs <- which(is.element(obs$Dates$start, datesValidation))
   indObsId <- which(is.element(attr(obs$xyCoords, "dimnames")[[1]], idValidation))
+  obj$xyCoords <- obs$xyCoords[which(is.element(attr(obs$xyCoords, "dimnames")[[1]], idValidation)),]
   indVal <- rep(list(bquote()), length(dimObs))
   for (d in 1:length(dimObs)){
     indVal[[d]] <- 1:dimObs[d]
@@ -542,3 +545,4 @@ getWDsld <- function(data, threshold, INDEX = 1:dim(data)[1]){
       meanObj[1,,1,6] <- apply(auxDry, MARGIN = 2, FUN = median, na.rm = TRUE)
       return(meanObj)
 }
+
