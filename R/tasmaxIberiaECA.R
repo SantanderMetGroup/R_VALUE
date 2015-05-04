@@ -17,7 +17,7 @@
 #' data(tasmaxIberiaECA)
 #' plot(tasmaxIberiaECA$predictions$Data[ ,2], tasmaxIberiaECA$observations$Data[ ,2],
 #'    asp = 1, ylab = "Obs", xlab = "Pred")
-#' title(tasmaxIberiaECA$observations$Metadata$longname[2])
+#' title(tasmaxIberiaECA$observations$Metadata$name[2])
 #' mtext("Tmax JJA (2001-2010)")
 #' r2 <- format(summary(lm(tasmaxIberiaECA$predictions$Data[ ,2] ~ 
 #'    tasmaxIberiaECA$observations$Data[ ,2]))$adj.r.squared, digits = 2)

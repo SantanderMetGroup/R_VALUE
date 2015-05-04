@@ -103,7 +103,6 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
     validation[1,,,22] <- getVarLF(obs$Data, lowVarPeriod, INDEX = yo)
     validation[1,,,24] <- getMean(prd$Data, marginValidation)
     validation[1,,,25] <- getVar(prd$Data, marginValidation)
-    validation[1,,,26] <- getSkew(prd$Data, marginValidation)
     aux <- getFreqGT(prd$Data, upper.threshold, MARGIN = marginValidation)
     validation[1,,,27] <- aux/length(yoS)
     aux <- getFreqLT(prd$Data, upper.threshold, MARGIN = marginValidation)
@@ -111,6 +110,7 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
     validation[1,,,29] <- get98th(prd$Data, marginValidation)
     if (length(prd.member.index)==0){
       validation[1,,,23] <- getCM(obs$Data, prd$Data, Nbins = Nbins)
+      validation[1,,,26] <- getSkew(prd$Data, obs.station.index)
       validation[1,,,30:32] <- getACF(prd$Data, lag.max)
       validation[1,,,33:34] <- getReturnValue(prd$Data, prob, INDEX = yo)
       validation[1,,,35:38] <- getAnnualCicle(prd$Data, INDEX = mo)
@@ -125,7 +125,8 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
         }
         indPrdMember[[prd.member.index]] <- m
         callPrdMember <- as.call(c(list(as.name("["),quote(prd$Data)), indPrdMember))
-        validation[1,,m,23] <- getCM(eval(callObs), eval(callPrdMember), Nbins = Nbins)
+        validation[1,,m,23] <- getCM(obs$Data, eval(callPrdMember), Nbins = Nbins)
+        validation[1,,m,26] <- getSkew(eval(callPrdMember), obs.station.index)
         validation[1,,m,30:32] <- getACF(eval(callPrdMember), lag.max)
         validation[1,,m,33:34] <- getReturnValue(eval(callPrdMember), prob, INDEX = yo)
         validation[1,,m,35:38] <- getAnnualCicle(eval(callPrdMember), INDEX = mo)
@@ -165,7 +166,6 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
         callPrd <- as.call(c(list(as.name("["),quote(prd$Data)), indPrd))
         validation[s+1,,,24] <- getMean(eval(callPrd), marginValidation)
         validation[s+1,,,25] <- getVar(eval(callPrd), marginValidation)
-        validation[s+1,,,26] <- getSkew(eval(callPrd), marginValidation)
         aux <- getFreqGT(eval(callPrd), upper.threshold, MARGIN = marginValidation)
         validation[s+1,,,27] <- aux/length(yoS)
         aux <- getFreqLT(eval(callPrd), upper.threshold, MARGIN = marginValidation)
@@ -173,6 +173,7 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
         validation[s+1,,,29] <- get98th(eval(callPrd), marginValidation)
         if (length(prd.member.index)==0){
           validation[s+1,,,23] <- getCM(eval(callObs), eval(callPrd), Nbins = Nbins)
+          validation[s+1,,,26] <- getSkew(eval(callPrd), obs.station.index)
           validation[s+1,,,30:32] <- getACF(eval(callPrd), lag.max)
           validation[s+1,,,33:34] <- getReturnValue(eval(callPrd), prob, INDEX = yoSS)
           validation[s+1,,,39:41] <- getGTsld(eval(callPrd), upper.threshold, INDEX = yoSS)
@@ -188,6 +189,7 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
             indPrdMember[[prd.member.index]] <- m
             callPrdMember <- as.call(c(list(as.name("["),quote(prd$Data)), indPrdMember))
             validation[s+1,,m,23] <- getCM(eval(callObs), eval(callPrdMember), Nbins = Nbins)
+            validation[s+1,,m,26] <- getSkew(eval(callPrdMember), obs.station.index)
             validation[s+1,,m,30:32] <- getACF(eval(callPrdMember), lag.max)
             validation[s+1,,m,33:34] <- getReturnValue(eval(callPrdMember), prob, INDEX = yoSS)
             validation[s+1,,m,39:41] <- getGTsld(eval(callPrdMember), upper.threshold, INDEX = yoSS)
@@ -220,7 +222,6 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
     validation[1,,,27] <- getVarLF(obs$Data, lowVarPeriod, INDEX = yo)
     validation[1,,,29] <- getMean(prd$Data, marginValidation)
     validation[1,,,30] <- getVar(prd$Data, marginValidation)
-    validation[1,,,31] <- getSkew(prd$Data, marginValidation)
     aux <- getFreqGET(prd$Data, pr.threshold, MARGIN = marginValidation)
     validation[1,,,32] <- aux/length(yoS)
     aux <- getFreqGT(prd$Data, r10.threshold, MARGIN = marginValidation)
@@ -230,6 +231,7 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
     validation[1,,,35] <- getWet98th(prd$Data, pr.threshold, MARGIN = marginValidation)
     if (length(prd.member.index)==0){
       validation[1,,,28] <- getCM(obs$Data, prd$Data, Nbins = Nbins)
+      validation[1,,,31] <- getSkew(prd$Data, obs.station.index)
       validation[1,,,36:38] <- getACF(prd$Data, lag.max)
       validation[1,,,39:40] <- getReturnValue(prd$Data, prob, INDEX = yo)
       validation[1,,,41] <- getFreqWW(prd$Data, pr.threshold)
@@ -247,7 +249,8 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
         }
         indPrdMember[[prd.member.index]] <- m
         callPrdMember <- as.call(c(list(as.name("["),quote(prd$Data)), indPrdMember))
-        validation[1,,m,28] <- getCM(eval(callObs), eval(callPrdMember), Nbins = Nbins)
+        validation[1,,m,31] <- getSkew(eval(callPrdMember), obs.station.index)
+        validation[1,,m,28] <- getCM(obs$Data, eval(callPrdMember), Nbins = Nbins)
         validation[1,,m,36:38] <- getACF(eval(callPrdMember), lag.max)
         validation[1,,m,39:40] <- getReturnValue(eval(callPrdMember), prob, INDEX = yo)
         validation[1,,m,41] <- getFreqWW(eval(callPrdMember), pr.threshold)
@@ -297,7 +300,6 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
         callPrd <- as.call(c(list(as.name("["),quote(prd$Data)), indPrd))
         validation[s+1,,,29] <- getMean(eval(callPrd), marginValidation)
         validation[s+1,,,30] <- getVar(eval(callPrd), marginValidation)
-        validation[s+1,,,31] <- getSkew(eval(callPrd), marginValidation)
         aux <- getFreqGET(eval(callPrd), pr.threshold, MARGIN = marginValidation)
         validation[s+1,,,32] <- aux/length(yoSSS)
         aux <- getFreqGT(eval(callPrd), r10.threshold, MARGIN = marginValidation)
@@ -306,6 +308,7 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
         validation[s+1,,,34] <- aux/length(yoSSS)
         validation[s+1,,,35] <- getWet98th(eval(callPrd), pr.threshold, MARGIN = marginValidation)
         if (length(prd.member.index)==0){
+          validation[s+1,,,31] <- getSkew(eval(callPrd), obs.station.index)
           validation[s+1,,,28] <- getCM(eval(callObs), eval(callPrd), Nbins = Nbins)
           validation[s+1,,,36:38] <- getACF(eval(callPrd), lag.max)
           validation[s+1,,,39:40] <- getReturnValue(eval(callPrd), prob, INDEX = yoSS)
@@ -324,6 +327,7 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
             indPrdMember[[prd.time.index]] <- indSeason
             indPrdMember[[prd.member.index]] <- m
             callPrdMember <- as.call(c(list(as.name("["),quote(prd$Data)), indPrdMember))
+            validation[s+1,,m,31] <- getSkew(eval(callPrdMember), obs.station.index)
             validation[s+1,,m,28] <- getCM(eval(callObs), eval(callPrdMember), Nbins = Nbins)
             validation[s+1,,m,36:38] <- getACF(eval(callPrdMember), lag.max)
             validation[s+1,,m,39:40] <- getReturnValue(eval(callPrdMember), prob, INDEX = yoSS)
@@ -340,3 +344,4 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
   }
   return(validation)
 }
+

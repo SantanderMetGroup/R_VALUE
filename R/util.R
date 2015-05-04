@@ -73,6 +73,7 @@ getYearsAsINDEX <- function(obj) {
 #' 
 
 string2date <- function(timeString, tz = tz) {
+      timeString = gsub("^\\s+|\\s+$", "", timeString)
       if (nchar(timeString[1]) == 8) {
             timeDates <- strptime(timeString, "%Y%m%d", tz = tz)  
       }

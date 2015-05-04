@@ -109,7 +109,7 @@ loadValueStations <- function(dataset, var, stationID = NULL, lonLim = NULL, lat
       vars <- read.csv(unz(dataset, zipFileContents[grep("variables", zipFileContents, ignore.case = TRUE)]))
       miss.col <- grep("missing_code", names(vars), ignore.case = TRUE)
       if(length(miss.col) > 0) {
-            na.string <- vars[grep(var, vars[ , grep("variable", names(vars), ignore.case = TRUE)]), miss.col]
+            na.string <- vars[grep(var, vars[ , grep("variable_id", names(vars), ignore.case = TRUE)]), miss.col]
             vars <- NULL
             miss.col <- NULL
       } else {
