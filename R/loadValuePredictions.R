@@ -65,7 +65,7 @@ loadValuePredictions <- function(stationObj, predictions.file, tz = "", na.strin
             header <- unlist(strsplit(header, split = ","))
             colNums <- match(stids, header)
             member.list <- lapply(1:n.members, function(x) {
-                  read.csv(unz(dataset, zipFileContents[x]), na.string = na.strings)[timePars$timeInd, colNums]
+                  read.csv(unz(dataset, zipFileContents[x]), na.string = na.strings, strip.white = TRUE)[timePars$timeInd, colNums]
             })
             aux <- drop(do.call("abind", c(member.list, along = -1)))
             member.list <- NULL
