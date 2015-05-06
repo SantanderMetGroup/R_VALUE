@@ -84,7 +84,8 @@ loadValuePredictions <- function(stationObj, predictions.file, tz = "", na.strin
             header <- gsub("\\s", "", header)
             header <- unlist(strsplit(header, split = ","))
             colNums <- match(header, stids)
-            colNums <- colNums[!is.na(colNums)]
+            colNums <- which(!is.na(colNums))
+            # colNums <- colNums[!is.na(colNums)]
             aux <- as.matrix(read.csv(dataset, na.strings = na.strings)[timePars$timeInd, colNums])
       }
       # Set the dimensions attribute
