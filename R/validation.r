@@ -62,8 +62,8 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
     score = c(score,"obsVar","prdVar","Var")
     score = c(score,"obsSkewness","prdSkewness","Skewness")
     score = c(score,"cmIndex")
-    score = c(score,"correlation")
-    score = c(score,"mae")
+    score = c(score,"r")
+    score = c(score,"MAE")
     score = c(score,"obsACF1","obsACF2","obsACF3","prdACF1","prdACF2","prdACF3","ACF1","ACF2","ACF3")
     score = c(score,"obsT98p","prdT98p","T98p")
     score = c(score,"obsRV20lb","obsRV20ub","prdRV20lb","prdRV20ub","RV20lb","RV20ub")
@@ -82,8 +82,8 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
     score = c(score,"obsVar","prdVar","Var")
     score = c(score,"obsSkewness","prdSkewness","Skewness")
     score = c(score,"cmIndex")
-    score = c(score,"correlation")
-    score = c(score,"mae")
+    score = c(score,"r")
+    score = c(score,"MAE")
     score = c(score,"obsACF1","obsACF2","obsACF3","prdACF1","prdACF2","prdACF3","ACF1","ACF2","ACF3")
     score = c(score,"obsT98p","prdT98p","T98p")
     score = c(score,"obsRV20lb","obsRV20ub","prdRV20lb","prdRV20ub","RV20lb","RV20ub")
@@ -102,8 +102,8 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
     score = c(score,"obsVar","prdVar","Var")
     score = c(score,"obsSkewness","prdSkewness","Skewness")
     score = c(score,"cmIndex")
-    score = c(score,"correlation")
-    score = c(score,"mae")
+    score = c(score,"r")
+    score = c(score,"MAE")
     score = c(score,"obsACF1","obsACF2","obsACF3","prdACF1","prdACF2","prdACF3","ACF1","ACF2","ACF3")
     score = c(score,"obsT98p","prdT98p","T98p")
     score = c(score,"obsRV20lb","obsRV20ub","prdRV20lb","prdRV20ub","RV20lb","RV20ub")
@@ -122,8 +122,8 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
     score = c(score,"obsVar","prdVar","Var")
     score = c(score,"obsSkewness","prdSkewness","Skewness")
     score = c(score,"cmIndex")
-    score = c(score,"correlation")
-    score = c(score,"mae")
+    score = c(score,"r")
+    score = c(score,"MAE")
     score = c(score,"obsACF1","obsACF2","obsACF3","prdACF1","prdACF2","prdACF3","ACF1","ACF2","ACF3")
     score = c(score,"obsR01","prdR01","R01")
     score = c(score,"obsT98p","prdT98p","T98p")
@@ -181,13 +181,13 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
           scoAg[m,] <- getCM(obs$Data[iTObs,], prd$Data[m,iTObs,], Nbins = Nbins)
         }
         validation[s+1,,,"cmIndex"] <- apply(scoAg,c(2),mean,na.rm=TRUE)
-      }else if(sc=="correlation"){
-        validation[s+1,,,"correlation"] <- getCorrelation(obs$Data[iTObs,],prdAg,c(2))
-      }else if(sc=="mae"){
+      }else if(sc=="r"){
+        validation[s+1,,,"r"] <- getCorrelation(obs$Data[iTObs,],prdAg,c(2))
+      }else if(sc=="MAE"){
         for (m in 1:length(realizations)){
           scoAg[m,] <- getMae(obs$Data[iTObs,],prd$Data[m,iTObs,],c(2))
         }
-        validation[s+1,,,"mae"] <- apply(scoAg,c(2),mean,na.rm=TRUE)
+        validation[s+1,,,"MAE"] <- apply(scoAg,c(2),mean,na.rm=TRUE)
       }else if(sc=="obsACF1"){
         # includes obsACF1 obsACF2 obsACF3
         # includes prdACF1 prdACF2 prdACF3
