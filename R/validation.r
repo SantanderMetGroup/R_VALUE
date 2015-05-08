@@ -76,6 +76,7 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
     score = c(score,"obsProVarLowFreq","prdProVarLowFreq","ProVarLowFreq")
     upper.threshold <- 25
     lower.threshold <- 15
+    correlationMethod <- "pearson"
   }
   if ((any(grepl(obs$Variable$varName,c("tasmax","maximum temperature","tmax"))))){
     score = c("obsMean","prdMean","Mean")
@@ -96,6 +97,7 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
     score = c(score,"obsProVarLowFreq","prdProVarLowFreq","ProVarLowFreq")
     upper.threshold <- 30
     lower.threshold <- 0
+    correlationMethod <- "pearson"
   }
   if ((any(grepl(obs$Variable$varName,c("tasmin","minimum temperature","tmin"))))){
     score = c("obsMean","prdMean","Mean")
@@ -116,6 +118,7 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
     score = c(score,"obsProVarLowFreq","prdProVarLowFreq","ProVarLowFreq")
     upper.threshold <- 20
     lower.threshold <- 0
+    correlationMethod <- "pearson"
   }
   if (any(grepl(obs$Variable$varName,c("pr","tp","precipitation","precip")))){
     score = c("obsMean","prdMean","Mean")
@@ -139,6 +142,7 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
     score = c(score,"obsProVarLowFreq","prdProVarLowFreq","ProVarLowFreq")
     pr.threshold <- 1
     r10.threshold <- 10
+    correlationMethod <- "spearman"
   }
   
   dimValidation[4] <- length(score)
@@ -182,7 +186,7 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
         }
         validation[s+1,,,"cmIndex"] <- apply(scoAg,c(2),mean,na.rm=TRUE)
       }else if(sc=="r"){
-        validation[s+1,,,"r"] <- getCorrelation(obs$Data[iTObs,],prdAg,c(2))
+        validation[s+1,,,"r"] <- getCorrelation(obs$Data[iTObs,],prdAg,c(2),correlationMethod)
       }else if(sc=="MAE"){
         for (m in 1:length(realizations)){
           scoAg[m,] <- getMae(obs$Data[iTObs,],prd$Data[m,iTObs,],c(2))

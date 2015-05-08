@@ -559,16 +559,16 @@ getMae <- function(obs, prd, MARGIN){
 }
 
 #' @title Correlation
-#' @description Get pearson correlation
+#' @description Get correlation
 #' @author Daniel San-Martín \email{daniel@@predictia.es}
 #' @export
 #' @keywords internal
 
 # Correlation:
-getCorrelation <- function(o, p, MARGIN){
+getCorrelation <- function(o, p, MARGIN,method){
   corObj <- array(data = NA, dim = c(1,dim(o)[MARGIN]))
   for (i in 1:dim(o)[MARGIN]){
-    corObj[i] <- cor(o[,i],p[,i],use="pairwise.complete.obs")
+    corObj[i] <- cor(o[,i],p[,i],use="pairwise.complete.obs",method=method)
   }
   return(corObj)
 }
