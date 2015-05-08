@@ -546,3 +546,30 @@ getWDsld <- function(data, threshold, INDEX = 1:dim(data)[1]){
       return(meanObj)
 }
 
+#' @title Mae
+#' @description Get mean absolute error
+#' @author Daniel San-Martín \email{daniel@@predictia.es}
+#' @export
+#' @keywords internal
+
+# Mean:
+getMae <- function(obs, prd, MARGIN){
+  maeObj <- apply(abs(obs-prd), MARGIN = MARGIN, FUN = mean, na.rm = TRUE)
+  return(maeObj)
+}
+
+#' @title Correlation
+#' @description Get pearson correlation
+#' @author Daniel San-Martín \email{daniel@@predictia.es}
+#' @export
+#' @keywords internal
+
+# Correlation:
+getCorrelation <- function(o, p, MARGIN){
+  corObj <- array(data = NA, dim = c(1,dim(o)[MARGIN]))
+  for (i in 1:dim(o)[MARGIN]){
+    corObj[i] <- cor(o[,i],p[,i],use="pairwise.complete.obs")
+  }
+  return(corObj)
+}
+
