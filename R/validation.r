@@ -352,7 +352,7 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
           validation[s+1,,,"obsWWProb"] <- getFreqWW(obs$Data, pr.threshold)
           scoAg <- array(data=NA,dim=c(length(realizations),length(stations)))
           for (m in 1:length(realizations)){
-            scoAg[m,] <- getFreqWW(prd$Data[,iTObs,], pr.threshold)
+            scoAg[m,] <- getFreqWW(prd$Data[m,iTObs,], pr.threshold)
           }
           validation[s+1,,,"prdWWProb"] <- apply(scoAg,c(2),mean,na.rm=TRUE)
           validation[s+1,,,"WWProb"] <- validation[s+1,,,"obsWWProb"] / validation[s+1,,,"prdWWProb"]
@@ -363,7 +363,7 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
           validation[s+1,,,"obsDWProb"] <- getFreqDW(obs$Data, pr.threshold)
           scoAg <- array(data=NA,dim=c(length(realizations),length(stations)))
           for (m in 1:length(realizations)){
-            scoAg[m,] <- getFreqDW(prd$Data[,iTObs,], pr.threshold)
+            scoAg[m,] <- getFreqDW(prd$Data[m,iTObs,], pr.threshold)
           }
           validation[s+1,,,"prdDWProb"] <- apply(scoAg,c(2),mean,na.rm=TRUE)
           validation[s+1,,,"DWProb"] <- validation[s+1,,,"obsDWProb"] / validation[s+1,,,"prdDWProb"]
