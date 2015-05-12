@@ -27,7 +27,7 @@
 #' 
 #' @references VALUE's standard ASCII format reference: 
 #' \url{https://github.com/SantanderMetGroup/downscaleR/wiki/Observation-Data-format} 
-# \url{http://stackoverflow.com/questions/12460938/r-reading-in-a-zip-data-file-without-unzipping-it}
+#' \url{http://stackoverflow.com/questions/12460938/r-reading-in-a-zip-data-file-without-unzipping-it}
 #' 
 #' @export
 #' 
@@ -37,8 +37,8 @@
 #'  
 #' @family loading
 #' 
-#' @examples
-#' obs.dataset <- file.path(find.package("R.VALUE"), "VALUE_ECA.zip")
+#' @examples \dontrun{
+#' obs.dataset <- file.path(find.package("R.VALUE"), "VALUE_ECA_86_v1.zip")
 #' # All data
 #' obs <- loadValueStations(dataset = obs.dataset, var = "tmean")
 #' # Selection by lon-lat
@@ -54,7 +54,16 @@
 #' djf <- loadValueStations(dataset = obs.dataset, var = "tmin", season = c(12, 1, 2),
 #'  years = 1991:2000)
 #' # Note that winter 1991 encompasses Dec 1990 + Jan 1991 + Feb 1991 (year-crossing season)
+#' }
 
+dataset <- file.path(find.package("R.VALUE"), "VALUE_ECA_86_v1.zip")
+var = "precip"
+stationID = NULL
+lonLim = c(-10,5)
+latLim = c(37,43)
+season = NULL
+years = NULL
+tz = ""
 
 loadValueStations <- function(dataset, var, stationID = NULL, lonLim = NULL, latLim = NULL, season = NULL, years = NULL, tz = "") {
       zipFileContents <- unzip(dataset, list = TRUE)$Name
@@ -117,7 +126,10 @@ loadValueStations <- function(dataset, var, stationID = NULL, lonLim = NULL, lat
       }
       # Data retrieval
       message("[", Sys.time(), "] Loading data ...", sep = "")
-      Data <- unname(as.matrix(read.csv(unz(dataset, zipFileContents[fileInd]), na.strings = na.string)[timePars$timeInd, stInd + 1]))
+      var.stids <- tail(unlist(strsplit(readLines(unz(dataset, zipFileContents[fileInd]), 1), split = ", ")), -1)
+      closeAllConnections() 
+      stInd.var <- match(stids, var.stids)
+      Data <- unname(as.matrix(read.csv(unz(dataset, zipFileContents[fileInd]), na.strings = na.string)[timePars$timeInd, stInd.var + 1]))
       # Metadata
       message("[", Sys.time(), "] Retrieving metadata ...", sep = "")
       # Assumes that at least station ids must exist, and therefore meta.list is never empty
