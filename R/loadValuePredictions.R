@@ -27,7 +27,7 @@
 #'  
 #' @family loading
 #'
-#'@examples
+#'@examples  \dontrun{
 #' #Example predictions
 #' obs.dataset <- file.path(find.package("R.VALUE"), "example-observations.zip")
 #' obs <- loadValueStations(obs.dataset, "tmin", season = 6:8, years = 2001)
@@ -39,7 +39,7 @@
 #' pred.file2 <- file.path(find.package("R.VALUE"), "example-prediction-multimember.zip")
 #' pred2 <- loadValuePredictions(obs, pred.file2)
 #' str(pred2$Data) # 3D array with 'member' dimension
-#'
+#' }
 
 loadValuePredictions <- function(stationObj, predictions.file, tz = "", na.strings = "NA") {
       stationObj$Data <- NULL

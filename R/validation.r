@@ -17,7 +17,7 @@
 #'  
 #' @family validation
 #'
-#' @examples
+#' @examples \dontrun{
 #' # Precipitation
 #' data(precipIberiaECA)
 #' obs <- precipIberiaECA$observations
@@ -28,6 +28,7 @@
 #' obs <- tasmaxIberiaECA$observations
 #' prd <- tasmaxIberiaECA$predictions
 #' valObject <- validation(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, prob = 1/20)
+#' }
 
 validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, prob = 1/20) {
   obj <- getIntersect(obs,prd)

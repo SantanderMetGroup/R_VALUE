@@ -56,15 +56,6 @@
 #' # Note that winter 1991 encompasses Dec 1990 + Jan 1991 + Feb 1991 (year-crossing season)
 #' }
 
-dataset <- file.path(find.package("R.VALUE"), "VALUE_ECA_86_v1.zip")
-var = "precip"
-stationID = NULL
-lonLim = c(-10,5)
-latLim = c(37,43)
-season = NULL
-years = NULL
-tz = ""
-
 loadValueStations <- function(dataset, var, stationID = NULL, lonLim = NULL, latLim = NULL, season = NULL, years = NULL, tz = "") {
       zipFileContents <- unzip(dataset, list = TRUE)$Name
       if ((!is.null(lonLim) | !is.null(latLim)) & !is.null(stationID)) { 
