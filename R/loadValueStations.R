@@ -117,7 +117,9 @@ loadValueStations <- function(dataset, var, stationID = NULL, lonLim = NULL, lat
       }
       # Data retrieval
       message("[", Sys.time(), "] Loading data ...", sep = "")
-      var.stids <- tail(unlist(strsplit(readLines(unz(dataset, zipFileContents[fileInd]), 1), split = ", ")), -1)
+      trim <- function (x) gsub("^\\s+|\\s+$", "", x)
+      var.stids <- lapply(strsplit(readLines(unz(dataset, zipFileContents[fileInd]), 1), split = ", "),FUN=trim)
+      var.stids <- tail(unlist(var.stids), -1)
       closeAllConnections() 
       stInd.var <- match(stids, var.stids)
       Data <- unname(as.matrix(read.csv(unz(dataset, zipFileContents[fileInd]), na.strings = na.string)[timePars$timeInd, stInd.var + 1]))
