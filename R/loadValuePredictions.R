@@ -99,14 +99,12 @@ loadValuePredictions <- function(stationObj, predictions.file, tz = "", na.strin
       attr(aux, "dimensions") <- dimensions
       stationObj$Data <- aux
       stationObj$Dates <- timeBoundsValue(timePars$timeDates, tz)
+      stationObj$xyCoords <- stationObj$xyCoords[colNums,]
+      stationObj$Metadata$station_id <- stationObj$Metadata$station_id[colNums]
+      stationObj$Metadata$name <- stationObj$Metadata$name[colNums]
+      stationObj$Metadata$altitude <- stationObj$Metadata$altitude[colNums]
+      stationObj$Metadata$source <- stationObj$Metadata$source[colNums]
       attr(stationObj, "datatype") <- "predictions"
       return(stationObj)
 }
 # End
-
-
-
-
-
-
-
