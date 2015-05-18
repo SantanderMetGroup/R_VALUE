@@ -87,6 +87,7 @@ loadValuePredictions <- function(stationObj, predictions.file, tz = "", na.strin
             colNums <- which(!is.na(colNums))
             # colNums <- colNums[!is.na(colNums)]
             aux <- as.matrix(read.csv(dataset, na.strings = na.strings)[timePars$timeInd, colNums])
+            colNums <- colNums-1
       }
       # Set the dimensions attribute
       if (length(dim(aux)) == 2) {
