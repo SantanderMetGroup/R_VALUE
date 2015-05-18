@@ -226,7 +226,7 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
         if(s==0){
           aux <- getFreqGT(obs$Data[iTObs,], 15, MARGIN = obs.station.index)
           validation[s+1,,,"obsT15"] <- aux/length(yoS)
-          scoAg <- getFreqGT(prd$Data[,iTObs,,drop = F], 15, MARGIN = c(1,3))/length(yoU)
+          scoAg <- getFreqGT(prd$Data[,iTObs,,drop = F], 15, MARGIN = c(1,3))/length(yoS)
           validation[s+1,,,"prdT15"] <- apply(scoAg,c(2),mean,na.rm=TRUE)
           validation[s+1,,,"T15"] <- validation[s+1,,,"prdT15"] - validation[s+1,,,"obsT15"]
         }
@@ -235,7 +235,7 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
         if(s==0){
           aux <- getFreqGT(obs$Data[iTObs,], 20, MARGIN = obs.station.index)
           validation[s+1,,,"obsT20"] <- aux/length(yoS)
-          scoAg <- getFreqGT(prd$Data[,iTObs,,drop = F], 20, MARGIN = c(1,3))/length(yoU)
+          scoAg <- getFreqGT(prd$Data[,iTObs,,drop = F], 20, MARGIN = c(1,3))/length(yoS)
           validation[s+1,,,"prdT20"] <- apply(scoAg,c(2),mean,na.rm=TRUE)
           validation[s+1,,,"T20"] <- validation[s+1,,,"prdT20"] - validation[s+1,,,"obsT20"]
         }
@@ -244,7 +244,7 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
         if(s==0){
           aux <- getFreqGT(obs$Data[iTObs,], 25, MARGIN = obs.station.index)
           validation[s+1,,,"obsT25"] <- aux/length(yoS)          
-          scoAg <- getFreqGT(prd$Data[,iTObs,,drop = F], 25, MARGIN = c(1,3))/length(yoU)
+          scoAg <- getFreqGT(prd$Data[,iTObs,,drop = F], 25, MARGIN = c(1,3))/length(yoS)
           validation[s+1,,,"prdT25"] <- apply(scoAg,c(2),mean,na.rm=TRUE)
           validation[s+1,,,"T25"] <- validation[s+1,,,"prdT25"] - validation[s+1,,,"obsT25"]
         }
@@ -253,7 +253,7 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
         if(s==0){
           aux <- getFreqGT(obs$Data[iTObs,], 30, MARGIN = obs.station.index)
           validation[s+1,,,"obsT30"] <- aux/length(yoS)          
-          scoAg <- getFreqGT(prd$Data[,iTObs,,drop = F], 30, MARGIN = c(1,3))/length(yoU)
+          scoAg <- getFreqGT(prd$Data[,iTObs,,drop = F], 30, MARGIN = c(1,3))/length(yoS)
           validation[s+1,,,"prdT30"] <- apply(scoAg,c(2),mean,na.rm=TRUE)
           validation[s+1,,,"T30"] <- validation[s+1,,,"prdT30"] - validation[s+1,,,"obsT30"]
         }
@@ -262,7 +262,7 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
         if(s==0){
           aux <- getFreqGT(obs$Data[iTObs,], 0, MARGIN = obs.station.index)
           validation[s+1,,,"obsT00"] <- aux/length(yoS)          
-          scoAg <- getFreqGT(prd$Data[,iTObs,,drop = F], 0, MARGIN = c(1,3))/length(yoU)
+          scoAg <- getFreqGT(prd$Data[,iTObs,,drop = F], 0, MARGIN = c(1,3))/length(yoS)
           validation[s+1,,,"prdT00"] <- apply(scoAg,c(2),mean,na.rm=TRUE)
           validation[s+1,,,"T00"] <- validation[s+1,,,"T00"] -  validation[s+1,,,"obsT00"]
         }
@@ -315,21 +315,21 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
         # includes obsR01 prdR01 R01
         aux <- getFreqGET(obs$Data[iTObs,], pr.threshold, MARGIN = obs.station.index)
         validation[s+1,,,"obsR01"] <- aux/length(yoS)
-        scoAg <- getFreqGET(prd$Data[,iTObs,,drop = F], pr.threshold, MARGIN = c(1,3))/length(yoU)
+        scoAg <- getFreqGET(prd$Data[,iTObs,,drop = F], pr.threshold, MARGIN = c(1,3))/length(yoS)
         validation[s+1,,,"prdR01"] <- apply(scoAg,c(2),mean,na.rm=TRUE)
         validation[s+1,,,"R01"] <- validation[s+1,,,"prdR01"] / validation[s+1,,,"obsR01"]
       }else if(sc=="obsR10"){
         # includes obsR10 prdR10 R10
         aux <- getFreqGET(obs$Data[iTObs,], r10.threshold, MARGIN = obs.station.index)
         validation[s+1,,,"obsR10"] <- aux/length(yoS)
-        scoAg <- getFreqGET(prd$Data[,iTObs,,drop = F], pr.threshold, MARGIN = c(1,3))/length(yoU)
+        scoAg <- getFreqGET(prd$Data[,iTObs,,drop = F], pr.threshold, MARGIN = c(1,3))/length(yoS)
         validation[s+1,,,"prdR10"] <- apply(scoAg,c(2),mean,na.rm=TRUE)
         validation[s+1,,,"R10"] <- validation[s+1,,,"prdR10"] - validation[s+1,,,"obsR10"]
       }else if(sc=="obsR10p"){
         # includes obsR10p prdR10p R10p
         aux <- getAmountFreqGT(obs$Data[iTObs,], r10.threshold, MARGIN = obs.station.index)
         validation[s+1,,,"obsR10p"] <- aux/length(yoS)
-        scoAg <- getAmountFreqGT(prd$Data[,iTObs,,drop = F], pr.threshold, MARGIN = c(1,3))/length(yoU)
+        scoAg <- getAmountFreqGT(prd$Data[,iTObs,,drop = F], pr.threshold, MARGIN = c(1,3))/length(yoS)
         validation[s+1,,,"prdR10p"] <- apply(scoAg,c(2),mean,na.rm=TRUE)
         validation[s+1,,,"R10p"] <- validation[s+1,,,"prdR10p"] - validation[s+1,,,"obsR10p"]
       }else if(sc=="obsWetSpell50"){

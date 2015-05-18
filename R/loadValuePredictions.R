@@ -87,7 +87,6 @@ loadValuePredictions <- function(stationObj, predictions.file, tz = "", na.strin
             colNums <- which(!is.na(colNums))
             # colNums <- colNums[!is.na(colNums)]
             aux <- as.matrix(read.csv(dataset, na.strings = na.strings)[timePars$timeInd, colNums])
-            colNums <- colNums-1
       }
       # Set the dimensions attribute
       if (length(dim(aux)) == 2) {
@@ -100,6 +99,7 @@ loadValuePredictions <- function(stationObj, predictions.file, tz = "", na.strin
       attr(aux, "dimensions") <- dimensions
       stationObj$Data <- aux
       stationObj$Dates <- timeBoundsValue(timePars$timeDates, tz)
+      colNums <- colNums-1
       stationObj$xyCoords <- stationObj$xyCoords[colNums,]
       stationObj$Metadata$station_id <- stationObj$Metadata$station_id[colNums]
       stationObj$Metadata$name <- stationObj$Metadata$name[colNums]
