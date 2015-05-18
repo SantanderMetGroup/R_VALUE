@@ -31,14 +31,6 @@
 #' }
 
 validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, prob = 1/20) {
-  obj <- getIntersect(obs,prd)
-  obs <- obj$obs
-  prd <- obj$prd
-  vectorialDates <- getVectorialDates(obs)
-  yo <- vectorialDates[,1]
-  mo <- vectorialDates[,2]
-  so <- vectorialDates[,3]
-  obs.station.index <- grep("^station$", attr(obs$Data, "dimensions"))
   dimPrd <- dim(prd$Data)
   if(length(dimPrd)==2){
     # add dummy member dimension
@@ -49,6 +41,16 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
     prd$Data = auxData
     remove(auxData)
   }
+  
+  obj <- getIntersect(obs,prd)
+  obs <- obj$obs
+  prd <- obj$prd
+  vectorialDates <- getVectorialDates(obs)
+  yo <- vectorialDates[,1]
+  mo <- vectorialDates[,2]
+  so <- vectorialDates[,3]
+  obs.station.index <- grep("^station$", attr(obs$Data, "dimensions"))
+
   prd.station.index <- grep("^station$", attr(prd$Data, "dimensions"))
   prd.member.index <- grep("^member$", attr(prd$Data, "dimensions"))
   
@@ -130,7 +132,7 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
     score = c(score,"MAE")
     score = c(score,"obsACF1","obsACF2","obsACF3","prdACF1","prdACF2","prdACF3","ACF1","ACF2","ACF3")
     score = c(score,"obsR01","prdR01","R01")
-    score = c(score,"obsT98p","prdT98p","T98p")
+    score = c(score,"obsR98p","prdR98p","R98p")
     score = c(score,"obsRV20lb","obsRV20ub","prdRV20lb","prdRV20ub","RV20lb","RV20ub")
     score = c(score,"obsR10p","prdR10p","R10p")
     score = c(score,"obsR10","prdR10","R10")
@@ -166,13 +168,13 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
         # includes obsMean prdMean Mean
         validation[s+1,,,"obsMean"] <- getMean(obs$Data[iTObs,], obs.station.index)
         validation[s+1,,,"prdMean"] <- getMean(prdAg, c(2))
-        validation[s+1,,,"Mean"] <- validation[s+1,,,"obsMean"] - validation[s+1,,,"prdMean"]
+        validation[s+1,,,"Mean"] <- validation[s+1,,,"prdMean"] - validation[s+1,,,"obsMean"]
       }else if(sc=="obsVar"){
         # includes obsVar prdVar Var
         validation[s+1,,,"obsVar"] <- getVar(obs$Data[iTObs,], obs.station.index)
         scoAg <- getVar(prd$Data[,iTObs,,drop = F], c(1,3))
         validation[s+1,,,"prdVar"] <- apply(scoAg,c(2),mean,na.rm=TRUE)
-        validation[s+1,,,"Var"] <- validation[s+1,,,"obsVar"] / validation[s+1,,,"prdVar"]
+        validation[s+1,,,"Var"] <- validation[s+1,,,"prdVar"] / validation[s+1,,,"obsVar"]
       }else if(sc=="obsSkewness"){
         # includes obsSkewness prdSkewness Skewness
         validation[s+1,,,"obsSkewness"] <- getSkew(obs$Data[iTObs,], obs.station.index)
@@ -180,7 +182,7 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
           scoAg[m,] <- getSkew(prd$Data[m,iTObs,], obs.station.index)
         }
         validation[s+1,,,"prdSkewness"] <- apply(scoAg,c(2),mean,na.rm=TRUE)
-        validation[s+1,,,"Skewness"] <- validation[s+1,,,"obsSkewness"] - validation[s+1,,,"prdSkewness"]
+        validation[s+1,,,"Skewness"] <- validation[s+1,,,"prdSkewness"] - validation[s+1,,,"obsSkewness"]
       }else if(sc=="cmIndex"){
         for (m in 1:length(realizations)){
           scoAg[m,] <- getCM(obs$Data[iTObs,], prd$Data[m,iTObs,], Nbins = Nbins)
@@ -200,14 +202,14 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
         if(s>0){
           validation[s+1,,,c("obsACF1","obsACF2","obsACF3")] <- getACF(obs$Data[iTObs,], lag.max)
           validation[s+1,,,c("prdACF1","prdACF2","prdACF3")] <- getACF(prdAg, lag.max)
-          validation[s+1,,,c("ACF1","ACF2","ACF3")] <- validation[s+1,,,c("obsACF1","obsACF2","obsACF3")] - validation[s+1,,,c("prdACF1","prdACF2","prdACF3")]
+          validation[s+1,,,c("ACF1","ACF2","ACF3")] <- validation[s+1,,,c("prdACF1","prdACF2","prdACF3")] - validation[s+1,,,c("obsACF1","obsACF2","obsACF3")]
         }
       }else if(sc=="obsT98p"){
         # includes obsT98p prdT98p T98p
         validation[s+1,,,"obsT98p"] <- get98th(obs$Data[iTObs,], obs.station.index)
         scoAg <- get98th(prd$Data[,iTObs,,drop = F], c(1,3))
         validation[s+1,,,"prdT98p"] <- apply(scoAg,c(2),mean,na.rm=TRUE)
-        validation[s+1,,,"T98p"] <- validation[s+1,,,"obsT98p"] - validation[s+1,,,"prdT98p"]
+        validation[s+1,,,"T98p"] <- validation[s+1,,,"prdT98p"] - validation[s+1,,,"obsT98p"]
       }else if(sc=="obsRV20lb"){
         # includes obsRV20lb obsRV20ub
         # includes prdRV20lb prdRV20ub
@@ -218,7 +220,7 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
           scoAg[m,,] <- getReturnValue(prd$Data[m,iTObs,], prob, INDEX = yoS)[1,,1,]
         }
         validation[s+1,,,c("prdRV20lb","prdRV20ub")] <- apply(scoAg,c(2,3),mean,na.rm=TRUE)
-        validation[s+1,,,c("RV20lb","RV20ub")] <- validation[s+1,,,c("obsRV20lb","obsRV20ub")] - validation[s+1,,,c("prdRV20lb","prdRV20ub")]
+        validation[s+1,,,c("RV20lb","RV20ub")] <- validation[s+1,,,c("prdRV20lb","prdRV20ub")] - validation[s+1,,,c("obsRV20lb","obsRV20ub")]
       }else if(sc=="obsT15"){
         # includes obsT15 prdT15 T15
         if(s==0){
@@ -226,7 +228,7 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
           validation[s+1,,,"obsT15"] <- aux/length(yoS)
           scoAg <- getFreqGT(prd$Data[,iTObs,,drop = F], 15, MARGIN = c(1,3))/length(yoU)
           validation[s+1,,,"prdT15"] <- apply(scoAg,c(2),mean,na.rm=TRUE)
-          validation[s+1,,,"T15"] <- validation[s+1,,,"obsT15"] - validation[s+1,,,"prdT15"]
+          validation[s+1,,,"T15"] <- validation[s+1,,,"prdT15"] - validation[s+1,,,"obsT15"]
         }
       }else if(sc=="obsT20"){
         # includes obsT20 prdT20 T20
@@ -235,7 +237,7 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
           validation[s+1,,,"obsT20"] <- aux/length(yoS)
           scoAg <- getFreqGT(prd$Data[,iTObs,,drop = F], 20, MARGIN = c(1,3))/length(yoU)
           validation[s+1,,,"prdT20"] <- apply(scoAg,c(2),mean,na.rm=TRUE)
-          validation[s+1,,,"T20"] <- validation[s+1,,,"obsT20"] - validation[s+1,,,"prdT20"]
+          validation[s+1,,,"T20"] <- validation[s+1,,,"prdT20"] - validation[s+1,,,"obsT20"]
         }
       }else if(sc=="obsT25"){
         # includes obsT25 prdT25 T25
@@ -244,7 +246,7 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
           validation[s+1,,,"obsT25"] <- aux/length(yoS)          
           scoAg <- getFreqGT(prd$Data[,iTObs,,drop = F], 25, MARGIN = c(1,3))/length(yoU)
           validation[s+1,,,"prdT25"] <- apply(scoAg,c(2),mean,na.rm=TRUE)
-          validation[s+1,,,"T25"] <- validation[s+1,,,"obsT25"] - validation[s+1,,,"prdT25"]
+          validation[s+1,,,"T25"] <- validation[s+1,,,"prdT25"] - validation[s+1,,,"obsT25"]
         }
       }else if(sc=="obsT30"){
         # includes obsT30 prdT30 T30
@@ -253,7 +255,7 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
           validation[s+1,,,"obsT30"] <- aux/length(yoS)          
           scoAg <- getFreqGT(prd$Data[,iTObs,,drop = F], 30, MARGIN = c(1,3))/length(yoU)
           validation[s+1,,,"prdT30"] <- apply(scoAg,c(2),mean,na.rm=TRUE)
-          validation[s+1,,,"T30"] <- validation[s+1,,,"obsT30"] - validation[s+1,,,"prdT30"]
+          validation[s+1,,,"T30"] <- validation[s+1,,,"prdT30"] - validation[s+1,,,"obsT30"]
         }
       }else if(sc=="obsT00"){
         # includes obsT00 prdT00 T00
@@ -262,7 +264,7 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
           validation[s+1,,,"obsT00"] <- aux/length(yoS)          
           scoAg <- getFreqGT(prd$Data[,iTObs,,drop = F], 0, MARGIN = c(1,3))/length(yoU)
           validation[s+1,,,"prdT00"] <- apply(scoAg,c(2),mean,na.rm=TRUE)
-          validation[s+1,,,"T00"] <- validation[s+1,,,"obsT00"] - validation[s+1,,,"T00"]
+          validation[s+1,,,"T00"] <- validation[s+1,,,"T00"] -  validation[s+1,,,"obsT00"]
         }
       }else if(sc=="obsWarmSpell50"){
         # includes obsWarmSpell50 obsColdSpell50 prdWarmSpell50 prdColdSpell50 WarmSpell50 ColdSpell50
@@ -284,9 +286,9 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
           validation[s+1,,,c("obsMaxWarmSpell","obsMaxColdSpell")] <- NA
           validation[s+1,,,c("prdMaxWarmSpell","prdMaxColdSpell")] <- NA
         }        
-        validation[s+1,,,c("WarmSpell50","ColdSpell50")] <- validation[s+1,,,c("obsWarmSpell50","obsColdSpell50")] - validation[s+1,,,c("prdWarmSpell50","prdColdSpell50")]
-        validation[s+1,,,c("WarmSpell90","ColdSpell90")] <- validation[s+1,,,c("obsWarmSpell90","obsColdSpell90")] - validation[s+1,,,c("prdWarmSpell90","prdColdSpell90")]
-        validation[s+1,,,c("MaxWarmSpell","MaxColdSpell")] <- validation[s+1,,,c("obsMaxColdSpell","obsMaxWarmSpell")] - validation[s+1,,,c("prdMaxWarmSpell","prdMaxColdSpell")]
+        validation[s+1,,,c("WarmSpell50","ColdSpell50")] <- validation[s+1,,,c("prdWarmSpell50","prdColdSpell50")] - validation[s+1,,,c("obsWarmSpell50","obsColdSpell50")]
+        validation[s+1,,,c("WarmSpell90","ColdSpell90")] <- validation[s+1,,,c("prdWarmSpell90","prdColdSpell90")] - validation[s+1,,,c("obsWarmSpell90","obsColdSpell90")]
+        validation[s+1,,,c("MaxWarmSpell","MaxColdSpell")] <- validation[s+1,,,c("prdMaxWarmSpell","prdMaxColdSpell")] - validation[s+1,,,c("obsMaxColdSpell","obsMaxWarmSpell")]
       }else if(sc=="obsMinAC"){
         # includes obsMinAC obsMaxAC obsAmpAC
         # includes prdMinAC prdMaxAC prdAmpAC
@@ -297,8 +299,8 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
           for (m in 1:length(realizations)){
             scoAg[m,,] <- getAnnualCicle(prd$Data[m,iTObs,], INDEX = moS)
           }
-          validation[s+1,,,c("prdMinAC","prdMaxAC","prdAmpAC","RelAmpAC")] <- apply(scoAg,c(2,3),mean,na.rm=TRUE)
-          validation[s+1,,,c("MinAC","MaxAC","AmpAC","RelAmpAC")] <- validation[s+1,,,c("obsMinAC","obsMaxAC","obsAmpAC","obsRelAmpAC")] - validation[s+1,,,c("prdMinAC","prdMaxAC","prdAmpAC","prdRelAmpAC")]
+          validation[s+1,,,c("prdMinAC","prdMaxAC","prdAmpAC","prdRelAmpAC")] <- apply(scoAg,c(2,3),mean,na.rm=TRUE)
+          validation[s+1,,,c("MinAC","MaxAC","AmpAC","RelAmpAC")] <- validation[s+1,,,c("prdMinAC","prdMaxAC","prdAmpAC","prdRelAmpAC")] / validation[s+1,,,c("obsMinAC","obsMaxAC","obsAmpAC","obsRelAmpAC")] 
         }
       }else if(sc=="obsProVarLowFreq"){
         # includes obsProVarLowFreq prdProVarLowFreq ProVarLowFreq
@@ -308,28 +310,28 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
           scoAg[m,] <- getVarLF(prd$Data[m,iTObs,], lowVarPeriod, INDEX = yoS)
         }
         validation[s+1,,,"prdProVarLowFreq"] <- apply(scoAg,c(2),mean,na.rm=TRUE)
-        validation[s+1,,,"ProVarLowFreq"] <- validation[s+1,,,"obsProVarLowFreq"] / validation[s+1,,,"prdProVarLowFreq"]
+        validation[s+1,,,"ProVarLowFreq"] <- validation[s+1,,,"prdProVarLowFreq"] / validation[s+1,,,"obsProVarLowFreq"]
       }else if(sc=="obsR01"){
         # includes obsR01 prdR01 R01
         aux <- getFreqGET(obs$Data[iTObs,], pr.threshold, MARGIN = obs.station.index)
         validation[s+1,,,"obsR01"] <- aux/length(yoS)
         scoAg <- getFreqGET(prd$Data[,iTObs,,drop = F], pr.threshold, MARGIN = c(1,3))/length(yoU)
         validation[s+1,,,"prdR01"] <- apply(scoAg,c(2),mean,na.rm=TRUE)
-        validation[s+1,,,"R01"] <- validation[s+1,,,"obsR01"] - validation[s+1,,,"prdR01"]
+        validation[s+1,,,"R01"] <- validation[s+1,,,"prdR01"] / validation[s+1,,,"obsR01"]
       }else if(sc=="obsR10"){
         # includes obsR10 prdR10 R10
         aux <- getFreqGET(obs$Data[iTObs,], r10.threshold, MARGIN = obs.station.index)
         validation[s+1,,,"obsR10"] <- aux/length(yoS)
         scoAg <- getFreqGET(prd$Data[,iTObs,,drop = F], pr.threshold, MARGIN = c(1,3))/length(yoU)
         validation[s+1,,,"prdR10"] <- apply(scoAg,c(2),mean,na.rm=TRUE)
-        validation[s+1,,,"R10"] <- validation[s+1,,,"obsR10"] - validation[s+1,,,"prdR10"]
+        validation[s+1,,,"R10"] <- validation[s+1,,,"prdR10"] - validation[s+1,,,"obsR10"]
       }else if(sc=="obsR10p"){
         # includes obsR10p prdR10p R10p
         aux <- getAmountFreqGT(obs$Data[iTObs,], r10.threshold, MARGIN = obs.station.index)
         validation[s+1,,,"obsR10p"] <- aux/length(yoS)
         scoAg <- getAmountFreqGT(prd$Data[,iTObs,,drop = F], pr.threshold, MARGIN = c(1,3))/length(yoU)
         validation[s+1,,,"prdR10p"] <- apply(scoAg,c(2),mean,na.rm=TRUE)
-        validation[s+1,,,"R10p"] <- validation[s+1,,,"obsR10p"] - validation[s+1,,,"prdR10p"]
+        validation[s+1,,,"R10p"] <- validation[s+1,,,"prdR10p"] - validation[s+1,,,"obsR10p"]
       }else if(sc=="obsWetSpell50"){
         # includes obsWetSpell50 obsDrySpell50 prdWetSpell50 prdDrySpell50 WetSpell50 DrySpell50
         # includes obsWetSpell90 obsDrySpell90 prdWetSpell90 prdDrySpell90 WetSpell90 DrySpell90
@@ -344,9 +346,9 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
           validation[s+1,,,c("obsMaxWetSpell","obsMaxDrySpell")] <- NA
           validation[s+1,,,c("prdMaxWetSpell","prdMaxDrySpell")] <- NA
         }        
-        validation[s+1,,,c("WetSpell50","DrySpell50")] <- validation[s+1,,,c("obsWetSpell50","obsDrySpell50")] - validation[s+1,,,c("prdWetSpell50","prdDrySpell50")]
-        validation[s+1,,,c("WetSpell90","DrySpell90")] <- validation[s+1,,,c("obsWetSpell90","obsDrySpell90")] - validation[s+1,,,c("prdWetSpell90","prdDrySpell90")]
-        validation[s+1,,,c("MaxWetSpell","MaxDrySpell")] <- validation[s+1,,,c("obsMaxDrySpell","obsMaxWetSpell")] - validation[s+1,,,c("prdMaxWetSpell","prdMaxDrySpell")]
+        validation[s+1,,,c("WetSpell50","DrySpell50")] <- validation[s+1,,,c("prdWetSpell50","prdDrySpell50")] - validation[s+1,,,c("obsWetSpell50","obsDrySpell50")]
+        validation[s+1,,,c("WetSpell90","DrySpell90")] <- validation[s+1,,,c("prdWetSpell90","prdDrySpell90")] - validation[s+1,,,c("obsWetSpell90","obsDrySpell90")]
+        validation[s+1,,,c("MaxWetSpell","MaxDrySpell")] <- validation[s+1,,,c("prdMaxWetSpell","prdMaxDrySpell")] - validation[s+1,,,c("obsMaxDrySpell","obsMaxWetSpell")]
       }else if(sc=="obsWWProb"){
         # includes obsWWProb prdWWProb WWProb
         if(s>0){
@@ -356,7 +358,7 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
             scoAg[m,] <- getFreqWW(prd$Data[m,iTObs,], pr.threshold)
           }
           validation[s+1,,,"prdWWProb"] <- apply(scoAg,c(2),mean,na.rm=TRUE)
-          validation[s+1,,,"WWProb"] <- validation[s+1,,,"obsWWProb"] / validation[s+1,,,"prdWWProb"]
+          validation[s+1,,,"WWProb"] <- validation[s+1,,,"prdWWProb"] / validation[s+1,,,"obsWWProb"]
         }
       }else if(sc=="obsDWProb"){
         # includes obsDWProb prdDWProb DWProb
@@ -367,7 +369,7 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
             scoAg[m,] <- getFreqDW(prd$Data[m,iTObs,], pr.threshold)
           }
           validation[s+1,,,"prdDWProb"] <- apply(scoAg,c(2),mean,na.rm=TRUE)
-          validation[s+1,,,"DWProb"] <- validation[s+1,,,"obsDWProb"] / validation[s+1,,,"prdDWProb"]
+          validation[s+1,,,"DWProb"] <- validation[s+1,,,"prdDWProb"] / validation[s+1,,,"obsDWProb"]
         }
       }
     }
