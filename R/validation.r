@@ -41,10 +41,21 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
     prd$Data = auxData
     remove(auxData)
   }
-  
   obj <- getIntersect(obs,prd)
   obs <- obj$obs
   prd <- obj$prd
+
+  dimPrd <- dim(prd$Data)
+  if(length(dimPrd)==2){
+    # add dummy member dimension
+    auxData = dim(prd$Data)
+    auxData <- array(data = NA, dim = c(1,dimPrd))
+    auxData[1,,] = prd$Data
+    attr(auxData,"dimensions") = c("member",attr(prd$Data,"dimensions"))
+    prd$Data = auxData
+    remove(auxData)
+  }
+
   vectorialDates <- getVectorialDates(obs)
   yo <- vectorialDates[,1]
   mo <- vectorialDates[,2]
