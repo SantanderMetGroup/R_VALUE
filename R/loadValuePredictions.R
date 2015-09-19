@@ -61,7 +61,7 @@ loadValuePredictions <- function(stationObj, predictions.file, tz = "", na.strin
             con <- unz(dataset, zipFileContents[1])
             header <- readLines(con, n = 1)
             close.connection(con)
-            header <- gsub("\\s", "", header)
+            header <- gsub("\\s|\"", "", header)
             header <- unlist(strsplit(header, split = ","))
             colNums <- match(header, stids)
             colNums <- which(!is.na(colNums))
