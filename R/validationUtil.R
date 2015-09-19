@@ -548,7 +548,7 @@ getWDsld <- function(data, threshold, INDEX = 1:dim(data)[1]){
 
 #' @title Mae
 #' @description Get mean absolute error
-#' @author Daniel San-Martín \email{daniel@@predictia.es}
+#' @author Daniel San-Mart\'in \email{daniel@@predictia.es}
 #' @export
 #' @keywords internal
 
@@ -560,7 +560,7 @@ getMae <- function(obs, prd, MARGIN){
 
 #' @title Correlation
 #' @description Get correlation
-#' @author Daniel San-Martín \email{daniel@@predictia.es}
+#' @author Daniel San-Mart\'in \email{daniel@@predictia.es}
 #' @export
 #' @keywords internal
 

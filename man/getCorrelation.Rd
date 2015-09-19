@@ -10,7 +10,7 @@ getCorrelation(o, p, MARGIN, method)
 Get correlation
 }
 \author{
-Daniel San-Martín \email{daniel@predictia.es}
+Daniel San-Mart\'in \email{daniel@predictia.es}
 }
 \keyword{internal}
 

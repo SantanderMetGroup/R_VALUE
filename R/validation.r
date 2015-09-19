@@ -2,7 +2,7 @@
 #' 
 #' @description Function to compute VALUE indices and scores for each variable.
 #'
-#' @author S. Herrera, J. Bedia, D. San-Martín
+#' @author S. Herrera, J. Bedia, D. San-Mart\'in
 #' 
 #' @param obs A field or station data containing the observed climate data
 #' @param prd A field containing the simulated climate by the model

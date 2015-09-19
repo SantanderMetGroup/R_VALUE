@@ -41,6 +41,6 @@ valObject <- validation(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pr
 }
 }
 \author{
-S. Herrera, J. Bedia, D. San-Martín
+S. Herrera, J. Bedia, D. San-Mart\'in
 }
 
