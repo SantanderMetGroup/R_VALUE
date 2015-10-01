@@ -50,6 +50,8 @@ loadValuePredictions <- function(stationObj, predictions.file, tz = "", na.strin
       # Multimember case, ZIP file
       if (grepl("\\.zip$", dataset)) {
             zipFileContents <- unzip(dataset, list = TRUE)$Name
+            present.files <- sapply(zipFileContents, function(zipFileContent) length(readLines(unz(dataset, zipFileContent), n = 1)) > 0)
+            zipFileContents  <- zipFileContents[present.files]
             n.members <- length(zipFileContents)
             timeString <- read.csv(unz(dataset, zipFileContents[1]), colClasses = "character")[ , 1]
             timeDates <- string2date(timeString, tz)
