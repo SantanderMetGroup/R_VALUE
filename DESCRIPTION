@@ -9,8 +9,8 @@ Imports:
     evd
 Type: Package
 Title: Climate data validation in the framework of the COST action VALUE
-Version: 0.0-2
-Date: 19-Sep-2015
+Version: 0.0-3
+Date: 06-Oct-2015
 Authors@R: as.person(c(
     "Predictia Intelligent Data Solutions [aut]",
     "Joaquin Bedia <bediaj@unican.es> [ctb]",
