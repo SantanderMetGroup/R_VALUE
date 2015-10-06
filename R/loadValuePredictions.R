@@ -87,26 +87,25 @@ loadValuePredictions <- function(stationObj, predictions.file, tz = "", na.strin
             header <- unlist(strsplit(header, split = ","))
             colNums <- match(header, stids)
             colNums <- which(!is.na(colNums))
-            # colNums <- colNums[!is.na(colNums)]
             aux <- as.matrix(read.csv(dataset, na.strings = na.strings)[timePars$timeInd, colNums])
       }
       # Set the dimensions attribute
-      if (length(dim(aux)) == 2) {
-            dimensions <- c("time", "station")
+      dimensions <- if (length(dim(aux)) == 2) {
+            c("time", "station")
       } else {
-            dimensions <- c("member", "time", "station")
+            c("member", "time", "station")
       }
       aux[which(aux == -9999)] <- NA
       aux <- unname(aux) 
       attr(aux, "dimensions") <- dimensions
       stationObj$Data <- aux
       stationObj$Dates <- timeBoundsValue(timePars$timeDates, tz)
-      colNums <- colNums-1
-      stationObj$xyCoords <- stationObj$xyCoords[colNums,]
-      stationObj$Metadata$station_id <- stationObj$Metadata$station_id[colNums]
-      stationObj$Metadata$name <- stationObj$Metadata$name[colNums]
-      stationObj$Metadata$altitude <- stationObj$Metadata$altitude[colNums]
-      stationObj$Metadata$source <- stationObj$Metadata$source[colNums]
+      ind.st <- match(header[-1], stationObj$Metadata$station_id)
+      stationObj$xyCoords <- stationObj$xyCoords[ind.st,]
+      stationObj$Metadata$station_id <- stationObj$Metadata$station_id[ind.st]
+      stationObj$Metadata$name <- stationObj$Metadata$name[ind.st]
+      stationObj$Metadata$altitude <- stationObj$Metadata$altitude[ind.st]
+      stationObj$Metadata$source <- stationObj$Metadata$source[ind.st]
       attr(stationObj, "datatype") <- "predictions"
       return(stationObj)
 }
