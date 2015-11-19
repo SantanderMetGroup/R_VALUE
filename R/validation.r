@@ -74,9 +74,10 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
   if ((any(grepl(obs$Variable$varName,c("tas","mean temperature","tmean"))))){
     score = c("obsMean","prdMean","Mean")
     score = c(score,"obsVar","prdVar","Var")
+    score = c(score,"obsVar_det","prdVar_det","Var_det")
     score = c(score,"obsSkewness","prdSkewness","Skewness")
     score = c(score,"cmIndex")
-    score = c(score,"r")
+    score = c(score,"r","r_det")
     score = c(score,"MAE")
     score = c(score,"obsACF1","obsACF2","obsACF3","prdACF1","prdACF2","prdACF3","ACF1","ACF2","ACF3")
     score = c(score,"obsT98p","prdT98p","T98p")
@@ -95,9 +96,10 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
   if ((any(grepl(obs$Variable$varName,c("tasmax","maximum temperature","tmax"))))){
     score = c("obsMean","prdMean","Mean")
     score = c(score,"obsVar","prdVar","Var")
+    score = c(score,"obsVar_det","prdVar_det","Var_det")
     score = c(score,"obsSkewness","prdSkewness","Skewness")
     score = c(score,"cmIndex")
-    score = c(score,"r")
+    score = c(score,"r","r_det")
     score = c(score,"MAE")
     score = c(score,"obsACF1","obsACF2","obsACF3","prdACF1","prdACF2","prdACF3","ACF1","ACF2","ACF3")
     score = c(score,"obsT98p","prdT98p","T98p")
@@ -116,9 +118,10 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
   if ((any(grepl(obs$Variable$varName,c("tasmin","minimum temperature","tmin"))))){
     score = c("obsMean","prdMean","Mean")
     score = c(score,"obsVar","prdVar","Var")
+    score = c(score,"obsVar_det","prdVar_det","Var_det")
     score = c(score,"obsSkewness","prdSkewness","Skewness")
     score = c(score,"cmIndex")
-    score = c(score,"r")
+    score = c(score,"r","r_det")
     score = c(score,"MAE")
     score = c(score,"obsACF1","obsACF2","obsACF3","prdACF1","prdACF2","prdACF3","ACF1","ACF2","ACF3")
     score = c(score,"obsT98p","prdT98p","T98p")
@@ -137,9 +140,10 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
   if (any(grepl(obs$Variable$varName,c("pr","tp","precipitation","precip")))){
     score = c("obsMean","prdMean","Mean")
     score = c(score,"obsVar","prdVar","Var")
+    score = c(score,"obsVar_det","prdVar_det","Var_det")
     score = c(score,"obsSkewness","prdSkewness","Skewness")
     score = c(score,"cmIndex")
-    score = c(score,"r")
+    score = c(score,"r","r_det")
     score = c(score,"MAE")
     score = c(score,"obsACF1","obsACF2","obsACF3","prdACF1","prdACF2","prdACF3","ACF1","ACF2","ACF3")
     score = c(score,"obsR01","prdR01","R01")
@@ -186,6 +190,11 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
         scoAg <- getVar(prd$Data[,iTObs,,drop = F], c(1,3))
         validation[s+1,,,"prdVar"] <- apply(scoAg,c(2),mean,na.rm=TRUE)
         validation[s+1,,,"Var"] <- validation[s+1,,,"prdVar"] / validation[s+1,,,"obsVar"]
+      }else if(sc=="obsVar_det"){
+        # includes obsVar_det prdVar_det Var_det
+        validation[s+1,,,"obsVar_det"] <- getVar(obs$Data[iTObs,], obs.station.index)
+        validation[s+1,,,"prdVar_det"] <- getVar(prdAg, c(2))
+        validation[s+1,,,"Var_det"] <- validation[s+1,,,"prdVar_det"] / validation[s+1,,,"obsVar_det"]
       }else if(sc=="obsSkewness"){
         # includes obsSkewness prdSkewness Skewness
         validation[s+1,,,"obsSkewness"] <- getSkew(obs$Data[iTObs,], obs.station.index)
@@ -199,8 +208,13 @@ validation <- function(obs, prd, lag.max = 3, lowVarPeriod = 1, Nbins = 100, pro
           scoAg[m,] <- getCM(obs$Data[iTObs,], prd$Data[m,iTObs,], Nbins = Nbins)
         }
         validation[s+1,,,"cmIndex"] <- apply(scoAg,c(2),mean,na.rm=TRUE)
+      }else if(sc=="r_det"){
+        validation[s+1,,,"r_det"] <- getCorrelation(obs$Data[iTObs,],prdAg,c(2),correlationMethod)
       }else if(sc=="r"){
-        validation[s+1,,,"r"] <- getCorrelation(obs$Data[iTObs,],prdAg,c(2),correlationMethod)
+        for (m in 1:length(realizations)){
+          scoAg[m,] <- getCorrelation(obs$Data[iTObs,],prd$Data[m,iTObs,],c(2),correlationMethod)
+        }
+        validation[s+1,,,"r"] <- apply(scoAg,c(2),mean,na.rm=TRUE)
       }else if(sc=="MAE"){
         for (m in 1:length(realizations)){
           scoAg[m,] <- getMae(obs$Data[iTObs,],prd$Data[m,iTObs,],c(2))
