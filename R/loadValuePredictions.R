@@ -121,12 +121,9 @@ loadValuePredictions <- function(stationObj, predictions.file, tz = "", na.strin
       attr(aux, "dimensions") <- dimensions
       stationObj$Data <- aux
       stationObj$Dates <- timeBoundsValue(timePars$timeDates, tz)
-      ind.st <- match(header[-1], stationObj$Metadata$station_id)
-      stationObj$xyCoords <- stationObj$xyCoords[ind.st,]
-      stationObj$Metadata$station_id <- stationObj$Metadata$station_id[ind.st]
-      stationObj$Metadata$name <- stationObj$Metadata$name[ind.st]
-      stationObj$Metadata$altitude <- stationObj$Metadata$altitude[ind.st]
-      stationObj$Metadata$source <- stationObj$Metadata$source[ind.st]
+      ind.st <- na.omit(match(header[-1], stationObj$Metadata$station_id))
+      stationObj$xyCoords <- stationObj$xyCoords[ind.st, ]
+      stationObj$Metadata <- lapply(1:length(stationObj$Metadata), function(x) stationObj$Metadata[[x]][ind.st])
       attr(stationObj, "datatype") <- "predictions"
       return(stationObj)
 }
