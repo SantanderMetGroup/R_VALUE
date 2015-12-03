@@ -1,13 +1,30 @@
+#     loadGridData.R Load a user-defined spatio-temporal slice from a gridded dataset
+#     
+#     Copyright (C) 2015 Santander Meteorology Group (http://www.meteo.unican.es)
+#
+#     This program is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+# 
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+# 
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#' 
 #' @title Load VALUE predictions data
 #' 
 #' @description Load predictions data, either deterministic (one single txt file) or stochastic (several
 #'  realizations stored in sepparate txt files, bundled in a single zip file).
 #' 
 #' @param stationObj A station data object returned by \code{\link{loadValueStations}}. See details.
-#' @param predictions.file path to the file (either text or zip) containing the predictions.
+#' @param predictions.file Path to the file (either text or zip) containing the predictions.
 #' @param tz Optional. A time zone specification to be used for the conversion of dates. See more details in 
 #' \code{\link{loadValueStations}}.
-#' @param na.strings Optional. a character vector of strings which are to be interpreted as \code{\link{NA}} values.
+#' @param na.strings Optional. A character vector of strings which are to be interpreted as \code{\link{NA}} values.
 #'  Blank fields are also considered to be missing values in logical, integer, numeric and complex fields. This argument
 #'  is passed to read.csv. Note that numeric values of -9999 will be also coerced to NAs.
 #' 
@@ -50,7 +67,11 @@ loadValuePredictions <- function(stationObj, predictions.file, tz = "", na.strin
       # Multimember case, ZIP file
       if (grepl("\\.zip$", dataset)) {
             zipFileContents <- unzip(dataset, list = TRUE)$Name
-            present.files <- sapply(zipFileContents, function(zipFileContent) length(readLines(unz(dataset, zipFileContent), n = 1)) > 0)
+            present.files <- sapply(zipFileContents, function(zipFileContent) {
+                  con <- unz(dataset, zipFileContent)
+                  on.exit(close.connection(con))
+                  length(readLines(con, n = 1)) > 0
+            })
             zipFileContents  <- zipFileContents[present.files]
             n.members <- length(zipFileContents)
             timeString <- read.csv(unz(dataset, zipFileContents[1]), colClasses = "character")[ , 1]
@@ -67,9 +88,9 @@ loadValuePredictions <- function(stationObj, predictions.file, tz = "", na.strin
             header <- unlist(strsplit(header, split = ","))
             colNums <- match(header, stids)
             colNums <- which(!is.na(colNums))
-            # colNums <- colNums[!is.na(colNums)]
             member.list <- lapply(1:n.members, function(x) {
-                  read.csv(unz(dataset, zipFileContents[x]), na.string = na.strings, strip.white = TRUE)[timePars$timeInd, colNums]
+                  con <- unz(dataset, zipFileContents[x])
+                  read.csv(con, na.string = na.strings, strip.white = TRUE)[timePars$timeInd, colNums]
             })
             aux <- drop(do.call("abind", c(member.list, along = -1)))
             member.list <- NULL
