@@ -123,10 +123,8 @@ loadValuePredictions <- function(stationObj, predictions.file, tz = "", na.strin
       stationObj$Dates <- timeBoundsValue(timePars$timeDates, tz)
       ind.st <- na.omit(match(header[-1], stationObj$Metadata$station_id))
       stationObj$xyCoords <- stationObj$xyCoords[ind.st, ]
-      l <- lapply(1:length(stationObj$Metadata), function(x) stationObj$Metadata[[x]][ind.st])
-      names(l) <- names(stationObj$Metadata)
-      stationObj$Metadata <- l
-      l <- NULL
+      stationObj$Metadata <- sapply(names(stationObj$Metadata), function(x) stationObj$Metadata[[x]][ind.st],
+                                    USE.NAMES = TRUE, simplify = FALSE)
       attr(stationObj, "datatype") <- "predictions"
       return(stationObj)
 }
