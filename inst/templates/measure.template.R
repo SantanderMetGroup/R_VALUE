@@ -7,6 +7,7 @@
 #' whereas others are computed upon previouly computed indices (e.g. mean bias).
 #' @return A scaler or a vector corresponding to the measure value(s).
 #' @export
+#' @importFrom package function # OPTIONAL IN CASE OF PACKAGE DEPENDENCIES. Remove otherwise.
 #' @family validation
 #' @author corresponding author \email{author@@email.com}, author2, ...
 #' @examples \dontrun{

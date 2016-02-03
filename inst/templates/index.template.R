@@ -9,6 +9,7 @@
 #'  \code{"%Y-%m-%d %H:%M:%S"}. See \code{\link{srtptime}} for further details on date formatting. 
 #' @author corrresponding author \email{author@@email.com}, author2, ...
 #' @export
+#' @importFrom package function # OPTIONAL IN CASE OF PACKAGE DEPENDENCIES. Remove otherwise.
 #' @examples \dontrun{
 #' # Observed precipitation in Braganca:
 #' data(precipIberiaECA)
