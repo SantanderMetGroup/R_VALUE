@@ -1,4 +1,4 @@
-#' @title preprocess.value
+#' @title preprocessVALUE
 #' @description Preprocessing of input data for index calculation routines
 #' @param obs A time series (vector) of observations
 #' @param pred A time series (vector) of predictions
@@ -20,7 +20,7 @@
 #' str(a)
 #' }
 
-preprocess.value <- function(obs, pred, dates.obs, dates.pred, season = NULL, na.prop = .25) {
+preprocessVALUE <- function(obs, pred, dates.obs, dates.pred, season = NULL, na.prop = .25) {
       # Temporal matching
       ind.obs <- which(is.element(dates.obs, dates.pred))
       ind.pred <- which(is.element(dates.pred, dates.obs))
