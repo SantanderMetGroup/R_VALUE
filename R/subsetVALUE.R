@@ -102,10 +102,6 @@ subsetVALUE.members <- function(valueObj, members = NULL) {
 #'@keywords internal
 #'@importFrom abind asub
 
-# years=1981:2000
-# years=1995
-# valueObj <- obs
-
 subsetVALUE.years <- function(valueObj, years = NULL) {
       dimNames <- attr(valueObj$Data, "dimensions")
       all.years <- getYearsAsINDEX(valueObj)
