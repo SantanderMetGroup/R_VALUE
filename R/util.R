@@ -3,9 +3,7 @@
 #' @param obj Any object extending the station or field classes
 #' @return An integer vector with the season
 #' @author juaco
-#' @export
 #' @keywords internal
-
 
 getSeason <- function(obj) {
       aux <- as.POSIXlt(obj$Dates$start)$mon + 1      
@@ -30,8 +28,6 @@ getSeason <- function(obj) {
 #' The function should no be used to extract the actual years vector
 #' @author juaco
 #' @keywords internal
-#' @export
-
 
 getYearsAsINDEX <- function(obj) {
       season <- getSeason(obj)
@@ -53,24 +49,15 @@ getYearsAsINDEX <- function(obj) {
 
 
 #' @title POSIXlt conversion from character 
-#' 
 #' @description Converts the date codes of the Value format to \code{"POSIXlt"}
-#' 
 #' @param timeString Date vector as stored in VALUE files, previously coerced to character
 #' @param tz Time zone. See \code{\link{loadValueStations}}
-#' 
 #' @return A POSIXlt vector of the same length of the input
-#' 
 #' @details Currently the VALUE format is intended for daily data of the form YYYMMDD. However,
 #'  the function also considers the possibility of subdaily data if hourly data are introduced in
 #'  the form YYYYMMDDHH, eading to a string of 10 characters.
-#'  
-#'  @export
-#'  
 #'  @keywords internal
-#'  
 #'  @author juaco
-#' 
 
 string2date <- function(timeString, tz = tz) {
       timeString = gsub("^\\s+|\\s+$", "", timeString)
@@ -92,8 +79,6 @@ string2date <- function(timeString, tz = tz) {
 #' @param tz Time zone
 #' @keywords internal
 #' @return A list with components start and end, of POSIXct dates
-#' @export
-#' 
 
 timeBoundsValue <- function(timeDates, tz) {
       varTimeStep <- difftime(timeDates[2], timeDates[1])

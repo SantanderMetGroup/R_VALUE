@@ -21,11 +21,7 @@ Converts the date codes of the Value format to \code{"POSIXlt"}
 Currently the VALUE format is intended for daily data of the form YYYMMDD. However,
  the function also considers the possibility of subdaily data if hourly data are introduced in
  the form YYYYMMDDHH, eading to a string of 10 characters.
- 
- @export
- 
  @keywords internal
- 
  @author juaco
 }
 
