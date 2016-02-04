@@ -2,7 +2,7 @@
 #' @description Function to compute the 1/prob return value (left tail). 
 #' @author Neyko Neykov \email{neyko.neykov@@meteo.bg}, J. Bedia, D. San-Mart\'in, S. Herrera
 #' @param ts  A vector containing the data
-#' @param prob  Return period considered. Defauñt to 20.
+#' @param prob  Return period considered. Default to 20.
 #' @param INDEX A Vector defining the aggregation periods (passed to \code{tapply}). No aggregation is performed by default.
 #' @return Return value for the lower tail
 #' @export

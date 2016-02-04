@@ -4,31 +4,25 @@
 \alias{measure.cor}
 \title{Correlation}
 \usage{
-measure.cor(obs, prd, method = c("pearson", "kendall", "spearman"))
+measure.cor(indexObs = NULL, indexPrd = NULL, obs = NULL, prd = NULL,
+  method = c("pearson", "kendall", "spearman"))
 }
 \arguments{
-\item{obs}{Vector with the observed time series.}
+\item{indexObs}{index computed from the observations}
 
-\item{prd}{Vector with the predicted time series.}
+\item{indexPrd}{index computed from the predictions}
+
+\item{obs}{Mean value for the observed series or a vector with the observed time series.}
+
+\item{prd}{Mean value for the predicted series or a vector with the predicted time series.}
 
 \item{method}{Type of correlation applied. Options: "pearson", "kendall" and "spearman".}
-
-\item{...}{optional parameters}
 }
 \value{
 A float number corresponding to the correlation coefficient of choice between the predicted and observed series.
 }
 \description{
 Function to compute the temporal correlation between the observed and predicted time series.
-}
-\examples{
-\dontrun{
-# Correlation Braganca:
-data(precipIberiaECA)
-obs <- precipIberiaECA$observations$Data[,1]
-prd <- precipIberiaECA$predictions$Data[,1]
-measure.cor(obs, prd, method = "spearman")
-}
 }
 \author{
 Daniel San-Mart\'in \email{daniel@predictia.es}, J. Bedia, D. San-Mart\'in, S. Herrera

@@ -1,6 +1,8 @@
 #' @title Cramer von Misses
 #' @description Function to compare the observed and predicted distribution using the Cramer von Misses index.
 #' @author Ole Roessler \email{ole.roessler@@giub.unibe.ch}, J. Bedia, D. San-Mart\'in, S. Herrera
+#' @param indexObs index computed from the observations
+#' @param indexPrd index computed from the predictions
 #' @param obs Vector of observations
 #' @param prd Vector os predictions
 #' @param Nbins Number of bins used for discretization. Default to 100.
@@ -8,15 +10,9 @@
 #' @return List with the Cramer von Misses index (\code{CvM}), the p-value (\code{pvalue}) of the test 
 #' and the maximum absolute difference between both the observed and predicted distributions (\code{KSdiff}).
 #' @export
-#' @examples \dontrun{
-#' # Cramer von Misses test for Braganca:
-#' data(precipIberiaECA)
-#' obs <- precipIberiaECA$observations$Data[,1]
-#' prd <- precipIberiaECA$predictions$Data[,1]
-#' measure.cm(obs,prd)
-#' }
 
-measure.cm <- function(obs, prd, Nbins = 100) {
+
+measure.cm <- function(indexObs = NULL, indexPrd = NULL, obs = NULL, prd = NULL, Nbins = 100) {
       if (length(obs) <= 1) {
             stop("Observed time series is needed")
       }

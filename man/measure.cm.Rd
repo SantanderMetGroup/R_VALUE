@@ -7,9 +7,14 @@
 L. Sachs and J. Hedderich (2006). Angewandte Statistik. Springer.
 }
 \usage{
-measure.cm(obs, prd, Nbins = 100)
+measure.cm(indexObs = NULL, indexPrd = NULL, obs = NULL, prd = NULL,
+  Nbins = 100)
 }
 \arguments{
+\item{indexObs}{index computed from the observations}
+
+\item{indexPrd}{index computed from the predictions}
+
 \item{obs}{Vector of observations}
 
 \item{prd}{Vector os predictions}
@@ -22,15 +27,6 @@ and the maximum absolute difference between both the observed and predicted dist
 }
 \description{
 Function to compare the observed and predicted distribution using the Cramer von Misses index.
-}
-\examples{
-\dontrun{
-# Cramer von Misses test for Braganca:
-data(precipIberiaECA)
-obs <- precipIberiaECA$observations$Data[,1]
-prd <- precipIberiaECA$predictions$Data[,1]
-measure.cm(obs,prd)
-}
 }
 \author{
 Ole Roessler \email{ole.roessler@giub.unibe.ch}, J. Bedia, D. San-Mart\'in, S. Herrera

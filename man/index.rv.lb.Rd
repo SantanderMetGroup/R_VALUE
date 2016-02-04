@@ -9,7 +9,7 @@ index.rv.lb(ts, prob = 20, INDEX = 1:length(ts))
 \arguments{
 \item{ts}{A vector containing the data}
 
-\item{prob}{Return period considered. Defauñt to 20.}
+\item{prob}{Return period considered. Default to 20.}
 
 \item{INDEX}{A Vector defining the aggregation periods (passed to \code{tapply}). No aggregation is performed by default.}
 }

@@ -4,9 +4,13 @@
 \alias{measure.mae}
 \title{Mean absolute error}
 \usage{
-measure.mae(obs, prd)
+measure.mae(indexObs = NULL, indexPrd = NULL, obs = NULL, prd = NULL)
 }
 \arguments{
+\item{indexObs}{index computed from the observations}
+
+\item{indexPrd}{index computed from the predictions}
+
 \item{obs}{A vector of observations}
 
 \item{prd}{A vector of predictions}
@@ -16,15 +20,6 @@ A float number corresponding to the mean absolute difference between the predict
 }
 \description{
 Function to compute the mean absolute difference between the observed and predicted time series.
-}
-\examples{
-\dontrun{
-# Mean absolute error of Braganca:
-data(precipIberiaECA)
-obs <- precipIberiaECA$observations$Data[,1]
-prd <- precipIberiaECA$predictions$Data[,1]
-measure.mae(obs,prd)
-}
 }
 \author{
 Daniel San-Mart\'in \email{daniel@predictia.es}, J. Bedia, D. San-Mart\'in, S. Herrera

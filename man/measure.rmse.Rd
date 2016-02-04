@@ -4,9 +4,13 @@
 \alias{measure.rmse}
 \title{Root mean square error}
 \usage{
-measure.rmse(obs, prd)
+measure.rmse(indexObs = NULL, indexPrd = NULL, obs = NULL, prd = NULL)
 }
 \arguments{
+\item{indexObs}{index computed from the observations}
+
+\item{indexPrd}{index computed from the predictions}
+
 \item{obs}{A vector of observations}
 
 \item{prd}{A vector of predictions}
@@ -16,15 +20,6 @@ A float number corresponding to the root mean square error between the predicted
 }
 \description{
 Function to compute the root mean square error between the observed and predicted time series.
-}
-\examples{
-\dontrun{
-# Root mean square error of Braganca:
-data(precipIberiaECA)
-obs <- precipIberiaECA$observations$Data[,1]
-prd <- precipIberiaECA$predictions$Data[,1]
-measure.rmse(obs, prd)
-}
 }
 \author{
 Daniel San-Mart\'in \email{daniel@predictia.es}, J. Bedia, D. San-Mart\'in, S. Herrera
