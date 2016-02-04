@@ -4,15 +4,15 @@
 \alias{index.acf}
 \title{Autocorrelation function}
 \usage{
-index.acf(ts, lag.max = 3)
+index.acf(ts, lag.max = 1)
 }
 \arguments{
 \item{ts}{A vector containing the time series}
 
-\item{lag.max}{Maximum lag considered for acf calculation. Default \code{lag.max = 3}.}
+\item{lag.max}{Maximum lag considered for acf calculation. Default \code{lag.max = 1}.}
 }
 \value{
-A vector with the estimated autocorrelation values.
+A scalar with the estimated autocorrelation for that lag.
 }
 \description{
 Function to compute the estimated autocorrelation function at pre-defined lags.
@@ -22,7 +22,7 @@ Function to compute the estimated autocorrelation function at pre-defined lags.
 # Autocorrelation of Braganca:
 data(precipIberiaECA)
 obs <- precipIberiaECA$observations$Data[,1]
-plot(index.acf(obs, lag.max = 10), type = "h")
+index.acf(obs, lag.max = 2)
 }
 }
 \author{

@@ -4,7 +4,7 @@
 \alias{measure.bias}
 \title{Bias}
 \usage{
-measure.bias(obs, prd)
+measure.bias(indexObs = NULL, indexPrd = NULL, obs = NULL, prd = NULL)
 }
 \arguments{
 \item{obs}{Mean value for the observed series or a vector with the observed time series.}

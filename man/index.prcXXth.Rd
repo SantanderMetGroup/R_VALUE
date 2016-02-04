@@ -4,7 +4,7 @@
 \alias{index.prcXXth}
 \title{Sample quantiles}
 \usage{
-index.prcXXth(ts, prob = seq(0, 1, 0.25), threshold = NULL)
+index.prcXXth(ts, prob = 0.25, threshold = NULL)
 }
 \arguments{
 \item{ts}{A vector containing the data}
@@ -27,7 +27,7 @@ data(precipIberiaECA)
 obs <- precipIberiaECA$observations$Data[,1]
 # 98th percentile
 prob <- 0.98
-# Default 
+# Default (Q1)
 index.prcXXth(obs)
 }
 }

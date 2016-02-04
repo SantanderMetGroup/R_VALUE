@@ -20,6 +20,6 @@
 #' }
 
 
-measure.bias <- function(obs,prd) {
-      index.mean(prd) - index.mean(obs)
+measure.bias <- function(indexObs = NULL, indexPrd = NULL, obs = NULL, prd = NULL) {
+      indexPrd - indexObs
 }

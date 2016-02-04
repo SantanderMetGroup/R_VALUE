@@ -14,11 +14,11 @@
 #' obs <- precipIberiaECA$observations$Data[,1]
 #' # 98th percentile
 #' prob <- 0.98
-#' # Default 
+#' # Default (Q1)
 #' index.prcXXth(obs)
 #' }
 
-index.prcXXth <- function(ts, prob = seq(0, 1, 0.25), threshold = NULL) {
+index.prcXXth <- function(ts, prob = .25, threshold = NULL) {
       if (!is.null(threshold)) ts[ts < threshold] <- NA
       quantile(ts, probs = prob, type = 7, na.rm = TRUE)
 }
