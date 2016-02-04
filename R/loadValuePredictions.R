@@ -1,4 +1,4 @@
-#     loadGridData.R Load a user-defined spatio-temporal slice from a gridded dataset
+#     loadValuePredictions.R Load a user-defined spatio-temporal slice from a VALUE predictions dataset
 #     
 #     Copyright (C) 2015 Santander Meteorology Group (http://www.meteo.unican.es)
 #
