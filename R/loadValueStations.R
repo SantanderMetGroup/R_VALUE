@@ -115,7 +115,7 @@ loadValueStations <- function(dataset, var, stationID = NULL, lonLim = NULL, lat
       ## Time dimension
       # TODO - fix potential MACOSX errors
       fileInd <- grep(paste(var, "\\.txt", sep = ""), zipFileContents)
-      if(length(fileInd) == 0) {
+      if (length(fileInd) == 0) {
             stop("[", Sys.time(),"] Variable requested not found")
       }
       timeString <- read.csv(unz(dataset, zipFileContents[fileInd]), colClasses = "character")[ ,1]
@@ -125,8 +125,8 @@ loadValueStations <- function(dataset, var, stationID = NULL, lonLim = NULL, lat
       ## missing data code
       vars <- read.csv(unz(dataset, zipFileContents[grep("variables", zipFileContents, ignore.case = TRUE)]))
       miss.col <- grep("missing_code", names(vars), ignore.case = TRUE)
-      if(length(miss.col) > 0) {
-            na.string <- vars[grep(var, vars[ , grep("variable_id", names(vars), ignore.case = TRUE)]), miss.col]
+      if (length(miss.col) > 0) {
+            na.string <- vars[grep(var, vars[ , grep("variable", names(vars), ignore.case = TRUE)]), miss.col]
             vars <- NULL
             miss.col <- NULL
       } else {
@@ -134,8 +134,8 @@ loadValueStations <- function(dataset, var, stationID = NULL, lonLim = NULL, lat
       }
       # Data retrieval
       message("[", Sys.time(), "] Loading data ...", sep = "")
-      trim <- function (x) gsub("^\\s+|\\s+$", "", x)
-      var.stids <- lapply(strsplit(readLines(unz(dataset, zipFileContents[fileInd]), 1), split = ", "),FUN=trim)
+      trim <- function(x) gsub("^\\s+|\\s+$", "", x)
+      var.stids <- lapply(strsplit(readLines(unz(dataset, zipFileContents[fileInd]), 1), split = ", "), FUN = trim)
       var.stids <- tail(unlist(var.stids), -1)
       closeAllConnections() 
       stInd.var <- match(stids, var.stids)
@@ -190,8 +190,10 @@ getLatLonDomainValueStations <- function(lonLim, latLim, lons, lats) {
             latInd <- which(lats >= latLim[1] & lats <= latLim[2])
             stInd <- intersect(lonInd, latInd)
       } else {
-            stInd <- which.min(sqrt((lons-lonLim)^2 + (lats-latLim)^2))
-            message("[", Sys.time(),"] Closest station located at ", round(min(sqrt((lons-lonLim)^2 + (lats-latLim)^2)), digits=4), " spatial units from the specified [lonLim,latLim] coordinate") 
+            stInd <- which.min(sqrt((lons - lonLim) ^ 2 + (lats - latLim) ^ 2))
+            message("[", Sys.time(),"] Closest station located at ", 
+                    round(min(sqrt((lons - lonLim) ^ 2 + (lats - latLim) ^ 2)), digits = 4),
+                    " spatial units from the specified [lonLim,latLim] coordinate") 
             
       }
       return(list("stInd" = stInd, "stCoords" = as.matrix(cbind(lons[stInd], lats[stInd]))))
@@ -236,16 +238,16 @@ getTimeDomainValueStations <- function(timeDates, season, years) {
       # Year-crossing seasons
       if (!identical(season, sort(season))) {
             if (years[1] == startYear) { 
-                  warning(paste("First forecast day in dataset: ", timeDates[1], ".\nRequested seasonal data for ", startYear," not available", sep=""))
+                  warning(paste("First forecast day in dataset: ", timeDates[1], ".\nRequested seasonal data for ", startYear," not available", sep = ""))
                   years <- years[-length(years)]
             } else {
                   years <- append(years[1] - 1, years)
             }
             timeInd <- which((timeDates$year + 1900) %in% years & (timeDates$mon + 1) %in% season)
             crossSeason <- which(c(1, diff(season)) < 0)
-            rm.ind <- which((timeDates$mon + 1) %in% season[1 : (crossSeason - 1)] & (timeDates$year + 1900) %in% years[length(years)])
+            rm.ind <- which((timeDates$mon + 1) %in% season[1:(crossSeason - 1)] & (timeDates$year + 1900) %in% years[length(years)])
             if (length(years) > 1) {
-                  rm.ind <- c(rm.ind, which((timeDates$mon + 1) %in% season[crossSeason : length(season)] & (timeDates$year + 1900) %in% years[1]))
+                  rm.ind <- c(rm.ind, which((timeDates$mon + 1) %in% season[crossSeason:length(season)] & (timeDates$year + 1900) %in% years[1]))
             }
             timeInd <- setdiff(timeInd, rm.ind)
       }else{
