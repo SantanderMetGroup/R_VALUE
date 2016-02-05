@@ -11,9 +11,9 @@ measure.bias(indexObs = NULL, indexPrd = NULL, obs = NULL, prd = NULL)
 
 \item{indexPrd}{index computed from the predictions}
 
-\item{obs}{Mean value for the observed series or a vector with the observed time series.}
+\item{obs}{A vector of observations}
 
-\item{prd}{Mean value for the predicted series or a vector with the predicted time series.}
+\item{prd}{A vector of predictions}
 }
 \value{
 A float number corresponding to the bias.

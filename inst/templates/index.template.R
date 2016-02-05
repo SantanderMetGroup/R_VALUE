@@ -1,7 +1,6 @@
 #' @title index.NameOfTheIndex
 #' @description Function to compute NameOfTheIndex index.
 #' @param ts A time series of the target variable
-#' @param dates Calendar dates corresponding to the time series records
 #' @param ... Further parameters particular to the index definition, if any (e.g., threshold, probability, etc.)
 #' @return Either a scalar or a vector depending on the index definition
 #' @details  It is assumed that the input time series do not have any missing values (these are filtered previously).
@@ -17,7 +16,7 @@
 #' index.nameOfTheIndex(obs)
 #' }
 
-index.NameOfTheIndex <- function(ts, dates, ...) {
+index.NameOfTheIndex <- function(ts, ...) {
       # Include the code needed to estimate the index
       return(index)
 }

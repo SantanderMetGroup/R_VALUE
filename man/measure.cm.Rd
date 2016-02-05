@@ -15,9 +15,9 @@ measure.cm(indexObs = NULL, indexPrd = NULL, obs = NULL, prd = NULL,
 
 \item{indexPrd}{index computed from the predictions}
 
-\item{obs}{Vector of observations}
+\item{obs}{A vector of observations}
 
-\item{prd}{Vector os predictions}
+\item{prd}{A vector of predictions}
 
 \item{Nbins}{Number of bins used for discretization. Default to 100.}
 }

@@ -1,10 +1,7 @@
 #' @title Root mean square error
 #' @description Function to compute the root mean square error between the observed and predicted time series.
 #' @author Daniel San-Mart\'in \email{daniel@@predictia.es}, J. Bedia, D. San-Mart\'in, S. Herrera
-#' @param indexObs index computed from the observations
-#' @param indexPrd index computed from the predictions
-#' @param obs A vector of observations
-#' @param prd A vector of predictions 
+#' @template templateMeasureParams
 #' @return A float number corresponding to the root mean square error between the predicted and observed series.
 #' @export
 

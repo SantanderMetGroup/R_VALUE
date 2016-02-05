@@ -1,7 +1,7 @@
 #' @title Autocorrelation function
 #' @description Function to compute the estimated autocorrelation function at pre-defined lags.
 #' @author Neyko Neykov \email{neyko.neykov@@meteo.bg}, J. Bedia, D. San-Mart\'in, S. Herrera
-#' @param ts A vector containing the time series
+#' @template templateIndexParams
 #' @param lag.max Maximum lag considered for acf calculation. Default \code{lag.max = 1}.
 #' @return A scalar with the estimated autocorrelation for that lag.
 #' @export

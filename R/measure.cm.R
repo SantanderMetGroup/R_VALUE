@@ -1,10 +1,7 @@
 #' @title Cramer von Misses
 #' @description Function to compare the observed and predicted distribution using the Cramer von Misses index.
 #' @author Ole Roessler \email{ole.roessler@@giub.unibe.ch}, J. Bedia, D. San-Mart\'in, S. Herrera
-#' @param indexObs index computed from the observations
-#' @param indexPrd index computed from the predictions
-#' @param obs Vector of observations
-#' @param prd Vector os predictions
+#' @template templateMeasureParams
 #' @param Nbins Number of bins used for discretization. Default to 100.
 #' @source L. Sachs and J. Hedderich (2006). Angewandte Statistik. Springer.  
 #' @return List with the Cramer von Misses index (\code{CvM}), the p-value (\code{pvalue}) of the test 

@@ -1,9 +1,6 @@
 #' @title Wrapper function to launch the validation
 #' @description Launches the VALUE validation framework according to the arguments passed by the 
 #' @author J. Bedia, D. San Martin
-#' @param target Character vector. Should indices be computed on observations (\code{"obs"}),
-#'  predictions (\code{"pred"}) or both (\code{c("obs","pred")})?. The latter is required for measure
-#'  calculation.
 #' @param metric Character vector.
 #' @param names Character vector of the same length than \code{metric}. Names of the indices/measures to be applied
 #' @param season Character vector defining the target season(s). Default to annual + 4 standard seasons.

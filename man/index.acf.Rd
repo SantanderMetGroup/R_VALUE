@@ -7,7 +7,7 @@
 index.acf(ts, lag.max = 1)
 }
 \arguments{
-\item{ts}{A vector containing the time series}
+\item{ts}{A vector containing the data}
 
 \item{lag.max}{Maximum lag considered for acf calculation. Default \code{lag.max = 1}.}
 }
