@@ -4,8 +4,7 @@
 \alias{preprocessVALUE}
 \title{preprocessVALUE}
 \usage{
-preprocessVALUE(obs, pred, dates.obs, dates.pred, season = NULL,
-  na.prop = 0.25)
+preprocessVALUE(obs, pred, dates.obs, dates.pred, na.prop)
 }
 \arguments{
 \item{obs}{A time series (vector) of observations}
@@ -16,9 +15,7 @@ preprocessVALUE(obs, pred, dates.obs, dates.pred, season = NULL,
 
 \item{dates.pred}{Calendar dates corresponding to the values in \code{pred}}
 
-\item{season}{Months to retain. Default to NULL (annual).}
-
-\item{na.prop}{Maximum allowable proportion of missing values (Default to 0.25).}
+\item{na.prop}{Maximum allowable proportion of missing values.}
 }
 \value{
 A list with preprocessed \code{obs}, \code{pred} and \code{dates}, as passed to the index.* routines

@@ -7,7 +7,7 @@
 wrapperFUN(metric = c("obs", "pred", "measure"), names = NULL,
   season = c("annual", "DJF", "MAM", "JJA", "SON"), aggr.type = c("before",
   "after"), aggr.fun = "mean", index.fun = NULL, measure.fun = NULL,
-  index.args = NULL, measure.args = NULL, o = o, p = p)
+  index.args = NULL, measure.args = NULL, o = o, p = p, na.prop = 0.9)
 }
 \arguments{
 \item{metric}{Character vector.}
@@ -32,6 +32,11 @@ Ignored for observations and deterministic predictions.}
 \item{o}{R object containing the observations as returned by \code{\link{loadValueStations}}.}
 
 \item{p}{R object containing the predictions as returned by \code{\link{loadValuePredictions}}.}
+
+\item{na.prop}{Maximum allowable proportion of missing data. Default to 0.9}
+}
+\value{
+A 3D array with labelled dimensions station, season and metric
 }
 \description{
 Launches the VALUE validation framework according to the arguments passed by the

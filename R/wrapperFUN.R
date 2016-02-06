@@ -13,6 +13,8 @@
 #' @param measure.args Same as \code{index.args} but for the measure function.
 #' @param o R object containing the observations as returned by \code{\link{loadValueStations}}. 
 #' @param p R object containing the predictions as returned by \code{\link{loadValuePredictions}}.
+#' @param na.prop Maximum allowable proportion of missing data. Default to 0.9
+#' @return A 3D array with labelled dimensions station, season and metric
 #' @importFrom abind abind
 #' @export
 
@@ -26,19 +28,23 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
                        index.args = NULL,
                        measure.args = NULL,
                        o = o,
-                       p = p) {
+                       p = p,
+                       na.prop = .9) {
       metric <- match.arg(arg = metric, choices = c("obs", "pred", "measure"), several.ok = TRUE)
       season <- match.arg(arg = season, choices = c("annual", "DJF", "MAM", "JJA", "SON"), several.ok = TRUE)
       aggr.type <- match.arg(arg = aggr.type, choices = c("before", "after"))
       suffix <- "\\.R$|\\.r$"
-      if (grepl(suffix, index.fun)) gsub(suffix, "", index.fun)
-      if (grepl(suffix, measure.fun)) gsub(suffix, "", measure.fun)
+      index.fun <- if (grepl(suffix, index.fun)) gsub(suffix, "", index.fun)
+      measure.fun <- if (grepl(suffix, measure.fun)) gsub(suffix, "", measure.fun)
+      message("[", Sys.time(), "] Intersecting obs and pred...")
       int <- getIntersect(o,p)
       o <- dimFix(int$obs)
       p <- dimFix(int$prd)
       int <- NULL
+      message("[", Sys.time(), "] OK")
       # Member aggregation (the array is re-assigned the member dimension after the aggregation)
       if (aggr.type == "before" & dim(p$Data)[1] > 1) {
+            message("[", Sys.time(), "] Aggregating members...")
             dimNames <- attr(p$Data, "dimensions")
             p$Data <- apply(p$Data,
                             MARGIN = grep("member", attr(p$Data, "dimensions"), invert = TRUE),
@@ -46,6 +52,7 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
             p$Data <- unname(abind(p$Data, NULL, along = 0))    
             attr(p$Data, "dimensions") <- dimNames
             attr(p$Data, "member.aggr.fun") <- aggr.fun
+            message("[", Sys.time(), "] OK")
       }
       n.st <- dim(o$Data)[3]
       n.mem <- dim(p$Data)[1]
@@ -55,8 +62,11 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
                          dimnames = list("station_id" = o$Metadata$station_id,
                                          "season" = season,
                                          "metric_name" = names))
+      attr(index.arr, "var") <- o$Variable$varName
       attr(index.arr, "aggr.type") <- aggr.type
+      attr(index.arr, "max.na.prop") <- na.prop
       for (i in 1:n.st) {
+            message("[", Sys.time(), "] Processing data for station \"", o$Metadata$station_id[i], "\"")
             st.o <- subsetVALUE(o, stationID = o$Metadata$station_id[i])
             st.p <- subsetVALUE(p, stationID = p$Metadata$station_id[i])
             for (j in 1:n.seas) {
@@ -68,57 +78,64 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
                                  "SON" = 9:11)
                   sea.o <- subsetVALUE(st.o, season = seas)
                   sea.p <- subsetVALUE(st.p, season = seas)
-                  st.o <- st.p <- NULL
                   # Vectorization
-                  dates.obs <- sea.o$Dates$start
                   obs <- as.matrix(drop(sea.o$Data))
+                  prd <- as.matrix(drop(sea.p$Data))
+                  prd <- if (n.mem > 1) t(prd)
+                  dates.obs <- sea.o$Dates$start
                   dates.pred <- sea.p$Dates$start
-                  prd <- t(as.matrix(drop(sea.p$Data))) 
                   sea.o <- sea.p <- NULL
-                  aux.list <- lapply(1:ncol(prd), function(x) preprocessVALUE(obs, prd[,x], dates.obs, dates.pred))
+                  # NA filter
+                  aux.list <- lapply(1:ncol(prd), function(x) preprocessVALUE(obs[,1], prd[,x], dates.obs, dates.pred, na.prop))
                   for (k in 1:n.metric) {
-                        ind <- grep(metric[k], names(aux.list[[1]]))
-                        if (length(ind) == 0) {# measure
-                              if (k > 1) {
-                                    indexObs <- index.arr[i,j,grep("^obs", attr(index.arr,"dimnames")$'metric_name')]      
-                                    indexPrd <- index.arr[i,j,grep("^pred", attr(index.arr,"dimnames")$'metric_name')]
-                              } else {
-                                    indexObs <- indexPrd <- NULL
-                              }
-                              aux <- rep(NA, n.mem)
-                              for (l in 1:n.mem) {  
-                                    arg.list <- list("indexObs" = indexObs,
-                                                     "indexPrd" = indexPrd,
-                                                     "obs" = aux.list[[l]]$obs,
-                                                     "prd" = aux.list[[l]]$pred)
-                                    if (!is.null(measure.args)) {
-                                          for (m in 1:length(measure.args)) {
-                                                arg.list[[length(arg.list) + 1]] <- measure.args[[m]]$value
-                                                names(arg.list)[length(arg.list)] <- measure.args[[m]]$key
-                                          }
+                        if (any(is.na(aux.list[[1]]$obs))) {
+                              index.arr[i,j,k] <- NA
+                        } else {
+                              ind <- grep(metric[k], names(aux.list[[1]]))
+                              if (length(ind) == 0) {# measure
+                                    if (k > 1) {
+                                          indexObs <- index.arr[i,j,grep("^obs", attr(index.arr,"dimnames")$'metric_name')]      
+                                          indexPrd <- index.arr[i,j,grep("^pred", attr(index.arr,"dimnames")$'metric_name')]
+                                    } else {
+                                          indexObs <- indexPrd <- NULL
                                     }
-                                    aux[l] <- do.call(measure.fun, args = arg.list)   
-                              }
-                              index.arr[i,j,k] <- mean(aux, na.rm = TRUE)
-                        } else {# index
-                              aux <- rep(NA, n.mem)
-                              for (l in 1:n.mem) {      
-                                    ind <- grep(metric[k], names(aux.list[[l]]))
-                                    arg.list <- list("ts" = aux.list[[l]][[ind]])
-                                    if (!is.null(index.args)) {
-                                          for (m in 1:length(index.args)) {
-                                                arg.list[[length(arg.list) + 1]] <- index.args[[m]]$value
-                                                names(arg.list)[length(arg.list)] <- index.args[[m]]$key
+                                    aux <- rep(NA, n.mem)
+                                    for (l in 1:n.mem) {
+                                          arg.list <- list("indexObs" = indexObs,
+                                                           "indexPrd" = indexPrd,
+                                                           "obs" = aux.list[[l]]$obs,
+                                                           "prd" = aux.list[[l]]$pred)
+                                          if (!is.null(measure.args)) {
+                                                for (m in 1:length(measure.args)) {
+                                                      arg.list[[length(arg.list) + 1]] <- measure.args[[m]]$value
+                                                      names(arg.list)[length(arg.list)] <- measure.args[[m]]$key
+                                                }
                                           }
+                                          aux[l] <- do.call(measure.fun, args = arg.list)   
                                     }
-                                    aux[l] <- do.call(index.fun, arg.list)
+                                    index.arr[i,j,k] <- mean(aux, na.rm = TRUE)
+                              } else {# index
+                                    aux <- rep(NA, n.mem)
+                                    for (l in 1:n.mem) {  
+                                          ind <- grep(metric[k], names(aux.list[[l]]))
+                                          arg.list <- list("ts" = aux.list[[l]][[ind]])
+                                          if (!is.null(index.args)) {
+                                                for (m in 1:length(index.args)) {
+                                                      arg.list[[length(arg.list) + 1]] <- index.args[[m]]$value
+                                                      names(arg.list)[length(arg.list)] <- index.args[[m]]$key
+                                                }
+                                          }
+                                          aux[l] <- do.call(index.fun, arg.list)
+                                    }
+                                    index.arr[i,j,k] <- mean(aux, na.rm = TRUE)
                               }
-                              index.arr[i,j,k] <- mean(aux, na.rm = TRUE)
                         }
                   }
                   aux.list <- NULL
             }
-      }      
+            st.o <- st.p <- NULL
+      }
+      return(index.arr)
 }
 
 
@@ -209,8 +226,7 @@ dimFix <- function(valueObj) {
 #' @param pred A time series (vector) of predictions
 #' @param dates.obs Calendar dates corresponding to the values in \code{obs}
 #' @param dates.pred Calendar dates corresponding to the values in \code{pred}
-#' @param season Months to retain. Default to NULL (annual).
-#' @param na.prop Maximum allowable proportion of missing values (Default to 0.25).
+#' @param na.prop Maximum allowable proportion of missing values.
 #' @details The function performs missing data filetring, temporal matching and (optionally) seasonal subsetting 
 #' @return A list with preprocessed \code{obs}, \code{pred} and \code{dates}, as passed to the index.* routines
 #' @keywords internal
@@ -226,7 +242,7 @@ dimFix <- function(valueObj) {
 #' str(a)
 #' }
 
-preprocessVALUE <- function(obs, pred, dates.obs, dates.pred, season = NULL, na.prop = .25) {
+preprocessVALUE <- function(obs, pred, dates.obs, dates.pred, na.prop) {
       # Temporal matching
       ind.obs <- which(is.element(dates.obs, dates.pred))
       ind.pred <- which(is.element(dates.pred, dates.obs))
@@ -234,26 +250,23 @@ preprocessVALUE <- function(obs, pred, dates.obs, dates.pred, season = NULL, na.
       obs <- obs[ind.obs]
       dates <- dates.obs[ind.obs]
       pred <- pred[ind.pred]
-      # Season filtering
-      if (!is.null(season)) {
-            if (any(!(season %in% 1:12))) stop("Ill-defined season")
-            mon.ind <- which((as.POSIXlt(dates)$mon + 1) %in% season)
-            obs <- obs[mon.ind]
-            pred <- pred[mon.ind]
-            dates <- dates[mon.ind]
-      }
       # NA filtering
       na.ind <- union(which(is.na(obs)), which(is.na(pred)))
       # Datos utiles
-      if  (length(na.ind) > 0) {
-            na.prop.data <- round(length(na.ind) / length(obs), 2)
-            if (na.prop.data > na.prop) {
-                  stop("Maximum allowable missing data proportion (", na.prop*100, "%) exceeded (", na.prop.data*100,"%)")
+      if (length(na.ind) == length(obs)) {
+            obs <- pred <- dates <- NA 
+      } else {
+            if  (length(na.ind) > 0) {
+                  na.prop.data <- round(length(na.ind) / length(obs), 2)
+                  if (na.prop.data > na.prop) {
+                        obs <- pred <- dates <- NA 
+                  } else {
+                        obs <- obs[-na.ind]
+                        pred <- pred[-na.ind]
+                        dates <- dates[-na.ind]
+                  }
             }
-            obs <- obs[-na.ind]
-            pred <- pred[-na.ind]
-            dates <- dates[-na.ind]
       }
-      return(list("obs" = obs, "pred" = pred, "dates" = dates))
+      list("obs" = obs, "pred" = pred, "dates" = dates)
 }
 
