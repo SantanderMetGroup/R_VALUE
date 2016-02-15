@@ -233,11 +233,12 @@ dimFix <- function(valueObj) {
       # Add fake member dimension to deterministic/obs
       if (!("member" %in% attr(valueObj$Data, "dimensions"))) {
             dimNames <- c("member", attr(valueObj$Data, "dimensions"))
-            valueObj$Data <- unname(abind(valueObj$Data, NULL, along = 0))    
+            valueObj$Data <- unname(abind(valueObj$Data, NULL, along = -1))    
             attr(valueObj$Data, "dimensions") <- dimNames
       }
       return(valueObj)
 }
+
 
 #' @title preprocessVALUE
 #' @description Preprocessing of input data for index calculation routines
