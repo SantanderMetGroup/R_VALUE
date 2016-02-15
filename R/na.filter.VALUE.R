@@ -1,4 +1,21 @@
-#' @title Remove missing data stations
+#     na.filter.VALUE.R Remove stations above a given proportion of missing data
+#     
+#     Copyright (C) 2016 Santander Meteorology Group (http://www.meteo.unican.es)
+#
+#     This program is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+# 
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+# 
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#' @title Remove stations above a given proportion of missing data
 #' @description Remove stations over a user-defined proportion of missing data from a R.VALUE multi-station object, 
 #' @param valueObj A VALUE R object, but see Details.
 #' @param max.na.prop Maximum allowed proportion of missing data (Default to 0, i.e., no missing values are allowed)
@@ -6,27 +23,8 @@
 #' @details The function assumes that all dimensions are present (i.e., function dimFix has been applied)
 #' @export
 #' @author J Bedia
-#' @example \dontrun{
-#' # Load ECA-VALUE-86 observational dataset
-#' dataset <- file.path(find.package("R.VALUE"),
-#'                      "example_datasets",
-#'                      "VALUE_ECA_86_v2.zip")
-#' obs <- loadValueStations(dataset, var = "tmin")
-#' attr(obs$Data, "dimensions")
-#' # Add fake member dimension for structural integrity
-#' obs2 <- dimFix(obs)
-#' attr(obs2$Data, "dimensions")
-#' dim(obs2$Data)
-#' # Retain stations without missing values (default)
-#' na.omit.obs <- na.omit.VALUE(obs2)      
-#' attributes(na.omit.obs) # 51 stations removed (35 preserved)
-#' str(na.omit.obs)
-#' # Remove only those with less than 25% missing data
-#' na.omit.obs2 <- na.omit.VALUE(obs2, max.na.prop = .25)      
-#' str(na.omit.obs2) # Only 2 stations discarded
-#' }
 
-na.omit.VALUE <- function(valueObj, max.na.prop = 0) {
+na.filter.VALUE <- function(valueObj, max.na.prop = 0) {
       dimNames <- attr(valueObj$Data, "dimensions")
       if (!identical(dimNames, c("member", "time", "station"))) {
             stop("Incompatible dimensions: consider using dimFix first")
