@@ -1,6 +1,6 @@
 #     loadValueStations.R Load observations data from station datasets in the standard VALUE ASCII format
 #     
-#     Copyright (C) 2015 Santander Meteorology Group (http://www.meteo.unican.es)
+#     Copyright (C) 2016 Santander Meteorology Group (http://www.meteo.unican.es)
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -17,13 +17,11 @@
 
 #' @title Load VALUE station data
 #' @description Load observations data from station datasets in the standard VALUE ASCII format (See reference URL).
-#'
 #' @template templateParams 
 #' @param stationID Optional. A character vector indicating the code names of the stations to be loaded.
 #' @param tz A time zone specification to be used for the conversion of dates, if one is required
 #' (i.e., if the time zone of the dataset does not correspond to the system-specific one; see
 #' \code{\link[base]{timezones}} for details). Default to unspecified (i.e. \code{tz = ""}).
-#' 
 #' @return a list with the following elements:
 #' \itemize{
 #' \item \code{Variable}. Name of the variable
@@ -36,24 +34,16 @@
 #' \item \code{Metadata}. A list of variable length depending on the available metadata associated
 #' to each observation. If no metadata are provided, at least the station codes (compulsory) are displayed.
 #' }
-#' 
 #' @template templateGeolocation
-#' 
 #' @note Unlike gridded datasets, station data do not use a dictionary for variable homogenization. Thus, users
 #' must take care of variable units and eventual conversions when necessary.
-#' 
 #' @references VALUE's standard ASCII format reference: 
 #' \url{http://meteo.unican.es/work/loadeR/wiki/Rmd_html/OformatStationData.html} 
 #' \url{http://stackoverflow.com/questions/12460938/r-reading-in-a-zip-data-file-without-unzipping-it}
-#' 
 #' @export
-#' 
 #' @importFrom utils unzip
-#' 
 #' @author J. Bedia 
-#'  
 #' @family loading
-#' 
 #' @examples \dontrun{
 #' obs.dataset <- file.path(find.package("R.VALUE"), "VALUE_ECA_86_v1.zip")
 #' # All data
@@ -203,9 +193,7 @@ getLatLonDomainValueStations <- function(lonLim, latLim, lons, lats) {
 
 
 #' @title Time  index positions for station dataset selections
-#' 
 #' @description Get time index positions for loading VALUE ascii station data
-#' 
 #' @param timeDates a POSIXlt vector of time dates
 #' @param season A vector of months defining the season selected
 #' @param years A vector of (continuous) year selection

@@ -1,6 +1,6 @@
 #     subsetVALUE.R Select an arbitrary subset from a VALUE object
 #     
-#     Copyright (C) 2015 Santander Meteorology Group (http://www.meteo.unican.es)
+#     Copyright (C) 2016 Santander Meteorology Group (http://www.meteo.unican.es)
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -17,10 +17,8 @@
 #
 #
 #' @title Select an arbitrary subset from a VALUE object along one or more of its dimensions
-#'
 #' @description Creates a new predictions/observations VALUE object that is a subset of the input object 
 #' along the selected dimensions
-#'
 #' @param valueObj The input object to be subset. This is either an observation, as returned by \code{loadValueStations}, 
 #' , or a predictions object as returned by \code{loadValuePredictions}.
 #' @param stationID Character string. Station codes.
@@ -35,7 +33,6 @@
 #' @param latLim Same as \code{lonLim} argument, but for latitude.
 #' @return A new VALUE stations/predictions object that is a logical subset of the input object along the specified dimensions.
 #' @details
-#' 
 #' The attribute \code{subset} will be added to the different slots corresponding to the subset dimensions, taking
 #' the value of the subroutine called in each case (e.g.: attribute subset will have the value \code{subsetSpatial}
 #' in the xyCoords slot after spatial subsetting...).
@@ -58,10 +55,8 @@
 #'  point to the point coordinate -3.21E, 41.087N. In both cases, the function
 #'  operates by finding the nearest (euclidean distance) stations to the coordinates introduced
 #'   (either north/south or east/westward).
-#'   
-#' 
+
 #' @author J. Bedia 
-#' 
 #' @export
 
 subsetVALUE <- function(valueObj, 

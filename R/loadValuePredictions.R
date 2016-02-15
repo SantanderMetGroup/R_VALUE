@@ -16,10 +16,8 @@
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #' 
 #' @title Load VALUE predictions data
-#' 
 #' @description Load predictions data, either deterministic (one single txt file) or stochastic (several
 #'  realizations stored in sepparate txt files, bundled in a single zip file).
-#' 
 #' @param stationObj A station data object returned by \code{\link{loadValueStations}}. See details.
 #' @param predictions.file Path to the file (either text or zip) containing the predictions.
 #' @param tz Optional. A time zone specification to be used for the conversion of dates. See more details in 
@@ -27,23 +25,17 @@
 #' @param na.strings Optional. A character vector of strings which are to be interpreted as \code{\link{NA}} values.
 #'  Blank fields are also considered to be missing values in logical, integer, numeric and complex fields. This argument
 #'  is passed to read.csv. Note that numeric values of -9999 will be also coerced to NAs.
-#' 
 #' @return A predictions object. This is equivalent to the stations object (see \code{\link{loadValueStations}}),
 #' but the data element may vary its shape to include the \code{"member"} dimension in case of stochastic
 #' predictions with several realizations. Also, a global attribute \code{"datatype"} is set, and assigned 
 #' the value \code{"predictions"} to differentiate it from observations data.
-#' 
 #' @details The idea of this function is to rely on the previously loaded observations data, so all
 #'  the information required to define the predictions subset (time and station codes) is retrieved from 
 #'  the observations data subset.
-#'  
 #' @export
-#' 
 #' @importFrom utils unzip
 #' @importFrom abind abind
-#'  
 #' @family loading
-#'
 #'@examples  \dontrun{
 #' #Example predictions
 #' obs.dataset <- file.path(find.package("R.VALUE"), "example-observations.zip")
@@ -94,7 +86,7 @@ loadValuePredictions <- function(stationObj, predictions.file, tz = "", na.strin
             })
             aux <- drop(do.call("abind", c(member.list, along = -1)))
             member.list <- NULL
-      } else { # Deterministic case, txt file      
+      } else {# Deterministic case, txt file      
             n.members = 1
             timeString <- read.csv(dataset, colClasses = "character")[ , 1]      
             timeDates <- string2date(timeString, tz)
