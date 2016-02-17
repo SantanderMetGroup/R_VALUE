@@ -1,0 +1,19 @@
+#' @title Wet-wet probability
+#' @description Function to compute the wet-wet-probability index. 
+#' @author Neyko Neykov \email{neyko.neykov@@meteo.bg}, J. Bedia, D. San-Mart\'in, S. Herrera
+#' @param ts A vector containing the data
+#' @param threshold A float number defining the threshold considered. Default to 1.
+#' @return A float number corresponding to the Wet-wet transition probability.
+#' @export
+#' @examples \dontrun{
+#' # Wet-wet transition probability of Braganca:
+#' data(precipIberiaECA)
+#' obs <- precipIberiaECA$observations$Data[,1]
+#' index.freqWW(obs)
+#' }
+
+index.freqWW <- function(ts, threshold = 1) {
+      indToday <- 1:(length(ts) - 1)
+      indTomorrow <- 2:length(ts)
+      mean((ts[indToday] >= threshold)*(ts[indTomorrow] >= threshold), na.rm = TRUE)
+}
