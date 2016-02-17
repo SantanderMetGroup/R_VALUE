@@ -102,8 +102,10 @@ corrMat.VALUE <- function(stationObj,
       cor.mat.list <- lapply(1:n.mem, function(x) cor(o$Data[x,,], use = "pairwise.complete.obs", method = method))
       o$Data <- NULL
       arr <- do.call("abind", c(cor.mat.list, along = -1L))
+      cor.mat.list <- NULL
       # Member aggregation "after"
       cormat <- apply(arr, MARGIN = c(2,3), FUN = mean, na.rm = TRUE)
+      arr <- NULL
       attr(cormat, "station_names") <- o$Metadata$name
       attr(cormat, "lon") <- o$xyCoords[,1]
       attr(cormat, "lat") <- o$xyCoords[,2]
