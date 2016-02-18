@@ -23,6 +23,6 @@ Function to compute the difference between the observed and predicted means.
 The measure depends on the index mean.
 }
 \author{
-Daniel San-Mart\'in \email{daniel@predictia.es}, J. Bedia, D. San-Mart\'in, S. Herrera
+J. Bedia, D. San-Mart\'in, S. Herrera
 }
 

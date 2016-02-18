@@ -11,8 +11,8 @@ index.spell.prcXXth(ts, dates, threshold = 1, condition = c("GT", "GE",
 \item{ts}{A vector containing the data}
 
 \item{dates}{A character (or \code{POSIXct}) vector following the format \dQuote{YYYY-MM-DD}
-(i.e., \code{format = "\%Y-\%m-\%d"}) as in \code{\link{strptime}}.
- Internally passed to \code{\link{as.Date}}.}
+(i.e., \code{format = "\%Y-\%m-\%d"} as in \code{\link{strptime}}). This is directly passed by the
+ VALUE objects (either stations or predictions) through the element \code{object$Dates$start}.}
 
 \item{threshold}{A float number defining the threshold considered. Default to 1}
 

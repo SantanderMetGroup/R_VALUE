@@ -1,9 +1,7 @@
 #' @title Annual spell length percentiles
 #' @description Computes a user-defined percentile for the duration of spells (above/below) a given threshold, on an annual basis.
 #' @template templateIndexParams
-#' @param dates A character (or \code{POSIXct}) vector following the format \dQuote{YYYY-MM-DD}
-#'  (i.e., \code{format = "\%Y-\%m-\%d"}) as in \code{\link{strptime}}.
-#'   Internally passed to \code{\link{as.Date}}.
+#' @template templateDates
 #' @param threshold A float number defining the threshold considered. Default to 1 
 #' @param condition Inequality operator to be applied considering the given threshold.
 #'  \code{"GT"} = greater than the value of \code{threshold}, \code{"GE"} = greater or equal,
