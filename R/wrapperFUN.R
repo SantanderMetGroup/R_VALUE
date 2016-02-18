@@ -99,7 +99,7 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
                   # Vectorization
                   obs <- as.matrix(drop(sea.o$Data))
                   prd <- as.matrix(drop(sea.p$Data))
-                  prd <- if (n.mem > 1) t(prd)
+                  if (n.mem > 1) prd <- t(prd)
                   dates.obs <- sea.o$Dates$start
                   dates.pred <- sea.p$Dates$start
                   sea.o <- sea.p <- NULL
