@@ -16,21 +16,20 @@
 #'  are computed on consecutive records.
 #' @export
 
-index.spell.annual.prcXXth <- function(ts, dates, threshold = 1, condition = c("GT", "GE", "LT", "LE"), prob = .5) {
+index.spellmax.annual.prcXXth <- function(ts, dates, threshold = 1, condition = c("GT", "GE", "LT", "LE"), prob = .5) {
       condition <- match.arg(condition, choices = c("GT", "GE", "LT", "LE"))
       ineq <- switch(condition,
                      "GT" = ">",
                      "GE" = ">=",
                      "LT" = "<",
                      "LE" = "<=")
-      # Index of discontinuities in the data series
       dates <- as.Date(dates)
       yrs <- as.POSIXlt(dates)$year
       annual.values <- sapply(1:length(unique(yrs)), function(x) {
-            ind <- which(yrs == unique(yrs)[x])
+            ind <- which(yrs == unique(yrs)[x]) 
             disc <- diff(dates[ind])
             aux <- ts[ind]
-            ind2 <- if (any(disc > 1)) {
+            ind2 <- if (any(disc > 1)) {# Index of discontinuities in the data series
                   c(0, which(disc > 1))
             } else {
                   c(0, length(aux))
