@@ -35,6 +35,34 @@
 #' @return A 3D array with labelled dimensions station, season and metric
 #' @importFrom abind abind
 #' @export
+#' @examples \dontrun{
+#' # Load observations
+#' obs.file <- file.path(find.package("R.VALUE"), "example_datasets", "VALUE_ECA_86_v2.zip")
+#' o <- loadValueStations(obs.file, var = "tmin")
+#' prdfile <- list.files(file.path(find.package("R.VALUE"), "example_datasets"),
+#'                       pattern = "predictions_portal_exp1a_deterministic",
+#'                       full.names = TRUE)
+#' # Load predictions
+#' p <- loadValuePredictions(o, predictions.file = prdfile)
+#' # Create argument list for computing mean bias:
+#' c1 = list()
+#' c1$metric = c("obs", "pred", "measure")
+#' c1$names = c("obsMean", "predMean","meanBias")
+#' c1$season = c("annual", "DJF", "MAM", "JJA", "SON")
+#' c1$aggr.type = "after"
+#' c1$aggr.fun = "mean"
+#' c1$index.fun = "index.mean.R"
+#' c1$measure.fun = "measure.bias.R"
+#' c1$index.args = NULL
+#' c1$measure.args = NULL
+#' c1$o = o
+#' c1$p = p
+#' c1$na.prop = .9
+#' 
+#' # Call validation wrapper
+#' a <- do.call("wrapperFUN", c1)
+#' str(a)
+#' }
 
 wrapperFUN <- function(metric = c("obs", "pred", "measure"),
                        names = NULL,
