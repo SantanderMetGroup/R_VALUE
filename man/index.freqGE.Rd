@@ -17,14 +17,6 @@ A float number corresponding to the amount of days above or equal the defined th
 \description{
 Function to compute the amount of days above or equal of a predefined threshold mean index. Missing values are ignored.
 }
-\examples{
-\dontrun{
-# Wet days frequency of Braganca:
-data(precipIberiaECA)
-obs <- precipIberiaECA$observations$Data[,1] 
-index.freqGE(obs)
-}
-}
 \author{
 Dougals Maraun \email{dmaraun@geomar.de}, J. Bedia, D. San-Mart\'in, S. Herrera
 }

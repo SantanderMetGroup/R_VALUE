@@ -17,14 +17,6 @@ A scalar with the estimated autocorrelation for that lag.
 \description{
 Function to compute the estimated autocorrelation function at pre-defined lags.
 }
-\examples{
-\dontrun{
-# Autocorrelation of Braganca:
-data(precipIberiaECA)
-obs <- precipIberiaECA$observations$Data[,1]
-index.acf(obs, lag.max = 2)
-}
-}
 \author{
 Neyko Neykov \email{neyko.neykov@meteo.bg}, J. Bedia, D. San-Mart\'in, S. Herrera
 }

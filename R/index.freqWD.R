@@ -5,12 +5,6 @@
 #' @param threshold A float number defining the threshold considered.
 #' @return A float number corresponding to the wet-dry transition probability.
 #' @export
-#' @examples \dontrun{
-#' # Wet-dry transition probability of Braganca:
-#' data(precipIberiaECA)
-#' obs <- precipIberiaECA$observations$Data[,1]
-#' index.freqWD(obs)
-#' }
 
 # Transition probabilities: Wet-Dry
 index.freqWD <- function(ts, threshold = 1) {

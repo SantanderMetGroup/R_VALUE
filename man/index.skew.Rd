@@ -15,14 +15,6 @@ A float number corresponding to the skewness index.
 \description{
 Function to compute the skewness index.
 }
-\examples{
-\dontrun{
-# Precipitation skewness of Braganca:
-data(precipIberiaECA)
-obs <- precipIberiaECA$observations$Data[,1]
-index.skew(obs)
-}
-}
 \author{
 Ole Roessler \email{ole.roessler@giub.unibe.ch}, J. Bedia, D. San-Mart\'in, S. Herrera
 }

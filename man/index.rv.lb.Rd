@@ -19,15 +19,7 @@ Return value for the lower tail
 \description{
 Function to compute the 1/prob return value (left tail).
 }
-\examples{
-\dontrun{
-# 20-years Return value of Braganca:
-data(precipIberiaECA)
-obs <- precipIberiaECA$observations$Data[,1]
-index.rv.lb(obs, prob = 20)
-}
-}
 \author{
-Neyko Neykov \email{neyko.neykov@meteo.bg}, J. Bedia, D. San-Mart\'in, S. Herrera
+Neyko Neykov \email{neyko.neykov@meteo.bg}
 }
 

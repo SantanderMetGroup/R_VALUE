@@ -17,17 +17,6 @@ A float number corresponding to the amount of days above the defined threshold o
 \description{
 Function to compute the amount from events above a predefined threshold.
 }
-\examples{
-\dontrun{
-# Precipitation amounts in Braganca:
-data(precipIberiaECA)
-obs <- precipIberiaECA$observations$Data[,1]
-# Above default threshold (1 mm)
-index.amountFreqGT(obs)
-# Above threshold of 10 mm
-index.amountFreqGT(obs, 10)
-}
-}
 \author{
 Neyko Neykov \email{neyko.neykov@meteo.bg}, J. Bedia, D. San-Mart\'in, S. Herrera
 }

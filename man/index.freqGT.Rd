@@ -17,15 +17,7 @@ A float number corresponding to the amount of days above the defined threshold o
 \description{
 Function to compute the amount of days above of a predefined threshold.
 }
-\examples{
-\dontrun{
-# Wet days frequency of Braganca:
-data(precipIberiaECA)
-obs <- precipIberiaECA$observations$Data[,1]
-index.freqGT(obs, threshold = 10)
-}
-}
 \author{
-Dougals Maraun \email{dmaraun@geomar.de}, J. Bedia, D. San-Mart\'in, S. Herrera
+Dougals Maraun \email{dmaraun@geomar.de}
 }
 

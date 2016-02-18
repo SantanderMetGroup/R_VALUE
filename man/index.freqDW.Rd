@@ -17,14 +17,6 @@ A float number corresponding to the dry-wet transition probability.
 \description{
 Function to compute the dry-wet probability index. Missing values are ignored.
 }
-\examples{
-\dontrun{
-# Dry-wet transition probability of Braganca:
-data(precipIberiaECA)
-obs <- precipIberiaECA$observations$Data[,1]
-index.freqDW(obs)
-}
-}
 \author{
 Neyko Neykov \email{neyko.neykov@meteo.bg}, J. Bedia, D. San-Mart\'in, S. Herrera
 }

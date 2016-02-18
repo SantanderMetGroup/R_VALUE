@@ -17,15 +17,7 @@ A float number corresponding to the amount of days below or equal the defined th
 \description{
 Function to compute the amount of days below or equal of a predefined threshold mean index.
 }
-\examples{
-\dontrun{
-# Dry days frequency of Braganca:
-data(precipIberiaECA)
-obs <- precipIberiaECA$observations$Data[,1]
-index.freqLE(obs, threshold = 0.5)
-}
-}
 \author{
-Douglas Maraun \email{dmaraun@geomar.de}, J. Bedia, D. San-Mart\'in, S. Herrera
+Douglas Maraun \email{dmaraun@geomar.de}
 }
 

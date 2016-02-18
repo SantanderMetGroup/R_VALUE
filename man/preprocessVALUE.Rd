@@ -26,18 +26,6 @@ Preprocessing of input data for index calculation routines
 \details{
 The function performs missing data filetring, temporal matching and (optionally) seasonal subsetting
 }
-\examples{
-\dontrun{
-data(precipIberiaECA)
-obs <- precipIberiaECA$observations$Data[,3]
-pred <- precipIberiaECA$predictions$Data[,3]
-dates.obs <- precipIberiaECA$observations$Dates$start
-dates.pred <- precipIberiaECA$predictions$Dates$start
-# Retain data for July-August (season = 7:8)
-a <- preprocess.value(obs, pred, dates.obs, dates.pred, season = 7:8, na.prop = 0.5)
-str(a)
-}
-}
 \author{
 J. Bedia
 }

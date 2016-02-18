@@ -6,14 +6,6 @@
 #' @return A float number corresponding to the dry-dry transition probability.
 #' @export
 
-#' @examples \dontrun{
-#' # Dry-dry transition probability of Braganca:
-#' data(precipIberiaECA)
-#' obs <- precipIberiaECA$observations$Data[,1]
-#' # Default precipitation threshold of 1 mm
-#' index.freqDD(obs)
-#' }
-
 index.freqDD <- function(ts, threshold = 1) {
       indToday <- 1:(length(ts) - 1)
       indTomorrow <- 2:length(ts)

@@ -8,15 +8,7 @@
 #'                  Included to consider the case of precipitation. NULL by default.
 #' @return A float number corresponding to the quantile.
 #' @export
-#' @examples \dontrun{
-#' # 98th quantile of Braganca:
-#' data(precipIberiaECA)
-#' obs <- precipIberiaECA$observations$Data[,1]
-#' # 98th percentile
-#' prob <- 0.98
-#' # Default (Q1)
-#' index.prcXXth(obs)
-#' }
+
 
 index.prcXXth <- function(ts, prob = .25, threshold = NULL) {
       if (!is.null(threshold)) ts[ts < threshold] <- NA

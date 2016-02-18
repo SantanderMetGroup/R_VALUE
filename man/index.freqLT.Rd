@@ -17,14 +17,6 @@ A float number corresponding to the amount of days below the defined threshold o
 \description{
 Function to compute the amount of days below a predefined threshold.
 }
-\examples{
-\dontrun{
-# Dry days frequency of Braganca:
-data(precipIberiaECA)
-obs <- precipIberiaECA$observations$Data[,1]
-index.freqLT(obs, threshold = 0.2)
-}
-}
 \author{
 Douglas Maraun \email{dmaraun@geomar.de}, J. Bedia, D. San-Mart\'in, S. Herrera
 }

@@ -15,14 +15,6 @@ A float number corresponding to the mean of the input.
 \description{
 Function to compute the arithmetic mean index.
 }
-\examples{
-\dontrun{
-# Precipitation mean of Braganca:
-data(precipIberiaECA)
-obs <- precipIberiaECA$observations$Data[,1]
-index.mean(obs)
-}
-}
 \author{
 Ole Roessler \email{ole.roessler@giub.unibe.ch}, J. Bedia, D. San-Mart\'in, S. Herrera
 }

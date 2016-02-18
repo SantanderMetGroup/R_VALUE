@@ -7,12 +7,7 @@
 #' @return Return value for the upper tail
 #' @export
 #' @importFrom evd fgev
-#' @examples \dontrun{
-#' # 20-years Return value of Braganca:
-#' data(precipIberiaECA)
-#' obs <- precipIberiaECA$observations$Data[,1]
-#' index.rv.ub(obs, prob = 20) # Yields warnings due to NAs
-#' }
+
 
 index.rv.ub <- function(ts, prob = 20, INDEX = 1:length(ts)) {
       meanObj <- NA

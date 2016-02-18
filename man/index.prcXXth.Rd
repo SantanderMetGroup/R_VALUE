@@ -20,17 +20,6 @@ A float number corresponding to the quantile.
 \description{
 Function to compute the sample quantiles for the given probabilities.
 }
-\examples{
-\dontrun{
-# 98th quantile of Braganca:
-data(precipIberiaECA)
-obs <- precipIberiaECA$observations$Data[,1]
-# 98th percentile
-prob <- 0.98
-# Default (Q1)
-index.prcXXth(obs)
-}
-}
 \author{
 Neyko Neykov \email{neyko.neykov@meteo.bg}, J. Bedia, D. San-Mart\'in, S. Herrera
 }

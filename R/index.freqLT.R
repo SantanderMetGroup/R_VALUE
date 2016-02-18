@@ -5,12 +5,6 @@
 #' @param threshold A float number defining the threshold considered. Default to 1.
 #' @return A float number corresponding to the amount of days below the defined threshold of the input.
 #' @export
-#' @examples \dontrun{
-#' # Dry days frequency of Braganca:
-#' data(precipIberiaECA)
-#' obs <- precipIberiaECA$observations$Data[,1]
-#' index.freqLT(obs, threshold = 0.2)
-#' }
 
 index.freqLT <- function(ts, threshold = 1) {
       sum(ts < threshold, na.rm = TRUE)

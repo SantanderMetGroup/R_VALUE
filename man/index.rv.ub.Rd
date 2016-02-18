@@ -19,14 +19,6 @@ Return value for the upper tail
 \description{
 Function to compute the 1/prob return value (right tail).
 }
-\examples{
-\dontrun{
-# 20-years Return value of Braganca:
-data(precipIberiaECA)
-obs <- precipIberiaECA$observations$Data[,1]
-index.rv.ub(obs, prob = 20) # Yields warnings due to NAs
-}
-}
 \author{
 Neyko Neykov \email{neyko.neykov@meteo.bg}, J. Bedia, D. San-Mart\'in, S. Herrera
 }

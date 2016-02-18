@@ -5,15 +5,6 @@
 #' @param threshold A float number defining the threshold considered. Default to 1.
 #' @return A float number corresponding to the amount of days above the defined threshold of the input.
 #' @export
-#' @examples \dontrun{
-#' # Precipitation amounts in Braganca:
-#' data(precipIberiaECA)
-#' obs <- precipIberiaECA$observations$Data[,1]
-#' # Above default threshold (1 mm)
-#' index.amountFreqGT(obs)
-#' # Above threshold of 10 mm
-#' index.amountFreqGT(obs, 10)
-#' }
 
 index.amountFreqGT <- function(ts, threshold = 1){
       ts[ts <= threshold] <- NA
