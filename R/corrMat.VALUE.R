@@ -39,6 +39,9 @@
 #' geographical coordinates.   
 #' @author J. Bedia 
 #' @export
+#' @examples \dontrun{
+#' # A worked example is provided in the additional package documentation 
+#' }
 
 corrMat.VALUE <- function(stationObj,
                           predictions.file = NULL,

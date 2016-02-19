@@ -17,7 +17,7 @@
 #
 #
 #' @title Wrapper function to launch the validation
-#' @description Launches the VALUE validation framework according to the arguments passed by the 
+#' @description Launches the VALUE validation framework according to the arguments passed by the database.
 #' @author J. Bedia, D. San Martin
 #' @param metric Character vector.
 #' @param names Character vector of the same length than \code{metric}. Names of the indices/measures to be applied

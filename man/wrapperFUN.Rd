@@ -39,7 +39,7 @@ Ignored for observations and deterministic predictions.}
 A 3D array with labelled dimensions station, season and metric
 }
 \description{
-Launches the VALUE validation framework according to the arguments passed by the
+Launches the VALUE validation framework according to the arguments passed by the database.
 }
 \examples{
 \dontrun{

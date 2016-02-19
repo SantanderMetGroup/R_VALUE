@@ -44,6 +44,11 @@ a specific window width (60 days by default, centered around lag 0). This is use
 An additional argument allows to specify the maximum number of missing values allowed, being ommited from the analysis 
 those data series above the threshold.
 }
+\examples{
+\dontrun{
+# A worked example is provided in the additional package documentation 
+}
+}
 \author{
 J. Bedia
 }
