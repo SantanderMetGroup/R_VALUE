@@ -32,8 +32,21 @@
 #' @author J. Bedia 
 #' @export
 #' @examples \dontrun{
-#' 
+#' obs.file <- file.path(find.package("R.VALUE"),"example_datasets","VALUE_ECA_86_v2.zip")
+#' # Load 1 station (Innsbruck) as example:
+#' stationObj <- loadValueStations(obs.file, var = "tmin", stationID = "000013", years = 1991:1993)
+#' # Test different window sizes:
+#' widths <- c(31,45,60)
+#' out <- lapply(widths, function(x) deseason.VALUE(stationObj, window.width = x))
+#' dates <- as.Date(stationObj$Dates$start)
+#' plot(dates, stationObj$Data, ty = 'l', ylab = "tmin ºC")
+#' for (i in 1:length(widths)) {
+#'       lines(dates,out[[i]]$Data,col = i + 1)
 #' }
+#' legend("bottomright", legend = widths, lty = 1, col = (1:3)+1, title = "window.width")
+#' }
+
+
 
 deseason.VALUE <- function(valueObj, window.width = 31, max.na.prop = .25) {
       valueObj <- dimFix(valueObj)
@@ -45,10 +58,10 @@ deseason.VALUE <- function(valueObj, window.width = 31, max.na.prop = .25) {
       fil <- rep(1/window.width, window.width + 1)
       message("[", Sys.time(),"] - Removing seasonal cycle on ", n.stations, " locations...")
       for (i in 1:n.mem) {
-            mat <- valueObj$Data[i,,]
+            mat <- valueObj$Data[i,,,drop = FALSE]
             for (j in 1:n.stations) {
                   # Moving average, circular, centered on lag 0
-                  x <- filter(mat[,j], filter = fil, circular = TRUE, sides = 2)
+                  x <- filter(mat[,,j], filter = fil, circular = TRUE, sides = 2)
                   # Daily climatology
                   ref <- tapply(x, INDEX = doy, FUN = mean, na.rm = TRUE)
                   # Remove cycle
