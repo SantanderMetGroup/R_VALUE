@@ -159,6 +159,7 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
                                                 arg.names <- sapply(1:length(measure.args), function(x) measure.args[[x]]$key)
                                                 if ("dates" %in% arg.names & isTRUE(measure.args[[grep("dates", arg.names)]]$value)) {
                                                       arg.list[[length(arg.list) + 1]] <- aux.list[[l]]$dates
+                                                      names(arg.list)[length(arg.list)] <- "dates"
                                                       measure.args <- measure.args[-grep("dates", arg.names)]      
                                                 }
                                                 for (m in 1:length(measure.args)) {
