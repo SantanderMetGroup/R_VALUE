@@ -22,9 +22,11 @@
 #' @param metric Character vector.
 #' @param names Character vector of the same length than \code{metric}. Names of the indices/measures to be applied
 #' @param season Character vector defining the target season(s). Default to annual + 4 standard seasons.
-#' @param aggr.type Character vector of length one. Should member aggregation be performed \code{"before"} or \code{"after"} the validation?.
-#' Ignored for observations and deterministic predictions.
-#' @param aggr.fun Character vector of length one. Multimember aggregation function. Default to \code{"mean"}.
+#' @param member.aggregation Character vector of length one. What aggregation function should be applied to multipe realizations
+#' before computing the indices?. Default to \code{"none"}, meaning that the indices are computed in a member-wise basis, and only
+#'  after that the index values are aggregated to compute the measure. The only additional option currently implemented
+#'   is \code{"mean"}, for cases when the realizations are averaged before computing the index. 
+#'  Ignored for observations and deterministic predictions.
 #' @param index.fun A character vector with the name of the R function that computes the index.
 #' @param measure.fun A character vector with the name of the R function that computes the measure.
 #' @param index.args A list with additional arguments passed to \code{index.fun}. It contains a key-value list for each additional argument.
@@ -67,8 +69,7 @@
 wrapperFUN <- function(metric = c("obs", "pred", "measure"),
                        names = NULL,
                        season = c("annual", "DJF", "MAM", "JJA", "SON"),
-                       aggr.type = c("before", "after"),
-                       aggr.fun = "mean",
+                       member.aggregation = "none",
                        index.fun = NULL,
                        measure.fun = NULL,
                        index.args = NULL,
@@ -78,7 +79,7 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
                        na.prop = .9) {
       metric <- match.arg(arg = metric, choices = c("obs", "pred", "measure"), several.ok = TRUE)
       season <- match.arg(arg = season, choices = c("annual", "DJF", "MAM", "JJA", "SON"), several.ok = TRUE)
-      aggr.type <- match.arg(arg = aggr.type, choices = c("before", "after"))
+      # member.aggregation <- match.arg(arg = member.aggregation, choices = c("none", "mean"))
       suffix <- "\\.R$|\\.r$"
       index.fun <- if (!is.null(index.fun) & grepl(suffix, index.fun)) gsub(suffix, "", index.fun)
       measure.fun <- if (!is.null(measure.fun) & grepl(suffix, measure.fun)) gsub(suffix, "", measure.fun)
@@ -89,15 +90,15 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
       int <- NULL
       message("[", Sys.time(), "] OK")
       # Member aggregation (the array is re-assigned the member dimension after the aggregation)
-      if (aggr.type == "before" & dim(p$Data)[1] > 1) {
+      if (member.aggregation != "none" & dim(p$Data)[1] > 1) {
             message("[", Sys.time(), "] Aggregating members...")
             dimNames <- attr(p$Data, "dimensions")
             p$Data <- apply(p$Data,
                             MARGIN = grep("member", attr(p$Data, "dimensions"), invert = TRUE),
-                            FUN = aggr.fun, na.rm = TRUE)
+                            FUN = member.aggregation, na.rm = TRUE)
             p$Data <- unname(abind(p$Data, NULL, along = 0))    
             attr(p$Data, "dimensions") <- dimNames
-            attr(p$Data, "member.aggr.fun") <- aggr.fun
+            # attr(p$Data, "member.aggr.fun") <- member.aggregation
             message("[", Sys.time(), "] OK")
       }
       n.st <- dim(o$Data)[3]
@@ -109,7 +110,7 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
                                          "season" = season,
                                          "metric_name" = names))
       attr(index.arr, "var") <- o$Variable$varName
-      attr(index.arr, "aggr.type") <- aggr.type
+      attr(index.arr, "member.aggregation") <- member.aggregation
       attr(index.arr, "max.na.prop") <- na.prop
       for (i in 1:n.st) {
             message("[", Sys.time(), "] Processing data for station \"", o$Metadata$station_id[i], "\"")
@@ -152,6 +153,14 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
                                                            "obs" = aux.list[[l]]$obs,
                                                            "prd" = aux.list[[l]]$pred)
                                           if (!is.null(measure.args)) {
+                                                #@@@@@@@@@@@
+                                                # measure.args <- list(list("key" = "arg1", "value" = "valor"),list("key" = "dates", "value" = TRUE), list("key" = "threshold", "value" = 1))
+                                                #@@@@@@@@@@@
+                                                arg.names <- sapply(1:length(measure.args), function(x) measure.args[[x]]$key)
+                                                if ("dates" %in% arg.names & isTRUE(measure.args[[grep("dates", arg.names)]]$value)) {
+                                                      arg.list[[length(arg.list) + 1]] <- aux.list[[l]]$dates
+                                                      measure.args <- measure.args[-grep("dates", arg.names)]      
+                                                }
                                                 for (m in 1:length(measure.args)) {
                                                       arg.list[[length(arg.list) + 1]] <- measure.args[[m]]$value
                                                       names(arg.list)[length(arg.list)] <- measure.args[[m]]$key
@@ -275,7 +284,7 @@ dimFix <- function(valueObj) {
 #' @param dates.obs Calendar dates corresponding to the values in \code{obs}
 #' @param dates.pred Calendar dates corresponding to the values in \code{pred}
 #' @param na.prop Maximum allowable proportion of missing values.
-#' @details The function performs missing data filetring, temporal matching and (optionally) seasonal subsetting 
+#' @details The function performs missing data filtering, temporal matching and (optionally) seasonal subsetting 
 #' @return A list with preprocessed \code{obs}, \code{pred} and \code{dates}, as passed to the index.* routines
 #' @keywords internal
 #' @author J. Bedia

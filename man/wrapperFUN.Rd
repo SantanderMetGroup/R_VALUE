@@ -5,8 +5,8 @@
 \title{Wrapper function to launch the validation}
 \usage{
 wrapperFUN(metric = c("obs", "pred", "measure"), names = NULL,
-  season = c("annual", "DJF", "MAM", "JJA", "SON"), aggr.type = c("before",
-  "after"), aggr.fun = "mean", index.fun = NULL, measure.fun = NULL,
+  season = c("annual", "DJF", "MAM", "JJA", "SON"),
+  member.aggregation = "none", index.fun = NULL, measure.fun = NULL,
   index.args = NULL, measure.args = NULL, o = o, p = p, na.prop = 0.9)
 }
 \arguments{
@@ -16,10 +16,11 @@ wrapperFUN(metric = c("obs", "pred", "measure"), names = NULL,
 
 \item{season}{Character vector defining the target season(s). Default to annual + 4 standard seasons.}
 
-\item{aggr.type}{Character vector of length one. Should member aggregation be performed \code{"before"} or \code{"after"} the validation?.
-Ignored for observations and deterministic predictions.}
-
-\item{aggr.fun}{Character vector of length one. Multimember aggregation function. Default to \code{"mean"}.}
+\item{member.aggregation}{Character vector of length one. What aggregation function should be applied to multipe realizations
+before computing the indices?. Default to \code{"none"}, meaning that the indices are computed in a member-wise basis, and only
+ after that the index values are aggregated to compute the measure. The only additional option currently implemented
+  is \code{"mean"}, for cases when the realizations are averaged before computing the index. 
+ Ignored for observations and deterministic predictions.}
 
 \item{index.fun}{A character vector with the name of the R function that computes the index.}
 
