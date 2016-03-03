@@ -6,7 +6,7 @@
 #' @author Douglas Maraun \email{dmaraun@@geomar.de}
 #' @export
 
-index.lfvar <- function(ts, lowVarPeriod, INDEX = 1:length(ts)) {
+index.lfvar <- function(ts, lowVarPeriod = 30, INDEX = 1:length(ts)) {
       mean.x <- tapply(ts, INDEX, mean, na.rm = TRUE)
       specVar <- spec.pgram(mean.x, na.action = na.exclude, plot = FALSE)
       lowfreqvar <- sum(specVar$spec[1/specVar$freq >= lowVarPeriod], na.rm = TRUE)

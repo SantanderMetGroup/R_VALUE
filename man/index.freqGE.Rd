@@ -15,7 +15,7 @@ index.freqGE(ts, threshold = 1)
 A float number corresponding to the amount of days above or equal the defined threshold of the input.
 }
 \description{
-Function to compute the amount of days above or equal of a predefined threshold mean index. Missing values are ignored.
+Function to compute the amount of days above or equal a predefined threshold mean index. Missing values are ignored.
 }
 \author{
 Dougals Maraun \email{dmaraun@geomar.de}, J. Bedia, D. San-Mart\'in, S. Herrera

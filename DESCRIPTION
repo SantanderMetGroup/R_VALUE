@@ -4,18 +4,19 @@ Depends:
 Imports:
     utils,
     abind,
-    evd
+    evd,
+    ff
 Type: Package
 Title: Climate data validation in the framework of the COST action VALUE
-Version: 0.1-0
-Date: 2016-02-18
+Version: 0.2-0
+Date: 2016-03-03
 Authors@R: as.person(c(
     "Santander Meteorology Group [aut]",      
     "Predictia Intelligent Data Solutions [ctb]",
-    "Joaquin Bedia <bediaj@unican.es> [ctb]",
+    "Joaquin Bedia <bediaj@unican.es> [ctb, cre]",
     "Sixto Herrera <sixto@predictia.es> [ctb]",
     "Daniel San Martin <dani@predictia.es> [ctb]",
-    "Max Tuni <max@predictia.es> [ctb, cre]",
+    "Max Tuni <max@predictia.es> [ctb]",
     "Sven Kotlarski <sven.kotlarski@env.ethz.ch> [ctb]",
     "Ole Roessler <ole.roessler@giub.unibe.ch> [ctb]",
     "Neyko Neykov <neyko.neykov@meteo.bg> [ctb]",

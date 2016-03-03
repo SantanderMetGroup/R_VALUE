@@ -68,7 +68,7 @@ loadValueStations <- function(dataset, var, stationID = NULL, lonLim = NULL, lat
       if ((!is.null(lonLim) | !is.null(latLim)) & !is.null(stationID)) { 
             lonLim <- NULL 
             latLim <- NULL
-            warning("lonLim/latLim arguments ignored as Station Codes have been specified.")
+            warning("lonLim/latLim arguments ignored as Station Codes have been specified.", call. = FALSE)
       }
       # Reading stations from zip file
       stations.file <- grep("stations\\.", zipFileContents, ignore.case = TRUE, value = TRUE)
@@ -81,7 +81,7 @@ loadValueStations <- function(dataset, var, stationID = NULL, lonLim = NULL, lat
       if (!is.null(stationID)) {
             stInd <- match(stationID, stids)
             if (any(is.na(stInd))) {
-                  stop("'stationID' values not found.\nCheck data inventory")
+                  stop("'stationID' values not found.\nCheck data inventory", call. = FALSE)
             }
       } else {
             stInd <- 1:length(stids)
@@ -92,7 +92,7 @@ loadValueStations <- function(dataset, var, stationID = NULL, lonLim = NULL, lat
       if (!is.null(lonLim)) {
             latLon <- getLatLonDomainValueStations(lonLim, latLim, lons, lats)
             if (length(latLon$stInd) == 0) {
-                  stop("No stations were found in the selected spatial domain")
+                  stop("No stations were found in the selected spatial domain", call. = FALSE)
             }
             stInd <- latLon$stInd
             coords <- latLon$stCoords
@@ -106,7 +106,7 @@ loadValueStations <- function(dataset, var, stationID = NULL, lonLim = NULL, lat
       # TODO - fix potential MACOSX errors
       fileInd <- grep(paste(var, "\\.txt", sep = ""), zipFileContents)
       if (length(fileInd) == 0) {
-            stop("[", Sys.time(),"] Variable requested not found")
+            stop("[", Sys.time(),"] Variable requested not found", call. = FALSE)
       }
       timeString <- read.csv(unz(dataset, zipFileContents[fileInd]), colClasses = "character")[ ,1]
       timeDates <- string2date(timeString, tz = tz)
@@ -170,10 +170,10 @@ loadValueStations <- function(dataset, var, stationID = NULL, lonLim = NULL, lat
 
 getLatLonDomainValueStations <- function(lonLim, latLim, lons, lats) {
       if (length(lonLim) > 2 | length(latLim) > 2) {
-            stop("Invalid definition of geographical position")
+            stop("Invalid definition of geographical position", call. = FALSE)
       }
       if (length(lonLim) != length(latLim)) {
-            stop("Invalid definition of geographical position")
+            stop("Invalid definition of geographical position", call. = FALSE)
       }
       if (length(lonLim) == 2) {
             lonInd <- which(lons >= lonLim[1] & lons <= lonLim[2])      
@@ -216,17 +216,18 @@ getTimeDomainValueStations <- function(timeDates, season, years) {
             years <- allYears
       }
       if (years[1] < startYear) {
-            warning("First year in dataset: ", startYear,". Only available years will be returned")
+            warning("First year in dataset: ", startYear,". Only available years will be returned", call. = FALSE)
             years <- startYear:years[length(years)]
       }
       if (tail(years, 1L) > endYear) {
-            warning("Last year in dataset: ", endYear,". Only available years will be returned")
+            warning("Last year in dataset: ", endYear,". Only available years will be returned", call. = FALSE)
             years <- years[1]:endYear
       }
       # Year-crossing seasons
       if (!identical(season, sort(season))) {
             if (years[1] == startYear) { 
-                  warning(paste("First forecast day in dataset: ", timeDates[1], ".\nRequested seasonal data for ", startYear," not available", sep = ""))
+                  warning(paste("First forecast day in dataset: ", timeDates[1], ".\nRequested seasonal data for ", startYear," not available", sep = ""),
+                          call. = FALSE)
                   years <- years[-length(years)]
             } else {
                   years <- append(years[1] - 1, years)

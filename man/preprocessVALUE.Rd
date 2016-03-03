@@ -24,7 +24,7 @@ A list with preprocessed \code{obs}, \code{pred} and \code{dates}, as passed to 
 Preprocessing of input data for index calculation routines
 }
 \details{
-The function performs missing data filetring, temporal matching and (optionally) seasonal subsetting
+The function performs missing data filtering, temporal matching and (optionally) seasonal subsetting
 }
 \author{
 J. Bedia

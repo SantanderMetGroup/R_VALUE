@@ -27,7 +27,7 @@
 na.filter.VALUE <- function(valueObj, max.na.prop = 0) {
       dimNames <- attr(valueObj$Data, "dimensions")
       if (!identical(dimNames, c("member", "time", "station"))) {
-            stop("Incompatible dimensions: consider using dimFix first")
+            stop("Incompatible dimensions: consider using dimFix first", call. = FALSE)
       }
       n.stations <- dim(valueObj$Data)[3]
       rm.ind <- rep(NA, n.stations)
@@ -36,7 +36,7 @@ na.filter.VALUE <- function(valueObj, max.na.prop = 0) {
       }
       rm.ind <- na.omit(rm.ind)
       if (length(rm.ind) > 0) {
-            if (length(rm.ind) == n.stations) stop("No stations available fulfilling the max.na.prop condition")
+            if (length(rm.ind) == n.stations) stop("No stations available fulfilling the max.na.prop condition", call. = FALSE)
             valueObj$Data <- valueObj$Data[,,-rm.ind]
             if (length(dim(valueObj$Data)) == 2) {# Assume member has been drop
                   dimNames <- dimNames[-1]

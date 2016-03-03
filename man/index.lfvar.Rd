@@ -4,7 +4,7 @@
 \alias{index.lfvar}
 \title{Proportion of variance in low frequency}
 \usage{
-index.lfvar(ts, lowVarPeriod, INDEX = 1:length(ts))
+index.lfvar(ts, lowVarPeriod = 30, INDEX = 1:length(ts))
 }
 \arguments{
 \item{ts}{A vector containing the data}

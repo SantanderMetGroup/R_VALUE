@@ -15,7 +15,7 @@ index.freqGT(ts, threshold = 1)
 A float number corresponding to the amount of days above the defined threshold of the input.
 }
 \description{
-Function to compute the amount of days above of a predefined threshold.
+Function to compute the amount of days above a predefined threshold.
 }
 \author{
 Dougals Maraun \email{dmaraun@geomar.de}

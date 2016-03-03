@@ -1,0 +1,7 @@
+R.VALUE
+=======
+
+* Added new function for computing threshold-based conditional probability matrices
+* Added new routine for seasonal cycle removal
+* corrMat.VALUE accepting several seasons in the same call
+
