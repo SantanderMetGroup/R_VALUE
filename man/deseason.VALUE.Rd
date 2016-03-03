@@ -33,7 +33,18 @@ the annual series, rather than in particular seasons. Seasonal slices can be sel
 }
 \examples{
 \dontrun{
-
+obs.file <- file.path(find.package("R.VALUE"),"example_datasets","VALUE_ECA_86_v2.zip")
+# Load 1 station (Innsbruck) as example:
+stationObj <- loadValueStations(obs.file, var = "tmin", stationID = "000013", years = 1991:1993)
+# Test different window sizes:
+widths <- c(31,45,60)
+out <- lapply(widths, function(x) deseason.VALUE(stationObj, window.width = x))
+dates <- as.Date(stationObj$Dates$start)
+plot(dates, stationObj$Data, ty = 'l', ylab = "tmin (degC)")
+for (i in 1:length(widths)) {
+      lines(dates,out[[i]]$Data,col = i + 1)
+}
+legend("bottomright", legend = widths, lty = 1, col = (1:3)+1, title = "window.width")
 }
 }
 \author{

@@ -39,7 +39,7 @@
 #' widths <- c(31,45,60)
 #' out <- lapply(widths, function(x) deseason.VALUE(stationObj, window.width = x))
 #' dates <- as.Date(stationObj$Dates$start)
-#' plot(dates, stationObj$Data, ty = 'l', ylab = "tmin ºC")
+#' plot(dates, stationObj$Data, ty = 'l', ylab = "tmin (degC)")
 #' for (i in 1:length(widths)) {
 #'       lines(dates,out[[i]]$Data,col = i + 1)
 #' }

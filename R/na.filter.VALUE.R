@@ -24,9 +24,6 @@
 #' @export
 #' @author J Bedia
 
-# valueObj <- o
-# max.na.prop <- 0.25
-
 na.filter.VALUE <- function(valueObj, max.na.prop = 0) {
       dimNames <- attr(valueObj$Data, "dimensions")
       if (!identical(dimNames, c("member", "time", "station"))) {
@@ -53,6 +50,7 @@ na.filter.VALUE <- function(valueObj, max.na.prop = 0) {
             attr(valueObj, "na.omitted.stationIDs") <- rm.stids
             attr(valueObj, "max.na.prop") <- max.na.prop
             attr(valueObj$Data, "dimensions") <- dimNames
+            message("NOTE: ", length(rm.ind), " stations were removed to fulfill the max.na.prop condition")
       }
       return(valueObj)
 }

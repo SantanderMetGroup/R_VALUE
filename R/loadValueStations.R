@@ -212,7 +212,7 @@ getTimeDomainValueStations <- function(timeDates, season, years) {
             years <- allYears
       } 
       if (years[1] < startYear & tail(years, 1L) > endYear) {
-            warning("Year selection out of dataset range. Only available years will be returned")
+            warning("Year selection out of dataset range. Only available years will be returned", call. = FALSE)
             years <- allYears
       }
       if (years[1] < startYear) {
