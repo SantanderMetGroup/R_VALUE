@@ -7,5 +7,5 @@
 #' @export
 
 measure.bias.rel <- function(indexObs = NULL, indexPrd = NULL, obs = NULL, prd = NULL) {
-      (indexPrd - indexObs) / indexPrd
+      (indexPrd - indexObs) / indexObs
 }
