@@ -99,8 +99,8 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
       season <- match.arg(arg = season, choices = c("annual", "DJF", "MAM", "JJA", "SON"), several.ok = TRUE)
       # member.aggregation <- match.arg(arg = member.aggregation, choices = c("none", "mean"))
       suffix <- "\\.R$|\\.r$"
-      index.fun <- if (!is.null(index.fun) & grepl(suffix, index.fun)) gsub(suffix, "", index.fun)
-      measure.fun <- if (!is.null(measure.fun) & grepl(suffix, measure.fun)) gsub(suffix, "", measure.fun)
+      index.fun <- if (!is.null(index.fun) && grepl(suffix, index.fun)) gsub(suffix, "", index.fun)
+      measure.fun <- if (!is.null(measure.fun) && grepl(suffix, measure.fun)) gsub(suffix, "", measure.fun)
       message("[", Sys.time(), "] Intersecting obs and pred...")
       int <- getIntersect(o,p)
       o <- dimFix(int$obs)
