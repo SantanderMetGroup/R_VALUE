@@ -57,8 +57,7 @@ c1 = list()
 c1$metric = c("obs", "pred", "measure")
 c1$names = c("obsMean", "predMean","meanBias")
 c1$season = c("annual", "DJF", "MAM", "JJA", "SON")
-c1$aggr.type = "after"
-c1$aggr.fun = "mean"
+c1$member.aggregation = "none"
 c1$index.fun = "index.mean.R"
 c1$measure.fun = "measure.bias.R"
 c1$index.args = NULL
@@ -70,9 +69,27 @@ c1$na.prop = .9
 # Call validation wrapper
 a <- do.call("wrapperFUN", c1)
 str(a)
+# Example stochastic
+prdfile <- list.files(file.path(find.package("R.VALUE"), "example_datasets"),
+                      pattern = "predictions_portal_exp1a_stochastic",
+                      full.names = TRUE)
+# Load predictions
+p <- loadValuePredictions(o, predictions.file = prdfile)
+c1$p = p
+
+# Member-wise index calculation:
+c1$member.aggregation = "none"
+b <- do.call("wrapperFUN", c1)
+str(b)
+# Note the attribute 'member.aggregation'
+
+# Member aggregation before computing the index (deterministic component):
+c1$member.aggregation = "mean"
+b1 <- do.call("wrapperFUN", c1)
+str(b1)
 }
 }
 \author{
-J. Bedia, D. San Martin
+J. Bedia, D. San Martin, M. Tuni
 }
 
