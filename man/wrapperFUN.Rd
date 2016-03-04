@@ -18,7 +18,7 @@ wrapperFUN(metric = c("obs", "pred", "measure"), names = NULL,
 
 \item{member.aggregation}{Character vector of length one. What aggregation function should be applied to multipe realizations
 before computing the indices?. Default to \code{"none"}, meaning that the indices are computed in a member-wise basis, and only
- after that the index values are aggregated to compute the measure. The only additional option currently implemented
+ after that the index values are aggregated to compute the measure. The only additional option currently used
   is \code{"mean"}, for cases when the realizations are averaged before computing the index. 
  Ignored for observations and deterministic predictions.}
 
