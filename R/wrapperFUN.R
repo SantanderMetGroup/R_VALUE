@@ -18,13 +18,13 @@
 #
 #' @title Wrapper function to launch the validation
 #' @description Launches the VALUE validation framework according to the arguments passed by the database.
-#' @author J. Bedia, D. San Martin
+#' @author J. Bedia, D. San Martin, M. Tuni
 #' @param metric Character vector.
 #' @param names Character vector of the same length than \code{metric}. Names of the indices/measures to be applied
 #' @param season Character vector defining the target season(s). Default to annual + 4 standard seasons.
 #' @param member.aggregation Character vector of length one. What aggregation function should be applied to multipe realizations
 #' before computing the indices?. Default to \code{"none"}, meaning that the indices are computed in a member-wise basis, and only
-#'  after that the index values are aggregated to compute the measure. The only additional option currently implemented
+#'  after that the index values are aggregated to compute the measure. The only additional option currently used
 #'   is \code{"mean"}, for cases when the realizations are averaged before computing the index. 
 #'  Ignored for observations and deterministic predictions.
 #' @param index.fun A character vector with the name of the R function that computes the index.
@@ -51,8 +51,7 @@
 #' c1$metric = c("obs", "pred", "measure")
 #' c1$names = c("obsMean", "predMean","meanBias")
 #' c1$season = c("annual", "DJF", "MAM", "JJA", "SON")
-#' c1$aggr.type = "after"
-#' c1$aggr.fun = "mean"
+#' c1$member.aggregation = "none"
 #' c1$index.fun = "index.mean.R"
 #' c1$measure.fun = "measure.bias.R"
 #' c1$index.args = NULL
@@ -64,7 +63,26 @@
 #' # Call validation wrapper
 #' a <- do.call("wrapperFUN", c1)
 #' str(a)
+#' # Example stochastic
+#' prdfile <- list.files(file.path(find.package("R.VALUE"), "example_datasets"),
+#'                       pattern = "predictions_portal_exp1a_stochastic",
+#'                       full.names = TRUE)
+#' # Load predictions
+#' p <- loadValuePredictions(o, predictions.file = prdfile)
+#' c1$p = p
+#' 
+#' # Member-wise index calculation:
+#' c1$member.aggregation = "none"
+#' b <- do.call("wrapperFUN", c1)
+#' str(b)
+#' # Note the attribute 'member.aggregation'
+#' 
+#' # Member aggregation before computing the index (deterministic component):
+#' c1$member.aggregation = "mean"
+#' b1 <- do.call("wrapperFUN", c1)
+#' str(b1)
 #' }
+
 
 wrapperFUN <- function(metric = c("obs", "pred", "measure"),
                        names = NULL,
@@ -105,7 +123,7 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
       n.mem <- dim(p$Data)[1]
       n.metric <- length(metric)
       n.seas <- length(season)
-      index.arr <- array(data = NA, dim = c(n.st, n.seas, n.metric),
+      index.arr <- array(dim = c(n.st, n.seas, n.metric),
                          dimnames = list("station_id" = o$Metadata$station_id,
                                          "season" = season,
                                          "metric_name" = names))
@@ -132,14 +150,14 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
                   dates.obs <- sea.o$Dates$start
                   dates.pred <- sea.p$Dates$start
                   sea.o <- sea.p <- NULL
-                  # NA filter
+                  # NA filter --------
                   aux.list <- lapply(1:ncol(prd), function(x) preprocessVALUE(obs[,1], prd[,x], dates.obs, dates.pred, na.prop))
                   for (k in 1:n.metric) {
                         if (any(is.na(aux.list[[1]]$obs))) {
                               index.arr[i,j,k] <- NA
                         } else {
                               ind <- grep(metric[k], names(aux.list[[1]]))
-                              if (length(ind) == 0) {# measure
+                              if (length(ind) == 0) {# measure -----
                                     if (k > 1) {
                                           indexObs <- index.arr[i,j,grep("^obs", attr(index.arr,"dimnames")$'metric_name')]      
                                           indexPrd <- index.arr[i,j,grep("^pred", attr(index.arr,"dimnames")$'metric_name')]
@@ -153,24 +171,15 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
                                                            "obs" = aux.list[[l]]$obs,
                                                            "prd" = aux.list[[l]]$pred)
                                           if (!is.null(measure.args)) {
-                                                #@@@@@@@@@@@
-                                                # measure.args <- list(list("key" = "arg1", "value" = "valor"),list("key" = "dates", "value" = TRUE), list("key" = "threshold", "value" = 1))
-                                                #@@@@@@@@@@@
-                                                arg.names <- sapply(1:length(measure.args), function(x) measure.args[[x]]$key)
-                                                if ("dates" %in% arg.names & isTRUE(measure.args[[grep("dates", arg.names)]]$value)) {
-                                                      arg.list[[length(arg.list) + 1]] <- aux.list[[l]]$dates
-                                                      names(arg.list)[length(arg.list)] <- "dates"
-                                                      measure.args <- measure.args[-grep("dates", arg.names)]      
-                                                }
                                                 for (m in 1:length(measure.args)) {
                                                       arg.list[[length(arg.list) + 1]] <- measure.args[[m]]$value
                                                       names(arg.list)[length(arg.list)] <- measure.args[[m]]$key
                                                 }
                                           }
-                                          aux[l] <- do.call(measure.fun, args = arg.list)   
+                                          aux[l] <- do.call(measure.fun, args = arg.list, quote = TRUE)   
                                     }
                                     index.arr[i,j,k] <- mean(aux, na.rm = TRUE)
-                              } else {# index
+                              } else {# index -----
                                     aux <- rep(NA, n.mem)
                                     for (l in 1:n.mem) {  
                                           ind <- grep(metric[k], names(aux.list[[l]]))
@@ -180,9 +189,13 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
                                                       arg.list[[length(arg.list) + 1]] <- index.args[[m]]$value
                                                       names(arg.list)[length(arg.list)] <- index.args[[m]]$key
                                                 }
+                                                # Subroutine for passing dates ----
+                                                if ("dates" %in% names(arg.list)) {
+                                                      arg.list$dates <- aux.list[[l]]$dates
+                                                }
                                           }
                                           aux[l] <- do.call(index.fun, arg.list)
-                                    }
+                                    }      
                                     index.arr[i,j,k] <- mean(aux, na.rm = TRUE)
                               }
                         }
