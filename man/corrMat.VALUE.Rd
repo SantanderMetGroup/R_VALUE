@@ -5,9 +5,8 @@
 \title{Correlation matrix for paper Figures 4 and 5 on spatial validation}
 \usage{
 corrMat.VALUE(stationObj, predictions.file = NULL, season = c("annual",
-  "DJF", "MAM", "JJA", "SON"), method = c("pearson", "kendall", "spearman"),
-  type = c("before", "after"), max.na.prop = 0.25, deseason = TRUE,
-  window.width = 31)
+  "DJF", "MAM", "JJA", "SON"), method = "pearson", type = "after",
+  max.na.prop = 0.25, deseason = TRUE, window.width = 31)
 }
 \arguments{
 \item{stationObj}{An R-VALUE object containing station data (as returned by \code{\link{loadValueStations}}).}
@@ -18,10 +17,11 @@ Default to NULL, meaning that the correlation matrix is done on the observations
 \item{season}{Character string indicating the target season. Accepted values are 
 \code{c("annual", "DJF", "MAM", "JJA", "SON")}. Several choices in the same request are accepted (all are computed by default).}
 
-\item{method}{Correlation method, passed to the \code{\link{cor}} function}
+\item{method}{Correlation method, passed to the \code{\link{cor}} function. Default is \code{"spearman"}, but
+\code{"pearson"} and \code{"kendall"} are also accepted.}
 
 \item{type}{Type of aggregation in the case of multiple realizations. Should the aggregation of 
-multiple members be performed \code{"before"} (default) or \code{"after"} computing the correlations?. Ignored
+multiple members be performed \code{"before"} or \code{"after"} (the default) computing the correlations?. Ignored
  in the case of observations and deterministic predictions.}
 
 \item{max.na.prop}{Maximum allowed proportion of missing data (Default to 0.25). See details}
@@ -34,21 +34,28 @@ moving average computation of the reference daily climatology. Default to 31 day
 \value{
 A list of 2D matrices. The length of the list corresponds to the periods indicated in the \code{season} argument (default to 5,
  annual and the four standard WMO seasons). Matrix attributes indicate the station names (in the row/column order they appear),
-  and their geographical coordinates.
+  and their geographical coordinates. Global attributes provide other method details.
 }
 \description{
 Computes the cross correlation matrices between stations that serve as input for plotting functions
 }
 \details{
+\strong{Seasonal cycle removal}
+
 A (circular) moving average daily climatology can be automatically calculated for each data series, considering 
-a specific window width (31 days by default, centered around lag 0). This is used for removing the seasonal cycles when applicable. 
-An additional argument allows to specify the maximum number of missing values allowed, being ommited from the analysis 
-those data series above the threshold.
+a specific window width (31 days by default, centered around lag 0). This is used for removing the seasonal cycle. 
+
+\strong{Missing data treatment}
+
+An additional argument, \code{max.na.prop}, allows to specify the maximum number of missing values allowed, being ommited from the analysis 
+those data series above the threshold. Note that this argument is applied on a seasonal basis, so correlation
+matrices for different seasons may differ in their dimension. Missing ata filering can be disabled by setting 
+the maximum allowed proportion of missing data to 1.
 }
 \examples{
 \dontrun{
 obs.file <- file.path(find.package("R.VALUE"),"example_datasets","VALUE_ECA_86_v2.zip")
-stationObj <- loadValueStations(obs.file, "tmin")
+stationObj <- loadValueStations(obs.file, "precip")
 predictions.file <- file.path(find.package("R.VALUE"),"example_datasets",
                                   "example_predictions_portal_exp1a_deterministic.zip")
 # Correlation matrix of annual data:                                  
