@@ -149,7 +149,7 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
       dates.pred <- sea.p$Dates$start
       sea.o <- sea.p <- NULL
       # NA filter --------
-      aux.list <- lapply(1:ncol(prd), function(x) preprocessVALUE(obs[,x], prd[,x], dates.obs, dates.pred, na.prop))
+      aux.list <- lapply(1:ncol(prd), function(x) preprocessVALUE(obs[,1], prd[,x], dates.obs, dates.pred, na.prop))
       for (k in 1:n.metric) {
         if (any(is.na(aux.list[[1]]$obs))) {
           index.arr[i,j,k] <- NA
