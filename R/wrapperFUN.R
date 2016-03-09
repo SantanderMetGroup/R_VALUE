@@ -130,6 +130,10 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
       attr(index.arr, "var") <- o$Variable$varName
       attr(index.arr, "member.aggregation") <- member.aggregation
       attr(index.arr, "max.na.prop") <- na.prop
+      attr(index.arr, "index.fun") <- index.fun
+      attr(index.arr, "index.args") <- index.args
+      attr(index.arr, "measure.fun") <- measure.fun
+      attr(index.arr, "measure.args") <- measure.args
       for (i in 1:n.st) {
             message("[", Sys.time(), "] Processing data for station \"", o$Metadata$station_id[i], "\"")
             st.o <- subsetVALUE(o, stationID = o$Metadata$station_id[i])
@@ -171,10 +175,7 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
                                                            "obs" = aux.list[[l]]$obs,
                                                            "prd" = aux.list[[l]]$pred)
                                           if (!is.null(measure.args)) {
-                                                for (m in 1:length(measure.args)) {
-                                                      arg.list[[length(arg.list) + 1]] <- measure.args[[m]]$value
-                                                      names(arg.list)[length(arg.list)] <- measure.args[[m]]$key
-                                                }
+                                                arg.list <- c(arg.list,measure.args)
                                           }
                                           aux[l] <- do.call(measure.fun, args = arg.list, quote = TRUE)   
                                     }
@@ -185,10 +186,7 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
                                           ind <- grep(metric[k], names(aux.list[[l]]))
                                           arg.list <- list("ts" = aux.list[[l]][[ind]])
                                           if (!is.null(index.args)) {
-                                                for (m in 1:length(index.args)) {
-                                                      arg.list[[length(arg.list) + 1]] <- index.args[[m]]$value
-                                                      names(arg.list)[length(arg.list)] <- index.args[[m]]$key
-                                                }
+                                                arg.list <- c(arg.list,index.args)
                                                 # Subroutine for passing dates ----
                                                 if ("dates" %in% names(arg.list)) {
                                                       arg.list$dates <- aux.list[[l]]$dates
@@ -273,10 +271,10 @@ dimFix <- function(valueObj) {
       # Add fake 'station' dimension to single-station datasets
       if (!("station" %in% attr(valueObj$Data, "dimensions"))) {
             dimNames <- c(attr(valueObj$Data, "dimensions"), "station")
-            if (length(attr(valueObj$Data, "dimensions")) == 2) { # "member","time"
-                  perm <- c(2,3,1)
+            perm <- if (length(attr(valueObj$Data, "dimensions")) == 2) { # "member","time"
+                  c(2,3,1)
             } else {# "time"
-                  perm <- c(2,1)
+                  c(2,1)
             }
             valueObj$Data <- unname(aperm(abind(valueObj$Data, NULL, along = 0), perm = perm))
             attr(valueObj$Data, "dimensions") <- dimNames
