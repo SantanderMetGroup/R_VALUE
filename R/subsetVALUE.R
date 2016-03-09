@@ -66,31 +66,31 @@ subsetVALUE <- function(valueObj,
                         years = NULL,
                         lonLim = NULL,
                         latLim = NULL) {
-      if (!is.null(stationID)) valueObj <- subsetVALUE.stations(valueObj, stationID)
-      if (!is.null(members)) valueObj <- subsetVALUE.members(valueObj, members)      
-      if (!is.null(season)) valueObj <- subsetVALUE.season(valueObj, season)
-      if (!is.null(years)) valueObj <- subsetVALUE.years(valueObj, years)
-      if (!is.null(lonLim) | !is.null(latLim)) valueObj <- subsetVALUE.spatial(valueObj, lonLim, latLim)
-      return(valueObj)
+  if (!is.null(stationID)) valueObj <- subsetVALUE.stations(valueObj, stationID)
+  if (!is.null(members)) valueObj <- subsetVALUE.members(valueObj, members)      
+  if (!is.null(season)) valueObj <- subsetVALUE.season(valueObj, season)
+  if (!is.null(years)) valueObj <- subsetVALUE.years(valueObj, years)
+  if (!is.null(lonLim) | !is.null(latLim)) valueObj <- subsetVALUE.spatial(valueObj, lonLim, latLim)
+  return(valueObj)
 }
 
 #'@keywords internal
 #'@importFrom abind asub
 
 subsetVALUE.members <- function(valueObj, members = NULL) {
-      dimNames <- attr(valueObj$Data, "dimensions")
-      if (!("member" %in% dimNames)) {
-            warning("No members defined")
-            return(valueObj)
-      } else {
-            mem.ind <- grep("member", dimNames)
-            n.mem <- dim(valueObj$Data)[mem.ind]
-            if (length(members) > n.mem) stop("Too many members selected")
-            if (any(members > n.mem)) stop("Member index selection out of range")
-      }
-      valueObj$Data <- asub(valueObj$Data, idx = members, dims = mem.ind, drop = FALSE)
-      attr(valueObj$Data, "dimensions") <- dimNames
-      return(valueObj)
+  dimNames <- attr(valueObj$Data, "dimensions")
+  if (!("member" %in% dimNames)) {
+    warning("No members defined")
+    return(valueObj)
+  } else {
+    mem.ind <- grep("member", dimNames)
+    n.mem <- dim(valueObj$Data)[mem.ind]
+    if (length(members) > n.mem) stop("Too many members selected")
+    if (any(members > n.mem)) stop("Member index selection out of range")
+  }
+  valueObj$Data <- asub(valueObj$Data, idx = members, dims = mem.ind, drop = FALSE)
+  attr(valueObj$Data, "dimensions") <- dimNames
+  return(valueObj)
 }
 
 
@@ -98,52 +98,53 @@ subsetVALUE.members <- function(valueObj, members = NULL) {
 #'@importFrom abind asub
 
 subsetVALUE.years <- function(valueObj, years = NULL) {
-      dimNames <- attr(valueObj$Data, "dimensions")
-      all.years <- getYearsAsINDEX(valueObj)
-      aux.year.ind <- match(years, unique(all.years))
-      if (length(intersect(years, all.years)) == 0) {
-            stop("No valid years for subsetting. The argument \'years\' was ignored")
-      }
-      if (any(years < min(all.years) | years > max(all.years))) {
-            stop("Some subset year boundaries outside the current object extent")
-      }
-      time.ind <- which(all.years %in% years)
-      valueObj$Data <- asub(valueObj$Data, time.ind, grep("time", dimNames), drop = FALSE)
-      attr(valueObj$Data, "dimensions") <- dimNames
-      valueObj$Dates <- sapply(names(valueObj$Dates), function(x) valueObj$Dates[[x]][time.ind],
-                               USE.NAMES = TRUE, simplify = FALSE)
-      attr(valueObj$Dates, "subset") <- "subsetYears"
-      return(valueObj)
+  dimNames <- attr(valueObj$Data, "dimensions")
+  all.years <- getYearsAsINDEX(valueObj)
+  aux.year.ind <- match(years, unique(all.years))
+  if (length(intersect(years, all.years)) == 0) {
+    stop("No valid years for subsetting. The argument \'years\' was ignored")
+  }
+  if (any(years < min(all.years) | years > max(all.years))) {
+    stop("Some subset year boundaries outside the current object extent")
+  }
+  time.ind <- which(all.years %in% years)
+  valueObj$Data <- asub(valueObj$Data, time.ind, grep("time", dimNames), drop = FALSE)
+  attr(valueObj$Data, "dimensions") <- dimNames
+  valueObj$Dates <- sapply(names(valueObj$Dates), function(x) valueObj$Dates[[x]][time.ind],
+                           USE.NAMES = TRUE, simplify = FALSE)
+  attr(valueObj$Dates, "subset") <- "subsetYears"
+  return(valueObj)
 }
 # End
-
 
 #'@keywords internal
 #'@importFrom abind asub
 
 subsetVALUE.season <- function(valueObj, season = NULL) {
-      dimNames <- attr(valueObj$Data, "dimensions")
-      season0 <- getSeason(valueObj)
-      if (!all(season %in% season0)) stop("Month selection outside original season values")      
-      fechas <- as.POSIXlt(valueObj$Dates$start)
-      yrs <- fechas$year + 1900      
-      mon <- as.POSIXlt(valueObj$Dates$start)$mon + 1
-      time.ind <- which(mon %in% season)
-      if (!identical(season, sort(season))) {
-            # Quita los primeros meses del primer año
-            mp <- season[(which(diff(season) < 1) + 1):length(season)]
-            a <- which(mon %in% mp & yrs == unique(yrs[1]))
-            # Quita los ultimos meses del ultimo año
-            mp1 <- season[1:(which(diff(season) < 1))]
-            b <- which(mon %in% mp1 & yrs == tail(unique(yrs),1))
-            time.ind <- time.ind[-c(a,b)]
-      }
-      valueObj$Data <- asub(valueObj$Data, time.ind, grep("time", dimNames), drop = FALSE)
-      attr(valueObj$Data, "dimensions") <- dimNames
-      valueObj$Dates <- sapply(names(valueObj$Dates), function(x) valueObj$Dates[[x]][time.ind],
-                               USE.NAMES = TRUE, simplify = FALSE)
-      attr(valueObj$Dates, "subset") <- "subsetSeason"
-      return(valueObj)
+  dimNames <- attr(valueObj$Data, "dimensions")
+  # date format yyyy-mm-dd hh:mm:ss is assumed
+  # this speeds up the POSIXlt function which uses the slow strptime function
+  # providing a format and timezone to POSIXlt helps but this approach is faster
+  yrs <- as.numeric(substr(valueObj$Dates$start,1,4))
+  mon <- as.numeric(substr(valueObj$Dates$start,6,7))
+  season0 <- unique(mon)
+  if (!all(season %in% season0)) stop("Month selection outside original season values")
+  time.ind <- which(mon %in% season)
+  if (!identical(season, sort(season))) {
+    # Quita los primeros meses del primer año
+    mp <- season[(which(diff(season) < 1) + 1):length(season)]
+    a <- which(mon %in% mp & yrs == unique(yrs[1]))
+    # Quita los ultimos meses del ultimo año
+    mp1 <- season[1:(which(diff(season) < 1))]
+    b <- which(mon %in% mp1 & yrs == tail(unique(yrs),1))
+    time.ind <- time.ind[-c(a,b)]
+  }
+  valueObj$Data <- asub(valueObj$Data, time.ind, which("time"==dimNames), drop = FALSE)
+  attr(valueObj$Data, "dimensions") <- dimNames
+  valueObj$Dates <- sapply(names(valueObj$Dates), function(x) valueObj$Dates[[x]][time.ind],
+                           USE.NAMES = TRUE, simplify = FALSE)
+  attr(valueObj$Dates, "subset") <- "subsetSeason"
+  return(valueObj)
 }
 # End
 
@@ -152,39 +153,39 @@ subsetVALUE.season <- function(valueObj, season = NULL) {
 #'@importFrom abind asub
 
 subsetVALUE.spatial <- function(valueObj, lonLim = NULL, latLim = NULL) {
-      dimNames <- attr(valueObj$Data, "dimensions")
-      if (!is.null(lonLim)) {
-            if (!is.vector(lonLim) | length(lonLim) > 2) {
-                  stop("Invalid longitudinal boundary definition")
-            }
-            lons <- valueObj$xyCoords[ ,"longitude"]
-            lon.ind <- which.min(abs(lons - lonLim[1]))
-            if (length(lonLim) > 1) {
-                  lon2 <- which.min(abs(lons - lonLim[2]))
-                  lon.ind <- lon.ind:lon2
-            }
-            xy.ind <- lon.ind
-      }
-      if (!is.null(latLim)) {
-            if (!is.vector(latLim) | length(latLim) > 2) {
-                  stop("Invalid latitudinal boundary definition")
-            }
-            lats <- valueObj$xyCoords[ ,"latitude"]
-            lat.ind <- which.min(abs(lats - latLim[1]))
-            if (length(latLim) > 1) {
-                  lat2 <- which.min(abs(lats - latLim[2]))
-                  lat.ind <- lat.ind:lat2
-            }
-            xy.ind <- lat.ind
-      }
-      if (exists("lon.ind") & exists("lat.ind")) xy.ind <- intersect(lon.ind, lat.ind)
-      valueObj$xyCoords <- valueObj$xyCoords[xy.ind, ]
-      valueObj$Metadata <- sapply(names(valueObj$Metadata), function(x) valueObj$Metadata[[x]][xy.ind],
-                                  USE.NAMES = TRUE, simplify = FALSE)
-      valueObj$Data <- asub(valueObj$Data, idx = xy.ind, dims = grep("station", dimNames), drop = FALSE)
-      attr(valueObj$Data, "dimensions") <- dimNames
-      attr(valueObj$xyCoords, "subset") <- "subsetSpatial"
-      return(valueObj)
+  dimNames <- attr(valueObj$Data, "dimensions")
+  if (!is.null(lonLim)) {
+    if (!is.vector(lonLim) | length(lonLim) > 2) {
+      stop("Invalid longitudinal boundary definition")
+    }
+    lons <- valueObj$xyCoords[ ,"longitude"]
+    lon.ind <- which.min(abs(lons - lonLim[1]))
+    if (length(lonLim) > 1) {
+      lon2 <- which.min(abs(lons - lonLim[2]))
+      lon.ind <- lon.ind:lon2
+    }
+    xy.ind <- lon.ind
+  }
+  if (!is.null(latLim)) {
+    if (!is.vector(latLim) | length(latLim) > 2) {
+      stop("Invalid latitudinal boundary definition")
+    }
+    lats <- valueObj$xyCoords[ ,"latitude"]
+    lat.ind <- which.min(abs(lats - latLim[1]))
+    if (length(latLim) > 1) {
+      lat2 <- which.min(abs(lats - latLim[2]))
+      lat.ind <- lat.ind:lat2
+    }
+    xy.ind <- lat.ind
+  }
+  if (exists("lon.ind") & exists("lat.ind")) xy.ind <- intersect(lon.ind, lat.ind)
+  valueObj$xyCoords <- valueObj$xyCoords[xy.ind, ]
+  valueObj$Metadata <- sapply(names(valueObj$Metadata), function(x) valueObj$Metadata[[x]][xy.ind],
+                              USE.NAMES = TRUE, simplify = FALSE)
+  valueObj$Data <- asub(valueObj$Data, idx = xy.ind, dims = grep("station", dimNames), drop = FALSE)
+  attr(valueObj$Data, "dimensions") <- dimNames
+  attr(valueObj$xyCoords, "subset") <- "subsetSpatial"
+  return(valueObj)
 }
 # End
 
@@ -193,17 +194,16 @@ subsetVALUE.spatial <- function(valueObj, lonLim = NULL, latLim = NULL) {
 #'@importFrom abind asub
 
 subsetVALUE.stations <- function(valueObj, stationID = NULL) {
-      dimNames <- attr(valueObj$Data, "dimensions")
-      stids <- valueObj$Metadata[["station_id"]]
-      if (any(!(stationID %in% stids))) stop("Unrecognized station codes: ",
-                                             stationID[which(!(stationID %in% stids))])
-      st.ind <- match(stationID, stids)
-      valueObj$xyCoords <- valueObj$xyCoords[st.ind, ]
-      valueObj$Metadata <- sapply(names(valueObj$Metadata), function(x) valueObj$Metadata[[x]][st.ind],
-                                  USE.NAMES = TRUE, simplify = FALSE)
-      valueObj$Data <- asub(valueObj$Data, idx = st.ind, dims = grep("station", dimNames), drop = FALSE)
-      attr(valueObj$Data, "dimensions") <- dimNames
-      attr(valueObj$xyCoords, "subset") <- "subsetStationIDs"
-      return(valueObj)
+  dimNames <- attr(valueObj$Data, "dimensions")
+  stids <- valueObj$Metadata[["station_id"]]
+  if (any(!(stationID %in% stids))) stop("Unrecognized station codes: ",
+                                         stationID[which(!(stationID %in% stids))])
+  st.ind <- match(stationID, stids)
+  valueObj$xyCoords <- valueObj$xyCoords[st.ind, ]
+  valueObj$Metadata <- sapply(names(valueObj$Metadata), function(x) valueObj$Metadata[[x]][st.ind],
+                              USE.NAMES = TRUE, simplify = FALSE)
+  valueObj$Data <- asub(valueObj$Data, idx = st.ind, dims = grep("station", dimNames), drop = FALSE)
+  attr(valueObj$Data, "dimensions") <- dimNames
+  attr(valueObj$xyCoords, "subset") <- "subsetStationIDs"
+  return(valueObj)
 }
-
