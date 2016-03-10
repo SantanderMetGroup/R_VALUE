@@ -34,5 +34,7 @@ index.spell.prcXXth <- function(ts, dates, threshold = 1, condition = c("GT", "G
             rle.obj <- eval(parse(text = paste("rle(aux", ineq, "threshold)")))
             rle.obj$lengths[rle.obj$values == TRUE]
       })
-      quantile(do.call("c", spell.list), probs = prob, type = 7, na.rm = TRUE)
+      q <- quantile(do.call("c", spell.list), probs = prob, type = 7, na.rm = TRUE)
+      if (is.nan(q)) q <- 0
+      return(q)
 }
