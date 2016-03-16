@@ -21,8 +21,11 @@ index.spellmax.annual.prcXXth <- function(ts, dates, threshold = 1, condition = 
                      "GE" = ">=",
                      "LT" = "<",
                      "LE" = "<=")
+      # date format yyyy-mm-dd hh:mm:ss is assumed
+      # this speeds up the POSIXlt function which uses the slow strptime function
+      # providing a format and timezone to POSIXlt helps but this approach is faster
+      yrs <- substr(dates,1,4)
       dates <- as.Date(dates)
-      yrs <- as.POSIXlt(dates)$year
       annual.values <- sapply(1:length(unique(yrs)), function(x) {
             ind <- which(yrs == unique(yrs)[x]) 
             disc <- diff(dates[ind])
