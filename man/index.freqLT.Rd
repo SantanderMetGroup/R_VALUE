@@ -18,6 +18,6 @@ A float number corresponding to the amount of days below the defined threshold o
 Function to compute the amount of days below a predefined threshold.
 }
 \author{
-Douglas Maraun \email{dmaraun@geomar.de}, J. Bedia, D. San-Mart\'in, S. Herrera
+Douglas Maraun, J. Bedia, D. San-Martin, S. Herrera
 }
 

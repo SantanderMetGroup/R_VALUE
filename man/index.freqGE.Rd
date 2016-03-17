@@ -18,6 +18,6 @@ A float number corresponding to the amount of days above or equal the defined th
 Function to compute the amount of days above or equal a predefined threshold mean index. Missing values are ignored.
 }
 \author{
-Dougals Maraun \email{dmaraun@geomar.de}, J. Bedia, D. San-Mart\'in, S. Herrera
+Douglas Maraun, J. Bedia, D. San-Martin, S. Herrera
 }
 

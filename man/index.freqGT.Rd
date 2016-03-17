@@ -18,6 +18,6 @@ A float number corresponding to the amount of days above the defined threshold o
 Function to compute the amount of days above a predefined threshold.
 }
 \author{
-Dougals Maraun \email{dmaraun@geomar.de}
+Douglas Maraun, J. Bedia, D. San-Martin, S. Herrera
 }
 

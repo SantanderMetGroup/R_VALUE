@@ -12,12 +12,12 @@ index.amountFreqGT(ts, threshold = 1)
 \item{threshold}{A float number defining the threshold considered. Default to 1.}
 }
 \value{
-A float number corresponding to the amount of days above the defined threshold of the input.
+A float number corresponding to the amount fallen the days above the input threshold.
 }
 \description{
 Function to compute the amount from events above a predefined threshold.
 }
 \author{
-Neyko Neykov \email{neyko.neykov@meteo.bg}, J. Bedia, D. San-Mart\'in, S. Herrera
+Neyko Neykov, J. Bedia, D. San-Martin, S. Herrera
 }
 
