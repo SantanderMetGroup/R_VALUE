@@ -7,7 +7,7 @@
 wrapperFUN(metric = c("obs", "pred", "measure"), names = NULL,
   season = c("annual", "DJF", "MAM", "JJA", "SON"),
   member.aggregation = "none", index.fun = NULL, measure.fun = NULL,
-  index.args = NULL, measure.args = NULL, o = o, p = p, na.prop = 0.9)
+  index.args = NULL, measure.args = NULL, o = o, p = p, na.prop = 1)
 }
 \arguments{
 \item{metric}{Character vector.}

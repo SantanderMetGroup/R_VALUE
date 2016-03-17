@@ -48,7 +48,7 @@
 #' 
 #' 
 #' @return A list of 2D matrices. The length of the list corresponds to the periods indicated in the \code{season} argument (default to 5,
-#'  annual and the four standard WMO seasons). Matrix attributes indicate the station names (in the row/column order they appear),
+#'  annual and the four standard WMO seasons). Matrix attributes indicate -in the row/column order they appear- the station names, id codes,
 #'   and their geographical coordinates. Global attributes provide other method details.   
 #' @author J. Bedia 
 #' @export
@@ -62,7 +62,6 @@
 #' # Correlation matrix for winter and summer:
 #' djfjja <- corrMat.VALUE(stationObj, predictions.file, season = c("DJF","JJA"))
 #' }
-
 
 corrMat.VALUE <- function(stationObj,
                           predictions.file = NULL,
@@ -111,9 +110,11 @@ corrMat.VALUE <- function(stationObj,
             # Member aggregation "after"
             cormat <- unname(apply(arr, MARGIN = c(2,3), FUN = mean, na.rm = TRUE))
             arr <- NULL
-            attr(cormat, "station_names") <- o$Metadata$name
-            attr(cormat, "lon") <- o$xyCoords[,1]
-            attr(cormat, "lat") <- o$xyCoords[,2]
+            attr(cormat, "station_id") <- aux$Metadata$station_id
+            attr(cormat, "station_names") <- aux$Metadata$name
+            attr(cormat, "lat") <- unname(aux$xyCoords[,2])
+            attr(cormat, "lon") <- unname(aux$xyCoords[,1])
+            attr(cormat, "lat") <- unname(aux$xyCoords[,2])
             return(cormat)
       })
       names(mat.list) <- season
@@ -121,7 +122,7 @@ corrMat.VALUE <- function(stationObj,
       attr(mat.list, "correlation.type") <- method
       attr(mat.list, "max.na.prop") <- max.na.prop
       attr(mat.list, "deseason") <- deseason
-      if (deseason) attr(mat.list, "ma.window") <- window.width
+      if (deseason) attr(mat.list, "deseason:window") <- window.width
       return(mat.list)
 }
 

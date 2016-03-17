@@ -18,7 +18,7 @@ A list with obj and pred intersected
 Temporal and spatial matching between obs and pred
 }
 \author{
-S. Herrera
+S. Herrera, D. San-Martin
 }
 \keyword{internal}
 

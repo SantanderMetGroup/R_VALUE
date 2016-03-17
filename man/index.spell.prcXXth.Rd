@@ -34,6 +34,6 @@ The function requires the date information in order to ensure that spells
  are computed on consecutive records.
 }
 \author{
-J. Bedia, J.M. Gutierrez
+N. Neykov, S. Herrera, J. Bedia
 }
 

@@ -33,7 +33,7 @@ moving average computation of the reference daily climatology. Default to 31 day
 }
 \value{
 A list of 2D matrices. The length of the list corresponds to the periods indicated in the \code{season} argument (default to 5,
- annual and the four standard WMO seasons). Matrix attributes indicate the station names (in the row/column order they appear),
+ annual and the four standard WMO seasons). Matrix attributes indicate -in the row/column order they appear- the station names, id codes,
   and their geographical coordinates. Global attributes provide other method details.
 }
 \description{

@@ -23,6 +23,6 @@ A float number with the corresponding statistis.
 Computes several annual cycle statistics
 }
 \author{
-J. Bedia
+Sven Kotlarski, S. Herrera, J. Bedia, D. San Martin
 }
 
