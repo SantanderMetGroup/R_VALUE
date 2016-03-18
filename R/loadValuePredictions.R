@@ -52,7 +52,7 @@
 
 loadValuePredictions <- function(stationObj, predictions.file, tz = "", na.strings = "NA") {
       stationObj$Data <- NULL
-      season <- getSeason(stationObj)
+      season <- getSeason.VALUE(stationObj)
       years <- unique(getYearsAsINDEX.VALUE(stationObj))
       stids <- stationObj$Metadata$station_id
       dataset <- predictions.file
