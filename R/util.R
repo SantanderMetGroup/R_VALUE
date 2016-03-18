@@ -27,16 +27,16 @@ getSeason <- function(obj) {
 #' @author juaco
 #' @keywords internal
 
-getYearsAsINDEX <- function(obj) {
+getYearsAsINDEX.VALUE <- function(obj) {
       season <- getSeason(obj)
-      aux.dates <- as.POSIXlt(obj$Dates$start)
-      yrs <- aux.dates$year + 1900
+      yrs <- as.numeric(substr(obs$Dates$start,1,4))
+      mon <- as.numeric(substr(obs$Dates$start,6,7))
       if (!identical(season, sort(season))) {
             yy <- unique(yrs)[-1]
-            aux <- match(aux.dates$mon + 1, season)
+            aux <- match(mon + 1, season)
             brks <- c(1, which(diff(aux) < 0) + 1, length(aux) + 1)
             l <- lapply(1:(length(brks) - 1), function(x) {
-                  a <- yrs[brks[x] : (brks[x + 1] - 1)]
+                  a <- yrs[brks[x]:(brks[x + 1] - 1)]
                   return(rep(yy[x], length(a)))
             })
             yrs  <- do.call("c", l)
