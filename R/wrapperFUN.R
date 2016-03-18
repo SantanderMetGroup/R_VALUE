@@ -207,13 +207,13 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
 #' @keywords internal
 
 getIntersect <- function(obs, prd){
-  obj <- list()
-  commonStartDates <- intersect(obs$Dates$start,prd$Dates$start)
-  commonEndDates <- intersect(obs$Dates$end,prd$Dates$end)
-  commonStations <- intersect(attr(obs$xyCoords, "dimnames")[[1]],attr(prd$xyCoords, "dimnames")[[1]])
-  obj$obs <- subsetData(obs,commonStartDates, commonEndDates, commonStations)
-  obj$prd <- subsetData(prd,commonStartDates, commonEndDates, commonStations)
-  return(obj)
+      obj <- list()
+      commonStartDates <- intersect(obs$Dates$start,prd$Dates$start)
+      commonEndDates <- intersect(obs$Dates$end,prd$Dates$end)
+      commonStations <- intersect(attr(obs$xyCoords, "dimnames")[[1]],attr(prd$xyCoords, "dimnames")[[1]])
+      obj$obs <- subsetData(obs,commonStartDates, commonEndDates, commonStations)
+      obj$prd <- subsetData(prd,commonStartDates, commonEndDates, commonStations)
+      return(obj)
 }
 
 #' @title subsetData
@@ -227,20 +227,20 @@ getIntersect <- function(obs, prd){
 #' @keywords internal
 
 subsetData <- function(obj, startDates, endDates, stations){
-  result = list()
-  idStartDates <- which(is.element(obj$Dates$start, startDates))
-  idEndDates <- which(is.element(obj$Dates$end, endDates))
-  idStations <- which(is.element(attr(obj$xyCoords, "dimnames")[[1]], stations))
-  result$Dates$start <- obj$Dates$start[idStartDates]
-  result$Dates$end <- obj$Dates$end[idEndDates]
-  result$xyCoords <- obj$xyCoords[idStations,]
-  result$Metadata$source <- obj$Metadata$source[idStations]
-  result$Metadata$altitude <- obj$Metadata$altitude[idStations]
-  result$Metadata$name <- obj$Metadata$name[idStations]
-  result$Metadata$station_id <- obj$Metadata$station_id[idStations]
-  result$Data <- obj$Data[,idStartDates,idStations,drop=FALSE]
-  attr(result$Data, "dimensions") <- attr(obj$Data, "dimensions")
-  return(result)
+      result = list()
+      idStartDates <- which(is.element(obj$Dates$start, startDates))
+      idEndDates <- which(is.element(obj$Dates$end, endDates))
+      idStations <- which(is.element(attr(obj$xyCoords, "dimnames")[[1]], stations))
+      result$Dates$start <- obj$Dates$start[idStartDates]
+      result$Dates$end <- obj$Dates$end[idEndDates]
+      result$xyCoords <- obj$xyCoords[idStations,]
+      result$Metadata$source <- obj$Metadata$source[idStations]
+      result$Metadata$altitude <- obj$Metadata$altitude[idStations]
+      result$Metadata$name <- obj$Metadata$name[idStations]
+      result$Metadata$station_id <- obj$Metadata$station_id[idStations]
+      result$Data <- obj$Data[,idStartDates,idStations,drop = FALSE]
+      attr(result$Data, "dimensions") <- attr(obj$Data, "dimensions")
+      return(result)
 }
 
 #' @title Complete missing dimensions of VALUE objects
@@ -252,24 +252,24 @@ subsetData <- function(obj, startDates, endDates, stations){
 #' @author J. Bedia
 
 dimFix <- function(valueObj) {
-  # Add fake 'station' dimension to single-station datasets
-  if (!("station" %in% attr(valueObj$Data, "dimensions"))) {
-    dimNames <- c(attr(valueObj$Data, "dimensions"), "station")
-    perm <- if (length(attr(valueObj$Data, "dimensions")) == 2) { # "member","time"
-      c(2,3,1)
-    } else {# "time"
-      c(2,1)
-    }
-    valueObj$Data <- unname(aperm(abind(valueObj$Data, NULL, along = 0), perm = perm))
-    attr(valueObj$Data, "dimensions") <- dimNames
-  }
-  # Add fake member dimension to deterministic/obs
-  if (!("member" %in% attr(valueObj$Data, "dimensions"))) {
-    dimNames <- c("member", attr(valueObj$Data, "dimensions"))
-    valueObj$Data <- unname(abind(valueObj$Data, NULL, along = -1))    
-    attr(valueObj$Data, "dimensions") <- dimNames
-  }
-  return(valueObj)
+      # Add fake 'station' dimension to single-station datasets
+      if (!("station" %in% attr(valueObj$Data, "dimensions"))) {
+            dimNames <- c(attr(valueObj$Data, "dimensions"), "station")
+            perm <- if (length(attr(valueObj$Data, "dimensions")) == 2) { # "member","time"
+                  c(2,3,1)
+            } else {# "time"
+                  c(2,1)
+            }
+            valueObj$Data <- unname(aperm(abind(valueObj$Data, NULL, along = 0), perm = perm))
+            attr(valueObj$Data, "dimensions") <- dimNames
+      }
+      # Add fake member dimension to deterministic/obs
+      if (!("member" %in% attr(valueObj$Data, "dimensions"))) {
+            dimNames <- c("member", attr(valueObj$Data, "dimensions"))
+            valueObj$Data <- unname(abind(valueObj$Data, NULL, along = -1))    
+            attr(valueObj$Data, "dimensions") <- dimNames
+      }
+      return(valueObj)
 }
 
 
