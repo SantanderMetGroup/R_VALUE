@@ -1,4 +1,4 @@
-#' @title Frequency above or equal the threshold
+#' @title Absolute fequency above or equal the threshold
 #' @description Function to compute the amount of days above or equal a predefined threshold mean index. Missing values are ignored.
 #' @author Douglas Maraun, J. Bedia, D. San-Martin, S. Herrera
 #' @param ts A vector containing the data

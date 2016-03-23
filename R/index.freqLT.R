@@ -1,4 +1,4 @@
-#' @title Frequency below the threshold
+#' @title Absolute frequency below the threshold
 #' @description Function to compute the amount of days below a predefined threshold. 
 #' @author Douglas Maraun, J. Bedia, D. San-Martin, S. Herrera
 #' @param ts A vector containing the data

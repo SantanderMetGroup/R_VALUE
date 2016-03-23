@@ -2,7 +2,7 @@
 % Please edit documentation in R/index.freqGE.R
 \name{index.freqGE}
 \alias{index.freqGE}
-\title{Frequency above or equal the threshold}
+\title{Absolute fequency above or equal the threshold}
 \usage{
 index.freqGE(ts, threshold = 1)
 }

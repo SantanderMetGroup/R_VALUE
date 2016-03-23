@@ -1,4 +1,4 @@
-#' @title Frequency above the threshold
+#' @title Absolute frequency above the threshold
 #' @description Function to compute the amount of days above a predefined threshold.
 #' @author Douglas Maraun, J. Bedia, D. San-Martin, S. Herrera
 #' @param ts A vector containing the data

@@ -2,7 +2,7 @@
 % Please edit documentation in R/index.freqLT.R
 \name{index.freqLT}
 \alias{index.freqLT}
-\title{Frequency below the threshold}
+\title{Absolute frequency below the threshold}
 \usage{
 index.freqLT(ts, threshold = 1)
 }

@@ -1,4 +1,4 @@
-#' @title Frequency lower or equal the threshold
+#' @title Absolute frequency lower or equal the threshold
 #' @description Function to compute the amount of days below or equal of a predefined threshold mean index. 
 #' @author Douglas Maraun \email{dmaraun@@geomar.de}
 #' @param ts A vector containing the data

@@ -2,7 +2,7 @@
 % Please edit documentation in R/index.freqLE.R
 \name{index.freqLE}
 \alias{index.freqLE}
-\title{Frequency lower or equal the threshold}
+\title{Absolute frequency lower or equal the threshold}
 \usage{
 index.freqLE(ts, threshold = 1)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/index.freqGT.R
 \name{index.freqGT}
 \alias{index.freqGT}
-\title{Frequency above the threshold}
+\title{Absolute frequency above the threshold}
 \usage{
 index.freqGT(ts, threshold = 1)
 }
