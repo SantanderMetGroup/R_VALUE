@@ -1,13 +1,6 @@
 R.VALUE
 =======
-* Version used for launching the validation published in the VALUE Portal
-* Redefined index and measure calculation routines to be applied on vectors
-* Created a wrapper function to launch the validation using the new indices and measures 
-
-* Other additions and modifications
-  * Added new function for computing threshold-based joint probability matrices
-  * Introduced the use of ff for optimized memory usage in some routines (still under testing)
-  * Added new routine for seasonal cycle removal
-  * corrMat.VALUE accepting several seasons in the same call
-  * Other minor bug fixes and enhancements
+* Added new relative frequency indices:
+  * index.freq.rel.*, where *=[GE,GT,LE,LT]
+* Added simple day intensity index in function index.meanGE
 
