@@ -51,6 +51,7 @@
 #' }
 
 loadValuePredictions <- function(stationObj, predictions.file, tz = "", na.strings = "NA") {
+      message("[", Sys.time(), "] Loading prediction data ...", sep = "")
       stationObj$Data <- NULL
       season <- getSeason.VALUE(stationObj)
       years <- unique(getYearsAsINDEX.VALUE(stationObj))
@@ -61,8 +62,9 @@ loadValuePredictions <- function(stationObj, predictions.file, tz = "", na.strin
             zipFileContents <- unzip(dataset, list = TRUE)$Name
             present.files <- sapply(zipFileContents, function(zipFileContent) {
                   con <- unz(dataset, zipFileContent)
-                  on.exit(close.connection(con))
-                  length(readLines(con, n = 1)) > 0
+                  a = length(readLines(con, n = 1)) > 0
+                  close.connection(con)
+                  return(a)
             })
             zipFileContents  <- zipFileContents[present.files]
             n.members <- length(zipFileContents)
@@ -108,16 +110,18 @@ loadValuePredictions <- function(stationObj, predictions.file, tz = "", na.strin
       } else {
             c("member", "time", "station")
       }
-      aux[which(aux == -9999)] <- NA
       aux <- unname(aux) 
       attr(aux, "dimensions") <- dimensions
       stationObj$Data <- aux
+      rm(aux)
+      gc()
       stationObj$Dates <- timeBoundsValue(timePars$timeDates, tz)
       ind.st <- na.omit(match(header[-1], stationObj$Metadata$station_id))
       stationObj$xyCoords <- stationObj$xyCoords[ind.st, ]
       stationObj$Metadata <- sapply(names(stationObj$Metadata), function(x) stationObj$Metadata[[x]][ind.st],
                                     USE.NAMES = TRUE, simplify = FALSE)
       attr(stationObj, "datatype") <- "predictions"
+      message(paste("[", Sys.time(), "] Prediction loaded.", sep = ""))
       return(stationObj)
 }
 # End
