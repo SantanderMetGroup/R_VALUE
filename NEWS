@@ -1,4 +1,5 @@
 R.VALUE
 =======
-* Minor changes in index.spell* functions for improved speed
+* Added Mutual Information index for the analysis of joint threshold exceedances
+* Other minor documentation changes
 

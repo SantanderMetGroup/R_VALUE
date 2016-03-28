@@ -5,9 +5,9 @@
 \title{Joint probability analysis}
 \usage{
 jointProbMat.VALUE(stationObj, predictions.file = NULL, season = c("annual",
-  "DJF", "MAM", "JJA", "SON"), aggr.type = c("before", "after"),
-  prob.type = c("DD", "DW", "WW", "WD"), threshold = 1,
-  max.na.prop = 0.25, use.ff = FALSE)
+  "DJF", "MAM", "JJA", "SON"), aggr.type = c("after", "before"),
+  prob.type = c("DD", "DW", "WW", "WD"), output = c("MI", "jointProb"),
+  threshold = 1, max.na.prop = 0.25, use.ff = FALSE)
 }
 \arguments{
 \item{stationObj}{An R-VALUE object containing station data (as returned by \code{\link{loadValueStations}}).}
@@ -25,6 +25,9 @@ multiple members be performed \code{"before"} (default) or \code{"after"} comput
 \item{prob.type}{Character vector indicating the type of probability to be computed. Currently accepted values are:
 \code{"DD"} for dry-dry, \code{"DW"} for dry-wet, \code{"WW"} for wet-wet and \code{"WD"} for wet-dry.}
 
+\item{output}{Character string indicating the type of measure to be retained. Default to \code{"MI"} for the mutual information criterion.
+For the joint probabilities use \code{"jointProb"}. See details.}
+
 \item{threshold}{Threshold above which values are used/discarded (i.e., values greater or equal than \code{threshold} are considered as Wet).}
 
 \item{max.na.prop}{Maximum allowed proportion of missing data (Default to 0.25). See details}
@@ -39,7 +42,70 @@ geographical coordinates. In addition, the type of joint probability, as coded i
 \description{
 Computes different joint (precipitation) probabilities between stations
 }
+\details{
+The typical way to analyze dependencies is comparing the joint $P(wet_{i},wet_{j})$ (i.e. \code{output="jointProb"})
+and the product of marginals $P(wet_{i}) * P(wet_{j})$. The difference is zero only in case that
+$wet_i$ and $wet_j$ are independent and the larger the value, the more dependent they are.
+ Using the joint probability alone would make comparisons a bit difficult since the final result would be
+a combination of the dependency between both wet series and the marginal probabilities
+in each of the stations (e.g. the joint for web values would be smaller in dry climates),
+so the analysis of dependencies will be modulated by the different climatologies.
+In order to avoid this, the mutual information the mutual information (\code{output="MI"}) of 
+two random variables is a measure of the mutual dependence between the two variables.
+     
+If the two events occur together exactly as frequently as one would
+expect by chance, the ratio inside the log is equal to 1, giving us a value of zero;
+ if they occur more frequently than one would expect by chance, the ratio is greater than 1
+ MI > 0; and conversely if they occur less frequently than one would expect by chance, the ratio
+is less than 1 so MI < 0. 
+
+Not limited to real-valued random variables like the correlation coefficient,
+ MI is more general and determines how similar the joint distribution p(X,Y) is to the products
+  of factored marginal distribution p(X)p(Y)
+}
+\examples{
+\dontrun{
+obs.file <- file.path(find.package("R.VALUE"), "example_datasets", "VALUE_53_ECAD_Germany_v1.zip")
+stationObj <- loadValueStations(obs.file, var = "precip")
+# Wet-wet probability (precip >= 1mm)
+ww <- jointProbMat.VALUE(stationObj,
+                        predictions.file = NULL,
+                        season = "annual",
+                        threshold = 1,
+                        max.na.prop = 1,
+                        aggr.type = "after",
+                        prob.type = "WW",
+                        use.ff = FALSE,
+                        output = "MI")
+
+# Dry-dry joint probability (precip < 1mm)
+dd <- jointProbMat.VALUE(stationObj,
+                         predictions.file = NULL,
+                         season = "annual",
+                         threshold = 1,
+                         max.na.prop = 1,
+                         aggr.type = "after",
+                         prob.type = "DD",
+                         use.ff = FALSE,
+                         output = "MI")
+                         
+# Draw matrix - requires lattice!
+mat <- matrix(ncol = ncol(ww), nrow = nrow(ww))
+mat[upper.tri(mat)] <- ww[upper.tri(ww)]
+mat[lower.tri(mat)] <- dd[upper.tri(dd)]
+station.labels <- attr(ww, "station_names")
+scales.list <- list(x = list(labels = station.labels, rot = 90,
+                           at = seq(1,ncol(ww),1), cex = .5),
+                    y = list(labels = station.labels,
+                             at = seq(1,ncol(ww),1), cex = .5))
+# lattice::levelplot(mat, xlab = "P(DRY,DRY)", ylab = "P(WET,WET)",
+# main = "Mutual Information Matrix", scales = scales.list)
+}
+}
 \author{
 J. Bedia
+}
+\references{
+\url{https://en.wikipedia.org/wiki/Mutual_information}
 }
 
