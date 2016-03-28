@@ -1,6 +1,4 @@
 R.VALUE
 =======
-* Added new relative frequency indices:
-  * index.freq.rel.*, where *=[GE,GT,LE,LT]
-* Added simple day intensity index in function index.meanGE
+* Minor changes in index.spell* functions for improved speed
 

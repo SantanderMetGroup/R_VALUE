@@ -8,8 +8,8 @@ Imports:
     ff
 Type: Package
 Title: Climate data validation in the framework of the COST action VALUE
-Version: 1.1-0
-Date: 2016-03-23
+Version: 1.1-2
+Date: 2016-03-28
 Authors@R: as.person(c(
     "Santander Meteorology Group [aut]",      
     "Predictia Intelligent Data Solutions [ctb]",
