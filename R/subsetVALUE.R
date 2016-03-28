@@ -63,12 +63,14 @@ subsetVALUE <- function(valueObj,
                         stationID = NULL,
                         members = NULL,
                         season = NULL,
+                        dates = NULL,
                         years = NULL,
                         lonLim = NULL,
                         latLim = NULL) {
       if (!is.null(stationID)) valueObj <- subsetVALUE.stations(valueObj, stationID)
       if (!is.null(members)) valueObj <- subsetVALUE.members(valueObj, members)      
       if (!is.null(season)) valueObj <- subsetVALUE.season(valueObj, season)
+      if (!is.null(dates)) valueObj <- subsetVALUE.dates(valueObj, dates)
       if (!is.null(years)) valueObj <- subsetVALUE.years(valueObj, years)
       if (!is.null(lonLim) | !is.null(latLim)) valueObj <- subsetVALUE.spatial(valueObj, lonLim, latLim)
       return(valueObj)
@@ -148,6 +150,22 @@ subsetVALUE.season <- function(valueObj, season = NULL) {
 }
 # End
 
+#'@keywords internal
+#'@importFrom abind asub
+
+subsetVALUE.dates <- function(valueObj, dates = NULL) {
+  dimNames <- attr(valueObj$Data, "dimensions")
+  # date format yyyy-mm-dd hh:mm:ss is assumed
+  filters = format(dates,'%Y-%m-%d %H:%M:%S')
+  time.ind <- which(valueObj$Dates$start %in% filters)
+  valueObj$Data <- asub(valueObj$Data, time.ind, which("time"==dimNames), drop = FALSE)
+  attr(valueObj$Data, "dimensions") <- dimNames
+  valueObj$Dates <- sapply(names(valueObj$Dates), function(x) valueObj$Dates[[x]][time.ind],
+                           USE.NAMES = TRUE, simplify = FALSE)
+  attr(valueObj$Dates, "subset") <- "subsetDates"
+  return(valueObj)
+}
+# End
 
 #'@keywords internal
 #'@importFrom abind asub
