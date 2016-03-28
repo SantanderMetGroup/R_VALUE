@@ -22,8 +22,9 @@ index.spell.prcXXth <- function(ts, dates, threshold = 1, condition = c("GT", "G
                      "LT" = "<",
                      "LE" = "<=")
       # Index of discontinuities in the data series
-      dates <- as.Date(dates)
+      dates <- as.Date(dates, format = "%Y-%m-%d %H:%M:%S", tz = "UTC")
       disc <- diff(dates)
+      dates <- NULL
       ind <- if (any(disc > 1)) {
             c(0, which(disc > 1))
       } else {

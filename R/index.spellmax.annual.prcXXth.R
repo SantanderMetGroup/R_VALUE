@@ -25,9 +25,10 @@ index.spellmax.annual.prcXXth <- function(ts, dates, threshold = 1, condition = 
       # this speeds up the POSIXlt function which uses the slow strptime function
       # providing a format and timezone to POSIXlt helps but this approach is faster
       yrs <- substr(dates,1,4)
-      dates <- as.Date(dates)
-      annual.values <- sapply(1:length(unique(yrs)), function(x) {
-            ind <- which(yrs == unique(yrs)[x]) 
+      dates <- as.Date(dates, format = "%Y-%m-%d %H:%M:%S", tz = "UTC")
+      uyrs <- unique(yrs)
+      annual.values <- sapply(1:length(uyrs), function(x) {
+            ind <- which(yrs == uyrs[x]) 
             disc <- diff(dates[ind])
             aux <- ts[ind]
             ind2 <- if (any(disc > 1)) {# Index of discontinuities in the data series
