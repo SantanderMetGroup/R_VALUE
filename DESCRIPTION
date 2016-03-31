@@ -11,19 +11,24 @@ Suggests:
 Type: Package
 Title: Climate data validation in the framework of the COST action VALUE
 Version: 1.2-1
-Date: 2016-03-28
+Date: 2016-03-31
 Authors@R: as.person(c(
     "Santander Meteorology Group [aut]",      
     "Predictia Intelligent Data Solutions [ctb]",
     "Joaquin Bedia <bediaj@unican.es> [ctb, cre]",
+    "Thomas Bosshard <thomas.bosshard@smhi.se> [ctb]",
+    "Maria J. Casado <mcasadoc@aemet.es> [ctb]",
+    "Jose M. Gutierrez <gutierjm@unican.es> [ctb]",
     "Sixto Herrera <sixto@predictia.es> [ctb]",
+    "Elke Hertig <elke.hertig@geo.uni-augsburg.de> [ctb]",
+    "Sven Kotlarski <sven.kotlarski@env.ethz.ch> [ctb]",
+    "Douglas Maraun <dmaraun@geomar.de> [ctb]",
+    "Neyko Neykov <neyko.neykov@meteo.bg> [ctb]",
+    "Petra Ramos <pramosc@aemet.es> [ctb]",
+    "Ole Roessler <ole.roessler@giub.unibe.ch> [ctb]",
     "Daniel San Martin <dani@predictia.es> [ctb]",
     "Max Tuni <max@predictia.es> [ctb]",
-    "Sven Kotlarski <sven.kotlarski@env.ethz.ch> [ctb]",
-    "Ole Roessler <ole.roessler@giub.unibe.ch> [ctb]",
-    "Neyko Neykov <neyko.neykov@meteo.bg> [ctb]",
-    "Douglas Maraun <dmaraun@geomar.de> [ctb]",
-    "Elke Hertig <elke.hertig@geo.uni-augsburg.de> [ctb]"))
+    "Martin Widmann <M.Widmann@bham.ac.uk> [ctb]"))
 BugReports: https://github.com/SantanderMetGroup/R_VALUE/issues
 Description: Load climate and weather data into R, compute several indices and
     perform climate data validation using the tools developed in the COST

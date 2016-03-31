@@ -4,10 +4,10 @@
 \alias{getSeason.VALUE}
 \title{Get season from a station or field object}
 \usage{
-getSeason.VALUE(obj)
+getSeason.VALUE(objDates)
 }
 \arguments{
-\item{obj}{Any object extending the station or field classes}
+\item{objDates}{Dates as directly extracted from any station or predictions object}
 }
 \value{
 An integer vector with the season

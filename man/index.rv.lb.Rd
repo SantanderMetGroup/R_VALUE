@@ -4,14 +4,15 @@
 \alias{index.rv.lb}
 \title{Return Value lower tail}
 \usage{
-index.rv.lb(ts, prob = 20, INDEX = 1:length(ts))
+index.rv.lb(ts, prob = 20, annual.index = TRUE)
 }
 \arguments{
 \item{ts}{A vector containing the data}
 
 \item{prob}{Return period considered. Default to 20.}
 
-\item{INDEX}{A Vector defining the aggregation periods (passed to \code{tapply}). No aggregation is performed by default.}
+\item{annual.index}{Logical. If set to TRUE, a vector defining the years for aggregation is passed by \code{\link{wrapperFUN}}.
+Otherwise no temporal aggregation of the input time series is performed.}
 }
 \value{
 Return value for the lower tail
@@ -20,6 +21,6 @@ Return value for the lower tail
 Function to compute the 1/prob return value (left tail).
 }
 \author{
-Neyko Neykov \email{neyko.neykov@meteo.bg}
+Neyko Neykov, S. Herrera, J. Bedia
 }
 

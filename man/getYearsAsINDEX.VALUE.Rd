@@ -4,7 +4,7 @@
 \alias{getYearsAsINDEX.VALUE}
 \title{Get years as a factor}
 \usage{
-getYearsAsINDEX.VALUE(obj)
+getYearsAsINDEX.VALUE(objDates)
 }
 \arguments{
 \item{obj}{Any object extending the station or field classes}
@@ -18,7 +18,7 @@ Extract the year as a factor (e.g. for computing annual statistics)
 }
 \details{
 The function performs a very basic operation, extracting the year element from the 
-dates previously converted to POSIXlt. The trick lies in the year-crossing seasons. For instance:
+dates. The trick lies in the year-crossing seasons. For instance:
  by convention, winter 2001 encompasses December 2000 and January, February 2001. Therefore, in order to compute
 annual statistics for a year-crossing season, it is necessary to modify first the vector of years, 
 and assign year 2001 to the preceding December. Similarly, the next December 2001 belongs to winter 2002,

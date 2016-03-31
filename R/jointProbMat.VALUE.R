@@ -41,13 +41,13 @@
 #' a combination of the dependency between both wet series and the marginal probabilities
 #' in each of the stations (e.g. the joint for web values would be smaller in dry climates),
 #' so the analysis of dependencies will be modulated by the different climatologies.
-#' In order to avoid this, the mutual information the mutual information (\code{output="MI"}) of 
+#' In order to avoid this, the mutual information of 
 #' two random variables is a measure of the mutual dependence between the two variables.
 #'      
 #' If the two events occur together exactly as frequently as one would
-#' expect by chance, the ratio inside the log is equal to 1, giving us a value of zero;
+#' expect by chance, the ratio inside the log is equal to 1, giving a value of zero;
 #'  if they occur more frequently than one would expect by chance, the ratio is greater than 1
-#'  MI > 0; and conversely if they occur less frequently than one would expect by chance, the ratio
+#'  so MI > 0; and conversely if they occur less frequently than one would expect by chance, the ratio
 #' is less than 1 so MI < 0. 
 #' 
 #' Not limited to real-valued random variables like the correlation coefficient,
