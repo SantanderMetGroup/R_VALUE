@@ -5,7 +5,7 @@
 \title{Select an arbitrary subset from a VALUE object along one or more of its dimensions}
 \usage{
 subsetVALUE(valueObj, stationID = NULL, members = NULL, season = NULL,
-  years = NULL, lonLim = NULL, latLim = NULL)
+  dates = NULL, years = NULL, lonLim = NULL, latLim = NULL)
 }
 \arguments{
 \item{valueObj}{The input object to be subset. This is either an observation, as returned by \code{loadValueStations}, 
@@ -16,6 +16,10 @@ subsetVALUE(valueObj, stationID = NULL, members = NULL, season = NULL,
 \item{members}{An integer vector indicating \strong{the position} of the members to be subset. Default to NULL.}
 
 \item{season}{An integer vector indicating the months to be subset.}
+
+\item{dates}{A vector of dates for subsetting on arbitrary dates. This is a character (or \code{POSIXct}) vector
+following the format \dQuote{YYYY-MM-DD} (i.e., \code{format = "\%Y-\%m-\%d"} as in \code{\link{strptime}}). 
+This is directly passed by the element \code{valueObject$Dates$start}, for instance.}
 
 \item{years}{The years to be selected. Note that this can be either a continuous or discontinuous
 series of years, the latter option often used in a cross-validation framework.
