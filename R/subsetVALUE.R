@@ -99,7 +99,7 @@ subsetVALUE.members <- function(valueObj, members = NULL) {
 
 subsetVALUE.years <- function(valueObj, years = NULL) {
       dimNames <- attr(valueObj$Data, "dimensions")
-      all.years <- getYearsAsINDEX.VALUE(valueObj)
+      all.years <- getYearsAsINDEX.VALUE(valueObj$Dates$start)
       aux.year.ind <- match(years, unique(all.years))
       if (length(intersect(years, all.years)) == 0) {
             stop("No valid years for subsetting. The argument \'years\' was ignored")

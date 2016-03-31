@@ -108,7 +108,6 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
       p <- int$prd
       int <- NULL
       message("[", Sys.time(), "] OK")
-      
       # Member aggregation (the array is re-assigned the member dimension after the aggregation)
       if (member.aggregation != "none" & dim(p$Data)[1] > 1) {
             message("[", Sys.time(), "] Aggregating members...")
@@ -141,7 +140,7 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
                   seas <- switch(season[j],"annual" = 1:12,"DJF" = c(12,1,2),"MAM" = 3:5,"JJA" = 6:8,"SON" = 9:11)
                   sea.o <- subsetVALUE(st.o, season = seas)
                   sea.p <- subsetVALUE(st.p, season = seas)
-                  # Vectorization
+                  # Vectorization ---
                   obs <- as.matrix(drop(sea.o$Data))
                   prd <- as.matrix(drop(sea.p$Data))
                   if (n.mem > 1) prd <- t(prd)
@@ -181,6 +180,14 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
                                                 # Subroutine for passing dates ----
                                                 if ("dates" %in% names(arg.list)) {
                                                       arg.list$dates <- aux.list[[l]]$dates
+                                                }
+                                                # Passing years for aggregation ----
+                                                if ("annual.index" %in% names(index.args)) {
+                                                      arg.list[["annual.index"]] <- if (isTRUE(index.args[["annual.index"]])) {
+                                                            getYearsAsINDEX.VALUE(aux.list[[l]]$dates)
+                                                      } else {
+                                                            1:length(aux.list[[l]]$dates)
+                                                      }
                                                 }
                                           }
                                           aux[l] <- do.call(index.fun, arg.list)

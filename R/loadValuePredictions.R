@@ -52,8 +52,8 @@
 
 loadValuePredictions <- function(stationObj, predictions.file, tz = "", na.strings = "NA") {
       stationObj$Data <- NULL
-      season <- getSeason.VALUE(stationObj)
-      years <- unique(getYearsAsINDEX.VALUE(stationObj))
+      season <- getSeason.VALUE(stationObj$Dates$start)
+      years <- unique(getYearsAsINDEX.VALUE(stationObj$Dates$start))
       stids <- stationObj$Metadata$station_id
       dataset <- predictions.file
       # Multimember case, ZIP file
