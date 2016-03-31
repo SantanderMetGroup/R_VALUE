@@ -94,6 +94,8 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
                        measure.args = NULL,
                        o = o,
                        p = p,
+                       processes = data.frame(),
+                       processNames = c(),
                        na.prop = 1) {
       metric <- match.arg(arg = metric, choices = c("obs", "pred", "measure"), several.ok = TRUE)
       season <- match.arg(arg = season, choices = c("annual", "DJF", "MAM", "JJA", "SON"), several.ok = TRUE)
@@ -108,6 +110,7 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
       p <- int$prd
       int <- NULL
       message("[", Sys.time(), "] OK")
+      
       # Member aggregation (the array is re-assigned the member dimension after the aggregation)
       if (member.aggregation != "none" & dim(p$Data)[1] > 1) {
             message("[", Sys.time(), "] Aggregating members...")
@@ -140,6 +143,20 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
                   seas <- switch(season[j],"annual" = 1:12,"DJF" = c(12,1,2),"MAM" = 3:5,"JJA" = 6:8,"SON" = 9:11)
                   sea.o <- subsetVALUE(st.o, season = seas)
                   sea.p <- subsetVALUE(st.p, season = seas)
+                  
+                  for (pr in 1:n.process){
+                        if(pr>1){
+                              process.dates = strptime(processes[which(processes[processNames[pr-1]]==1),"dates"],'%Y-%m-%d',tz='UTC')
+                              seaP.o <- subsetVALUE(sea.o, dates = process.dates)
+                              seaP.p <- subsetVALUE(sea.p, dates = process.dates)
+                              if (length(seaP.o$Data)==0 || length(seaP.p$Data)==0){
+                                    next
+                              }
+                        }else{
+                              seaP.o <- sea.o
+                              seaP.p <- sea.p
+                        }
+                        
                   # Vectorization ---
                   obs <- as.matrix(drop(sea.o$Data))
                   prd <- as.matrix(drop(sea.p$Data))
@@ -197,6 +214,8 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
                         }
                   }
                   aux.list <- NULL
+                  }
+                  seaP.o <- seaP.p <- NULL
             }
             st.o <- st.p <- NULL
       }
