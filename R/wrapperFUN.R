@@ -33,6 +33,8 @@
 #' @param measure.args Same as \code{index.args} but for the measure function.
 #' @param o R object containing the observations as returned by \code{\link{loadValueStations}}. 
 #' @param p R object containing the predictions as returned by \code{\link{loadValuePredictions}}.
+#' @param processes processes
+#' @param processNames Labels identifying the processes
 #' @param na.prop Maximum allowable proportion of missing data. Default to 0.9
 #' @return A 3D array with labelled dimensions station, season and metric
 #' @importFrom abind abind
@@ -145,70 +147,79 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
                   sea.o <- subsetVALUE(st.o, season = seas)
                   sea.p <- subsetVALUE(st.p, season = seas)
                   
-                  for (pr in 1:n.process){
-                      if(pr>1){
-                        process.dates = strptime(processes[which(processes[processNames[pr-1]]==1),"dates"],'%Y-%m-%d',tz='UTC')
-                        seaP.o <- subsetVALUE(sea.o, dates = process.dates)
-                        seaP.p <- subsetVALUE(sea.p, dates = process.dates)
-                        if (length(seaP.o$Data)==0 || length(seaP.p$Data)==0){
-                          next
+
+                  for (pr in 1:n.process) {
+                        if (pr > 1) {
+                              process.dates = strptime(processes[which(processes[processNames[pr - 1]] == 1),"dates"],'%Y-%m-%d',tz = 'UTC')
+                              seaP.o <- subsetVALUE(sea.o, dates = process.dates)
+                              seaP.p <- subsetVALUE(sea.p, dates = process.dates)
+                              if (length(seaP.o$Data) == 0 || length(seaP.p$Data) == 0) {
+                                    next
+                              }
+                        } else {
+                              seaP.o <- sea.o
+                              seaP.p <- sea.p
                         }
-                      }else{
-                        seaP.o <- sea.o
-                        seaP.p <- sea.p
-                      }
-                    
-                      # Vectorization
-                      obs <- as.matrix(drop(seaP.o$Data))
-                      prd <- as.matrix(drop(seaP.p$Data))
-                      if (n.mem > 1) prd <- t(prd)
-                      dates.obs <- seaP.o$Dates$start
-                      dates.pred <- seaP.p$Dates$start
-                      seaP.o <- seaP.p <- NULL
-                      # NA filter --------
-                      aux.list <- lapply(1:ncol(prd), function(x) preprocessVALUE(obs[,1], prd[,x], dates.obs, dates.pred, na.prop))
-                      for (k in 1:n.metric) {
-                            if (any(is.na(aux.list[[1]]$obs))) {
-                                  index.arr[i,j,k,pr] <- NA
-                            } else {
-                                  ind <- grep(metric[k], names(aux.list[[1]]))
-                                  if (length(ind) == 0) {# measure -----
-                                        if (k > 1) {
-                                              indexObs <- index.arr[i,j,"obs",pr]
-                                              indexPrd <- index.arr[i,j,"pred",pr]
-                                        } else {
-                                              indexObs <- indexPrd <- NULL
-                                        }
-                                        aux <- rep(NA, n.mem)
-                                        for (l in 1:n.mem) {
-                                              arg.list <- list("indexObs" = indexObs,"indexPrd" = indexPrd,"obs" = aux.list[[l]]$obs,"prd" = aux.list[[l]]$pred)
-                                              if (!is.null(measure.args)) {
-                                                    arg.list <- c(arg.list,measure.args)
-                                              }
-                                              aux[l] <- do.call(measure.fun, args = arg.list, quote = TRUE)   
-                                        }
-                                        index.arr[i,j,k,pr] <- mean(aux, na.rm = TRUE)
-                                  } else {# index -----
-                                        aux <- rep(NA, n.mem)
-                                        for (l in 1:n.mem) {  
-                                              ind <- grep(metric[k], names(aux.list[[l]]))
-                                              arg.list <- list("ts" = aux.list[[l]][[ind]])
-                                              if (!is.null(index.args)) {
-                                                    arg.list <- c(arg.list,index.args)
-                                                    # Subroutine for passing dates ----
-                                                    if ("dates" %in% names(arg.list)) {
-                                                          arg.list$dates <- aux.list[[l]]$dates
-                                                    }
-                                              }
-                                              aux[l] <- do.call(index.fun, arg.list)
-                                        }      
-                                        index.arr[i,j,k,pr] <- mean(aux, na.rm = TRUE)
-                                  }
-                            }
-                      }
-                      aux.list <- NULL
-                }
-                seaP.o <- seaP.p <- NULL
+                        
+                        # Vectorization ---
+                        obs <- as.matrix(drop(sea.o$Data))
+                        prd <- as.matrix(drop(sea.p$Data))
+                        if (n.mem > 1) prd <- t(prd)
+                        dates.obs <- sea.o$Dates$start
+                        dates.pred <- sea.p$Dates$start
+                        sea.o <- sea.p <- NULL
+                        # NA filter --------
+                        aux.list <- lapply(1:ncol(prd), function(x) preprocessVALUE(obs[,1], prd[,x], dates.obs, dates.pred, na.prop))
+                        for (k in 1:n.metric) {
+                              if (any(is.na(aux.list[[1]]$obs))) {
+                                    index.arr[i,j,k,pr] <- NA
+                              } else {
+                                    ind <- grep(metric[k], names(aux.list[[1]]))
+                                    if (length(ind) == 0) {# measure -----
+                                          if (k > 1) {
+                                                indexObs <- index.arr[i,j,"obs",pr]
+                                                indexPrd <- index.arr[i,j,"pred",pr]
+                                          } else {
+                                                indexObs <- indexPrd <- NULL
+                                          }
+                                          aux <- rep(NA, n.mem)
+                                          for (l in 1:n.mem) {
+                                                arg.list <- list("indexObs" = indexObs,"indexPrd" = indexPrd,"obs" = aux.list[[l]]$obs,"prd" = aux.list[[l]]$pred)
+                                                if (!is.null(measure.args)) {
+                                                      arg.list <- c(arg.list,measure.args)
+                                                }
+                                                aux[l] <- do.call(measure.fun, args = arg.list, quote = TRUE)   
+                                          }
+                                          index.arr[i,j,k,pr] <- mean(aux, na.rm = TRUE)
+                                    } else {# index -----
+                                          aux <- rep(NA, n.mem)
+                                          for (l in 1:n.mem) {  
+                                                ind <- grep(metric[k], names(aux.list[[l]]))
+                                                arg.list <- list("ts" = aux.list[[l]][[ind]])
+                                                if (!is.null(index.args)) {
+                                                      arg.list <- c(arg.list,index.args)
+                                                      # Subroutine for passing dates ----
+                                                      if ("dates" %in% names(arg.list)) {
+                                                            arg.list$dates <- aux.list[[l]]$dates
+                                                      }
+                                                      # Passing years for aggregation ----
+                                                      if ("annual.index" %in% names(index.args)) {
+                                                            arg.list[["annual.index"]] <- if (isTRUE(index.args[["annual.index"]])) {
+                                                                  getYearsAsINDEX.VALUE(aux.list[[l]]$dates)
+                                                            } else {
+                                                                  1:length(aux.list[[l]]$dates)
+                                                            }
+                                                      }
+                                                }
+                                                aux[l] <- do.call(index.fun, arg.list)
+                                          }      
+                                          index.arr[i,j,k,pr] <- mean(aux, na.rm = TRUE)
+                                    }
+                              }
+                        }
+                        aux.list <- NULL
+                  }
+                  seaP.o <- seaP.p <- NULL
             }
             st.o <- st.p <- NULL
       }

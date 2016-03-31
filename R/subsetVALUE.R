@@ -24,6 +24,9 @@
 #' @param stationID Character string. Station codes.
 #' @param members An integer vector indicating \strong{the position} of the members to be subset. Default to NULL.
 #' @param season An integer vector indicating the months to be subset. 
+#' @param dates A vector of dates for subsetting on arbitrary dates. This is a character (or \code{POSIXct}) vector
+#'  following the format \dQuote{YYYY-MM-DD} (i.e., \code{format = "\%Y-\%m-\%d"} as in \code{\link{strptime}}). 
+#'  This is directly passed by the element \code{valueObject$Dates$start}, for instance.
 #' @param years The years to be selected. Note that this can be either a continuous or discontinuous
 #' series of years, the latter option often used in a cross-validation framework.
 #'  See details for year-crossing seasons. Default to \code{NULL} (no subsetting is performed on the time dimension).
@@ -141,7 +144,7 @@ subsetVALUE.season <- function(valueObj, season = NULL) {
             b <- which(mon %in% mp1 & yrs == tail(unique(yrs),1))
             time.ind <- time.ind[-c(a,b)]
       }
-      valueObj$Data <- asub(valueObj$Data, time.ind, which("time"==dimNames), drop = FALSE)
+      valueObj$Data <- asub(valueObj$Data, time.ind, which("time" == dimNames), drop = FALSE)
       attr(valueObj$Data, "dimensions") <- dimNames
       valueObj$Dates <- sapply(names(valueObj$Dates), function(x) valueObj$Dates[[x]][time.ind],
                                USE.NAMES = TRUE, simplify = FALSE)
@@ -154,16 +157,16 @@ subsetVALUE.season <- function(valueObj, season = NULL) {
 #'@importFrom abind asub
 
 subsetVALUE.dates <- function(valueObj, dates = NULL) {
-  dimNames <- attr(valueObj$Data, "dimensions")
-  # date format yyyy-mm-dd hh:mm:ss is assumed
-  filters = format(dates,'%Y-%m-%d %H:%M:%S')
-  time.ind <- which(valueObj$Dates$start %in% filters)
-  valueObj$Data <- asub(valueObj$Data, time.ind, which("time"==dimNames), drop = FALSE)
-  attr(valueObj$Data, "dimensions") <- dimNames
-  valueObj$Dates <- sapply(names(valueObj$Dates), function(x) valueObj$Dates[[x]][time.ind],
-                           USE.NAMES = TRUE, simplify = FALSE)
-  attr(valueObj$Dates, "subset") <- "subsetDates"
-  return(valueObj)
+      dimNames <- attr(valueObj$Data, "dimensions")
+      # date format yyyy-mm-dd hh:mm:ss is assumed
+      filters = format(dates,'%Y-%m-%d %H:%M:%S')
+      time.ind <- which(valueObj$Dates$start %in% filters)
+      valueObj$Data <- asub(valueObj$Data, time.ind, which("time" == dimNames), drop = FALSE)
+      attr(valueObj$Data, "dimensions") <- dimNames
+      valueObj$Dates <- sapply(names(valueObj$Dates), function(x) valueObj$Dates[[x]][time.ind],
+                               USE.NAMES = TRUE, simplify = FALSE)
+      attr(valueObj$Dates, "subset") <- "subsetDates"
+      return(valueObj)
 }
 # End
 
@@ -225,3 +228,4 @@ subsetVALUE.stations <- function(valueObj, stationID = NULL) {
       attr(valueObj$xyCoords, "subset") <- "subsetStationIDs"
       return(valueObj)
 }
+

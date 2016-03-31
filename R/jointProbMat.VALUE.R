@@ -28,22 +28,81 @@
 #'  in the case of observations and deterministic predictions.
 #' @param prob.type Character vector indicating the type of probability to be computed. Currently accepted values are:
 #' \code{"DD"} for dry-dry, \code{"DW"} for dry-wet, \code{"WW"} for wet-wet and \code{"WD"} for wet-dry.
+#' @param output Character string indicating the type of measure to be retained. Default to \code{"MI"} for the mutual information criterion.
+#' For the joint probabilities use \code{"jointProb"}. See details.
 #' @param threshold Threshold above which values are used/discarded (i.e., values greater or equal than \code{threshold} are considered as Wet).
 #' @param max.na.prop Maximum allowed proportion of missing data (Default to 0.25). See details
 #' @param use.ff Optional. If set to \code{TRUE}, the loaded stations/predictions array is written to disk using the \pkg{ff} package in order to avoid 
 #' memory problems. Recommended when working with large stochastic prediction datasets in resource-limited machines.
+#' @details The typical way to analyze dependencies is comparing the joint $P(wet_{i},wet_{j})$ (i.e. \code{output="jointProb"})
+#' and the product of marginals $P(wet_{i}) * P(wet_{j})$. The difference is zero only in case that
+#' $wet_i$ and $wet_j$ are independent and the larger the value, the more dependent they are.
+#'  Using the joint probability alone would make comparisons a bit difficult since the final result would be
+#' a combination of the dependency between both wet series and the marginal probabilities
+#' in each of the stations (e.g. the joint for web values would be smaller in dry climates),
+#' so the analysis of dependencies will be modulated by the different climatologies.
+#' In order to avoid this, the mutual information of 
+#' two random variables is a measure of the mutual dependence between the two variables.
+#'      
+#' If the two events occur together exactly as frequently as one would
+#' expect by chance, the ratio inside the log is equal to 1, giving a value of zero;
+#'  if they occur more frequently than one would expect by chance, the ratio is greater than 1
+#'  so MI > 0; and conversely if they occur less frequently than one would expect by chance, the ratio
+#' is less than 1 so MI < 0. 
+#' 
+#' Not limited to real-valued random variables like the correlation coefficient,
+#'  MI is more general and determines how similar the joint distribution p(X,Y) is to the products
+#'   of factored marginal distribution p(X)p(Y)
 #' @return A 2D matrix. Attributes indicate the station names (in the row/column order they appear), and their
 #' geographical coordinates. In addition, the type of joint probability, as coded in argument \code{prob.type} is indicated in attribute \code{"joint_prob_type"}.   
 #' @author J. Bedia 
 #' @export
 #' @importFrom ff as.ff
-
+#' @references \url{https://en.wikipedia.org/wiki/Mutual_information}
+#' @examples \dontrun{
+#' obs.file <- file.path(find.package("R.VALUE"), "example_datasets", "VALUE_53_ECAD_Germany_v1.zip")
+#' stationObj <- loadValueStations(obs.file, var = "precip")
+#' # Wet-wet probability (precip >= 1mm)
+#' ww <- jointProbMat.VALUE(stationObj,
+#'                         predictions.file = NULL,
+#'                         season = "annual",
+#'                         threshold = 1,
+#'                         max.na.prop = 1,
+#'                         aggr.type = "after",
+#'                         prob.type = "WW",
+#'                         use.ff = FALSE,
+#'                         output = "MI")
+#'
+#' # Dry-dry joint probability (precip < 1mm)
+#' dd <- jointProbMat.VALUE(stationObj,
+#'                          predictions.file = NULL,
+#'                          season = "annual",
+#'                          threshold = 1,
+#'                          max.na.prop = 1,
+#'                          aggr.type = "after",
+#'                          prob.type = "DD",
+#'                          use.ff = FALSE,
+#'                          output = "MI")
+#'                          
+#' # Draw matrix - requires lattice!
+#' mat <- matrix(ncol = ncol(ww), nrow = nrow(ww))
+#' mat[upper.tri(mat)] <- ww[upper.tri(ww)]
+#' mat[lower.tri(mat)] <- dd[upper.tri(dd)]
+#' station.labels <- attr(ww, "station_names")
+#' scales.list <- list(x = list(labels = station.labels, rot = 90,
+#'                            at = seq(1,ncol(ww),1), cex = .5),
+#'                     y = list(labels = station.labels,
+#'                              at = seq(1,ncol(ww),1), cex = .5))
+#' # lattice::levelplot(mat, xlab = "P(DRY,DRY)", ylab = "P(WET,WET)",
+#' # main = "Mutual Information Matrix", scales = scales.list)
+#' }
 
 jointProbMat.VALUE <- function(stationObj,
                                predictions.file = NULL,
                                season = c("annual", "DJF", "MAM", "JJA", "SON"),
-                               aggr.type = c("before", "after"),
+                               aggr.type = c("after","before"),
                                prob.type = c("DD", "DW", "WW", "WD"),
+                               output = c("MI","jointProb"),
                                threshold = 1,
                                max.na.prop = 0.25,
                                use.ff = FALSE) {
@@ -58,8 +117,9 @@ jointProbMat.VALUE <- function(stationObj,
       ineq1 <- substr(prob.type, 1, 1)
       ineq2 <- substr(prob.type, 2, 2)
       ineqs <- sapply(c(ineq1, ineq2), function(x) switch(x, "D" = "<", "W" = ">="))
-      expr1 <- paste("which(mat[i,,j]", ineqs[1], "threshold)")
-      expr2 <- paste("sum(x", ineqs[2], "threshold, na.rm = TRUE) / length(which(!is.na(x)))")
+      exprPB <- paste0("sum(x", ineqs[2], "threshold,na.rm=TRUE) / length(which(!is.na(x)))") # Calculates P(B) matrix
+      expr1 <- paste("which(mat[i,,j]", ineqs[1], "threshold)") # index for conditioning
+      expr2 <- paste("which(mat[i,ind,k]", ineqs[2], "threshold)") # index for conditioning
       aggr.type <- match.arg(aggr.type, choices = c("before", "after"))
       o <- stationObj
       stationObj <- NULL
@@ -72,7 +132,7 @@ jointProbMat.VALUE <- function(stationObj,
       n.mem <- dim(o$Data)[1]
       # Member aggregation before
       if (aggr.type == "before") {
-            if (n.mem > 1) message("[", Sys.time(), "] - Aggregating members before computing correlation...")
+            if (n.mem > 1) message("[", Sys.time(), "] - Aggregating members before computing joint probabilities...")
             o$Data <- apply(o$Data, MARGIN = c(2,3), FUN = mean, na.rm = TRUE)
             attr(o$Data, "dimensions") <- c("time", "station")
             o <- dimFix(o)
@@ -86,23 +146,41 @@ jointProbMat.VALUE <- function(stationObj,
             o$Data
       }
       o$Data <- NULL
-      # Joint probability matrices
+      # Joint probability ------------------------
       message("[", Sys.time(), "] - Calculating probabilities...")
       jp.list <- lapply(1:n.mem, function(i) {
             jpmat <- matrix(nrow = n.stations, ncol = n.stations)
+            if (output == "MI") pb <- apply(mat[i,,], MARGIN = 2, FUN = function(x) eval(parse(text = exprPB))) # P(B)
             for (j in 1:n.stations) {
                   ind <- eval(parse(text = expr1))
-                  prob <- length(na.omit(ind)) / length(na.omit(mat[i,,j]))
-                  aux <- if (length(ind) > 1) {
-                        mat[i,ind,setdiff(1:n.stations, j)]
-                  } else if (length(ind) == 1) {
-                        warning("Only 1 record fulfilling the threshold condition at station ", j, " (member ", i,"): 1/0 Probabilities returned.", call. = FALSE)
-                        t(as.matrix(mat[i,ind,setdiff(1:n.stations,j)]))
-                  } else if (length(ind) == 0) {
-                        warning("No records fulfilling the threshold condition at station ", j, " (member ", i,"): NaNs returned.", call. = FALSE)
-                        matrix(NaN, nrow = 1, ncol = n.stations - 1)
+                  PrA <- length(na.omit(ind)) / length(na.omit(mat[i,,j])) # P(A)
+                  ind.diff <- setdiff(1:n.stations, j)
+                  for (k in ind.diff) {
+                        ind.aux <- eval(parse(text = expr2))
+                        PrBA <- length(ind.aux)/length(ind) # P(B|A)
+                        # Joint probability -----------------------
+                        out <- PrA*PrBA # P(A,B) = P(A)*P(B|A)
+                        # Mutual information ---------------------
+                        if (output == "MI") {
+                              PrB <- pb[k] # P(B)
+                              out <- out*log((out/(PrA*PrB))) # P(A,B)*log[P(A,B)/P(A)*P(B)]
+                        }
+                        jpmat[j,k] <- out
                   }
-                  jpmat[j,setdiff(1:n.stations,j)] <- apply(aux, MARGIN = 2, FUN = function(x) eval(parse(text = expr2))*prob)
+                  # PrB <- pb[setdiff(1:n.stations, j)]
+                        #########################################
+                  # } else if (length(ind) == 1) {
+                  #       warning("Only 1 record fulfilling the threshold condition at station ", j,
+                  #               " (member ", i,"): 1/0 Probabilities returned.", call. = FALSE)
+                  #       t(as.matrix(mat[i,ind,setdiff(1:n.stations,j)]))
+                  # } else if (length(ind) == 0) {
+                  #       warning("No records fulfilling the threshold condition at station ", j,
+                  #               " (member ", i,"): NaNs returned.", call. = FALSE)
+                  #       matrix(NaN, nrow = 1, ncol = n.stations - 1)
+                  # }
+                  # jpmat[j,setdiff(1:n.stations,j)] <- apply(aux, MARGIN = 2, FUN = function(x) {
+                  #       eval(parse(text = exprPB))*PrA # P(A)*P(B|A)
+                  # })
             }
             return(jpmat)
       })
@@ -114,6 +192,7 @@ jointProbMat.VALUE <- function(stationObj,
       jpmat <- unname(apply(arr, MARGIN = c(2,3), FUN = mean, na.rm = TRUE))
       arr <- NULL
       attr(jpmat, "joint_prob_type") <- prob.type
+      attr(jpmat, "joint_prob_output") <- output
       attr(jpmat, "station_names") <- o$Metadata$name
       attr(jpmat, "lon") <- unname(o$xyCoords[,1])
       attr(jpmat, "lat") <- unname(o$xyCoords[,2])

@@ -7,7 +7,8 @@
 wrapperFUN(metric = c("obs", "pred", "measure"), names = NULL,
   season = c("annual", "DJF", "MAM", "JJA", "SON"),
   member.aggregation = "none", index.fun = NULL, measure.fun = NULL,
-  index.args = NULL, measure.args = NULL, o = o, p = p, na.prop = 1)
+  index.args = NULL, measure.args = NULL, o = o, p = p,
+  processes = data.frame(), processNames = c(), na.prop = 1)
 }
 \arguments{
 \item{metric}{Character vector.}
@@ -33,6 +34,10 @@ before computing the indices?. Default to \code{"none"}, meaning that the indice
 \item{o}{R object containing the observations as returned by \code{\link{loadValueStations}}.}
 
 \item{p}{R object containing the predictions as returned by \code{\link{loadValuePredictions}}.}
+
+\item{processes}{processes}
+
+\item{processNames}{Labels identifying the processes}
 
 \item{na.prop}{Maximum allowable proportion of missing data. Default to 0.9}
 }
