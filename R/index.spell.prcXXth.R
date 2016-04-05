@@ -2,7 +2,9 @@
 #' @description Computes a user-defined percentile for the duration of spells (above/below) a given threshold.
 #' @template templateIndexParams
 #' @template templateDates
-#' @param threshold A float number defining the threshold considered. Default to 1 
+#' @param threshold A float number defining the absolute threshold considered. Default to 1 
+#' @param threshold.type Is the value of \code{threshold} an absolute value or a quantile [0-1]?.
+#' Two possible values: \code{"abs"} and \code{"prob"} respectively. Default to \code{"abs"}.
 #' @param condition Inequality operator to be applied considering the given threshold.
 #'  \code{"GT"} = greater than the value of \code{threshold}, \code{"GE"} = greater or equal,
 #'   \code{"LT"} = lower than, \code{"LE"} = lower or equal than
@@ -14,8 +16,9 @@
 #'  are computed on consecutive records.
 #' @export
 
-index.spell.prcXXth <- function(ts, dates, threshold = 1, condition = c("GT", "GE", "LT", "LE"), prob = .5) {
+index.spell.prcXXth <- function(ts, dates, threshold = 1, threshold.type = "abs", condition = c("GT", "GE", "LT", "LE"), prob = .5) {
       condition <- match.arg(condition, choices = c("GT", "GE", "LT", "LE"))
+      threshold.type <- match.arg(threshold.type, choices = c("abs","prob"))
       ineq <- switch(condition,
                      "GT" = ">",
                      "GE" = ">=",
@@ -30,6 +33,9 @@ index.spell.prcXXth <- function(ts, dates, threshold = 1, condition = c("GT", "G
       } else {
             c(0, length(ts))
       }
+      if (threshold.type == "prob") {
+            threshold <- quantile(ts, probs = threshold, type = 7, na.rm = TRUE)
+      }
       spell.list <- lapply(2:length(ind), function(x) {
             aux <- ts[(ind[x - 1] + 1):ind[x]]
             rle.obj <- eval(parse(text = paste("rle(aux", ineq, "threshold)")))
@@ -38,4 +44,6 @@ index.spell.prcXXth <- function(ts, dates, threshold = 1, condition = c("GT", "G
       q <- quantile(do.call("c", spell.list), probs = prob, type = 7, na.rm = TRUE)
       if (is.na(q)) q <- 0
       return(q)
+      
+      
 }
