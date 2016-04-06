@@ -6,9 +6,9 @@
 \usage{
 wrapperFUN(metric = c("obs", "pred", "measure"), names = NULL,
   season = c("annual", "DJF", "MAM", "JJA", "SON"),
-  member.aggregation = "none", index.fun = NULL, measure.fun = NULL,
-  index.args = NULL, measure.args = NULL, o = o, p = p,
-  processes = data.frame(), processNames = c(), na.prop = 1)
+  member.aggregation = "none", n.mem = NULL, index.fun = NULL,
+  measure.fun = NULL, index.args = NULL, measure.args = NULL, o = o,
+  p = p, processes = data.frame(), processNames = c(), na.prop = 1)
 }
 \arguments{
 \item{metric}{Character vector.}
@@ -22,6 +22,10 @@ before computing the indices?. Default to \code{"none"}, meaning that the indice
  after that the index values are aggregated to compute the measure. The only additional option currently used
   is \code{"mean"}, for cases when the realizations are averaged before computing the index. 
  Ignored for observations and deterministic predictions.}
+
+\item{n.mem}{Number of members to be considered for validation. Default (\code{n.mem = NULL}) to all members,
+(or 1 in case of deterministic predictions). Note that the number of members selected are used for \code{member.aggregation},
+independently of whether this aggregation is performed before or after.}
 
 \item{index.fun}{A character vector with the name of the R function that computes the index.}
 
