@@ -1,8 +1,11 @@
 R.VALUE
 =======
-* Added Mutual Information index for the analysis of joint threshold exceedances
-* Bug fix in return value routines
-* Internal changes affecting the inputs of auxiliary functions getSeason.VALUE and getYearsAsINDEX.VALUE. These now receive a vector of dates, rather than the whole station/predictions object
-* Changes in validation wrapper to compute years for annual aggregations (as required by return value indices, for instance)
-* Other minor documentation changes
+* Bug fix in annual spellmax computation
+* New argument 'n.mem' in validation wrapper to control the number of realizations to be computed.
+* New argument 'threshold.type' in spell indices to indicate quantile-based thresholds in addition to absolute.
+* Enhancement in the internal 'getIntersect' in order to handle unsorted time series prior to validation.
+* Other minor documentation updates and improvements.
+
+
+
 

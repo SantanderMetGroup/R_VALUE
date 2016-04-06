@@ -17,8 +17,13 @@ A list with obj and pred intersected
 \description{
 Temporal and spatial matching between obs and pred
 }
+\details{
+The function ensures that all records are in choronological order, by reordering -if necessary- the time dimension.
+Dates are ordered as characters, without performing the conversion to date object, which has proven time-consuming when 
+repeatedly evaluated.
+}
 \author{
-S. Herrera, D. San-Martin
+S. Herrera, D. San-Martin, J Bedia
 }
 \keyword{internal}
 
