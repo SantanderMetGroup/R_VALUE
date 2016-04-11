@@ -8,7 +8,8 @@ wrapperFUN(metric = c("obs", "pred", "measure"), names = NULL,
   season = c("annual", "DJF", "MAM", "JJA", "SON"),
   member.aggregation = "none", n.mem = NULL, index.fun = NULL,
   measure.fun = NULL, index.args = NULL, measure.args = NULL, o = o,
-  p = p, processes = data.frame(), processNames = c(), na.prop = 1)
+  p = p, processes = data.frame(), processNames = c(),
+  window.width = NULL, na.prop = 1)
 }
 \arguments{
 \item{metric}{Character vector.}
@@ -42,6 +43,10 @@ independently of whether this aggregation is performed before or after.}
 \item{processes}{processes}
 
 \item{processNames}{Labels identifying the processes}
+
+\item{window.width}{Defautl to \code{NULL}, and ignored. Only used if removal of the seasonal cycle is to be done.
+In this case, this is an integer number indicating the width, in days, of the window used for moving average computation
+ of the reference daily climatology. This argument is passed to \code{\link{deseason.VALUE}}.}
 
 \item{na.prop}{Maximum allowable proportion of missing data. Default to 0.9}
 }

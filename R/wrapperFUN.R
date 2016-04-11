@@ -38,6 +38,9 @@
 #' @param p R object containing the predictions as returned by \code{\link{loadValuePredictions}}.
 #' @param processes processes
 #' @param processNames Labels identifying the processes
+#' @param window.width Defautl to \code{NULL}, and ignored. Only used if removal of the seasonal cycle is to be done.
+#'  In this case, this is an integer number indicating the width, in days, of the window used for moving average computation
+#'   of the reference daily climatology. This argument is passed to \code{\link{deseason.VALUE}}.
 #' @param na.prop Maximum allowable proportion of missing data. Default to 0.9
 #' @return A 3D array with labelled dimensions station, season and metric
 #' @importFrom abind abind
@@ -102,12 +105,13 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
                        p = p,
                        processes = data.frame(),
                        processNames = c(),
+                       window.width = NULL,
                        na.prop = 1) {
       metric <- match.arg(arg = metric, choices = c("obs", "pred", "measure"), several.ok = TRUE)
       season <- match.arg(arg = season, choices = c("annual", "DJF", "MAM", "JJA", "SON"), several.ok = TRUE)
       suffix <- "\\.R$|\\.r$"
-      index.fun <- if (!is.null(index.fun) && grepl(suffix, index.fun)) gsub(suffix, "", index.fun)
-      measure.fun <- if (!is.null(measure.fun) && grepl(suffix, measure.fun)) gsub(suffix, "", measure.fun)
+      if (!is.null(index.fun) && grepl(suffix, index.fun)) index.fun <- gsub(suffix, "", index.fun)
+      if (!is.null(measure.fun) && grepl(suffix, measure.fun)) measure.fun <- gsub(suffix, "", measure.fun)
       message("[", Sys.time(), "] Intersecting obs and pred...")
       o <- dimFix(o)
       p <- dimFix(p)
@@ -133,6 +137,13 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
             attr(p$Data, "dimensions") <- dimNames
             # attr(p$Data, "member.aggr.fun") <- member.aggregation
             message("[", Sys.time(), "] OK")
+      }
+      # Seasonal cycle removal ----------------
+      if (!is.null(window.width)) {
+            message("[", Sys.time(),"] Removing seasonal cycle...")
+            o <- suppressMessages(deseason.VALUE(o, window.width, na.prop))
+            p <- suppressMessages(deseason.VALUE(o, window.width, na.prop))
+            message("[", Sys.time(),"] OK")
       }
       n.st <- dim(o$Data)[3]
       n.metric <- length(metric)
