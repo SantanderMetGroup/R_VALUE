@@ -53,8 +53,11 @@
 #' Not limited to real-valued random variables like the correlation coefficient,
 #'  MI is more general and determines how similar the joint distribution p(X,Y) is to the products
 #'   of factored marginal distribution p(X)p(Y)
-#' @return A 2D matrix. Attributes indicate the station names (in the row/column order they appear), and their
-#' geographical coordinates. In addition, the type of joint probability, as coded in argument \code{prob.type} is indicated in attribute \code{"joint_prob_type"}.   
+#' @return A list of 2D matrices. The length of the list corresponds to the periods indicated in the \code{season} 
+#' argument (default to 5, annual and the four standard WMO seasons). Attributes indicate the station names 
+#' (in the row/column order they appear), and their geographical coordinates. 
+#' In addition, the type of joint probability, as coded in argument \code{prob.type} is indicated in the global 
+#' attribute \code{"joint_prob_type"}.   
 #' @author J. Bedia 
 #' @export
 #' @importFrom ff as.ff
@@ -85,14 +88,14 @@
 #'                          output = "MI")
 #'                          
 #' # Draw matrix - requires lattice!
-#' mat <- matrix(ncol = ncol(ww), nrow = nrow(ww))
-#' mat[upper.tri(mat)] <- ww[upper.tri(ww)]
-#' mat[lower.tri(mat)] <- dd[upper.tri(dd)]
-#' station.labels <- attr(ww, "station_names")
+#' mat <- matrix(ncol = ncol(ww[[1]]), nrow = nrow(ww[[1]]))
+#' mat[upper.tri(mat)] <- ww[[1]][upper.tri(ww[[1]])]
+#' mat[lower.tri(mat)] <- dd[[1]][upper.tri(dd[[1]])]
+#' station.labels <- attr(ww[[1]], "station_names")
 #' scales.list <- list(x = list(labels = station.labels, rot = 90,
-#'                            at = seq(1,ncol(ww),1), cex = .5),
+#'                            at = seq(1,ncol(ww[[1]]),1), cex = .5),
 #'                     y = list(labels = station.labels,
-#'                              at = seq(1,ncol(ww),1), cex = .5))
+#'                              at = seq(1,ncol(ww[[1]]),1), cex = .5))
 #' # lattice::levelplot(mat, xlab = "P(DRY,DRY)", ylab = "P(WET,WET)",
 #' # main = "Mutual Information Matrix", scales = scales.list)
 #' }
@@ -106,13 +109,7 @@ jointProbMat.VALUE <- function(stationObj,
                                threshold = 1,
                                max.na.prop = 0.25,
                                use.ff = FALSE) {
-      season <- match.arg(season, choices = c("annual", "DJF", "MAM", "JJA", "SON"))
-      season <- switch(season,
-                       "annual" = 1:12,
-                       "DJF" = c(12,1,2),
-                       "MAM" = 3:5,
-                       "JJA" = 6:8,
-                       "SON" = 9:11)
+      season <- match.arg(season, choices = c("annual", "DJF", "MAM", "JJA", "SON"), several.ok = TRUE)
       prob.type <- match.arg(prob.type, choices = c("DD", "DW", "WW", "WD"))
       ineq1 <- substr(prob.type, 1, 1)
       ineq2 <- substr(prob.type, 2, 2)
@@ -127,77 +124,73 @@ jointProbMat.VALUE <- function(stationObj,
             message("[", Sys.time(), "] - Loading predictions...")
             o <- suppressWarnings(loadValuePredictions(o, predictions.file))
             message("[", Sys.time(), "] - Done.")            
-      }      
-      o <- na.filter.VALUE(dimFix(subsetVALUE(o, season = season)), max.na.prop)
-      n.mem <- dim(o$Data)[1]
-      # Member aggregation before
-      if (aggr.type == "before") {
-            if (n.mem > 1) message("[", Sys.time(), "] - Aggregating members before computing joint probabilities...")
-            o$Data <- apply(o$Data, MARGIN = c(2,3), FUN = mean, na.rm = TRUE)
-            attr(o$Data, "dimensions") <- c("time", "station")
-            o <- dimFix(o)
-            if (n.mem > 1) message("[", Sys.time(), "] - Done.")
+      }
+      mat.list <- lapply(1:length(season),  function(x) {
+            sea <- switch(season[x], 
+                          "annual" = 1:12,
+                          "DJF" = c(12,1,2),
+                          "MAM" = 3:5,
+                          "JJA" = 6:8,
+                          "SON" = 9:11)
+            o <- na.filter.VALUE(dimFix(subsetVALUE(o, season = sea)), max.na.prop)
             n.mem <- dim(o$Data)[1]
-      }
-      n.stations <- dim(o$Data)[3]
-      mat <- if (use.ff) {
-            as.ff(o$Data)
-      } else {
-            o$Data
-      }
-      o$Data <- NULL
-      # Joint probability ------------------------
-      message("[", Sys.time(), "] - Calculating probabilities...")
-      jp.list <- lapply(1:n.mem, function(i) {
-            jpmat <- matrix(nrow = n.stations, ncol = n.stations)
-            if (output == "MI") pb <- apply(mat[i,,], MARGIN = 2, FUN = function(x) eval(parse(text = exprPB))) # P(B)
-            for (j in 1:n.stations) {
-                  ind <- eval(parse(text = expr1))
-                  PrA <- length(na.omit(ind)) / length(na.omit(mat[i,,j])) # P(A)
-                  ind.diff <- setdiff(1:n.stations, j)
-                  for (k in ind.diff) {
-                        ind.aux <- eval(parse(text = expr2))
-                        PrBA <- length(ind.aux)/length(ind) # P(B|A)
-                        # Joint probability -----------------------
-                        out <- PrA*PrBA # P(A,B) = P(A)*P(B|A)
-                        # Mutual information ---------------------
-                        if (output == "MI") {
-                              PrB <- pb[k] # P(B)
-                              out <- out*log((out/(PrA*PrB))) # P(A,B)*log[P(A,B)/P(A)*P(B)]
-                        }
-                        jpmat[j,k] <- out
-                  }
-                  # PrB <- pb[setdiff(1:n.stations, j)]
-                        #########################################
-                  # } else if (length(ind) == 1) {
-                  #       warning("Only 1 record fulfilling the threshold condition at station ", j,
-                  #               " (member ", i,"): 1/0 Probabilities returned.", call. = FALSE)
-                  #       t(as.matrix(mat[i,ind,setdiff(1:n.stations,j)]))
-                  # } else if (length(ind) == 0) {
-                  #       warning("No records fulfilling the threshold condition at station ", j,
-                  #               " (member ", i,"): NaNs returned.", call. = FALSE)
-                  #       matrix(NaN, nrow = 1, ncol = n.stations - 1)
-                  # }
-                  # jpmat[j,setdiff(1:n.stations,j)] <- apply(aux, MARGIN = 2, FUN = function(x) {
-                  #       eval(parse(text = exprPB))*PrA # P(A)*P(B|A)
-                  # })
+            # Member aggregation before
+            if (aggr.type == "before") {
+                  if (n.mem > 1) message("[", Sys.time(), "] - Aggregating members before computing joint probabilities...")
+                  o$Data <- apply(o$Data, MARGIN = c(2,3), FUN = mean, na.rm = TRUE)
+                  attr(o$Data, "dimensions") <- c("time", "station")
+                  o <- dimFix(o)
+                  if (n.mem > 1) message("[", Sys.time(), "] - Done.")
+                  n.mem <- dim(o$Data)[1]
             }
+            n.stations <- dim(o$Data)[3]
+            mat <- if (use.ff) {
+                  as.ff(o$Data)
+            } else {
+                  o$Data
+            }
+            o$Data <- NULL
+            # Joint probability ------------------------
+            message("[", Sys.time(), "] - Calculating probabilities...")
+            jp.list <- lapply(1:n.mem, function(i) {
+                  jpmat <- matrix(nrow = n.stations, ncol = n.stations)
+                  if (output == "MI") pb <- apply(mat[i,,], MARGIN = 2, FUN = function(x) eval(parse(text = exprPB))) # P(B)
+                  for (j in 1:n.stations) {
+                        ind <- eval(parse(text = expr1))
+                        PrA <- length(na.omit(ind)) / length(na.omit(mat[i,,j])) # P(A)
+                        ind.diff <- setdiff(1:n.stations, j)
+                        for (k in ind.diff) {
+                              ind.aux <- eval(parse(text = expr2))
+                              PrBA <- length(ind.aux)/length(ind) # P(B|A)
+                              # Joint probability -----------------------
+                              out <- PrA*PrBA # P(A,B) = P(A)*P(B|A)
+                              # Mutual information ---------------------
+                              if (output == "MI") {
+                                    PrB <- pb[k] # P(B)
+                                    out <- out*log((out/(PrA*PrB))) # P(A,B)*log[P(A,B)/P(A)*P(B)]
+                              }
+                              jpmat[j,k] <- out
+                        }
+                  }
+                  return(jpmat)
+            })
+            if (use.ff) close(mat)
+            arr <- do.call("abind", c(jp.list, along = -1L))
+            jp.list <- NULL
+            # Member aggregation "after"
+            if (aggr.type == "after") message("[", Sys.time(), "] - Aggregating members...")
+            jpmat <- unname(apply(arr, MARGIN = c(2,3), FUN = mean, na.rm = TRUE))
+            arr <- NULL
+            attr(jpmat, "station_names") <- o$Metadata$name
+            attr(jpmat, "lon") <- unname(o$xyCoords[,1])
+            attr(jpmat, "lat") <- unname(o$xyCoords[,2])
             return(jpmat)
       })
-      if (use.ff) close(mat)
-      arr <- do.call("abind", c(jp.list, along = -1L))
-      jp.list <- NULL
-      # Member aggregation "after"
-      if (aggr.type == "after") message("[", Sys.time(), "] - Aggregating members...")
-      jpmat <- unname(apply(arr, MARGIN = c(2,3), FUN = mean, na.rm = TRUE))
-      arr <- NULL
-      attr(jpmat, "joint_prob_type") <- prob.type
-      attr(jpmat, "joint_prob_output") <- output
-      attr(jpmat, "station_names") <- o$Metadata$name
-      attr(jpmat, "lon") <- unname(o$xyCoords[,1])
-      attr(jpmat, "lat") <- unname(o$xyCoords[,2])
+      names(mat.list) <- season
+      attr(mat.list, "joint_prob_type") <- prob.type
+      attr(mat.list, "joint_prob_output") <- output
       message("[", Sys.time(), "] - Done.")
-      return(jpmat)
+      return(mat.list)
 }
 
 

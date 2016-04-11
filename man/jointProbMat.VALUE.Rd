@@ -36,8 +36,11 @@ For the joint probabilities use \code{"jointProb"}. See details.}
 memory problems. Recommended when working with large stochastic prediction datasets in resource-limited machines.}
 }
 \value{
-A 2D matrix. Attributes indicate the station names (in the row/column order they appear), and their
-geographical coordinates. In addition, the type of joint probability, as coded in argument \code{prob.type} is indicated in attribute \code{"joint_prob_type"}.
+A list of 2D matrices. The length of the list corresponds to the periods indicated in the \code{season} 
+argument (default to 5, annual and the four standard WMO seasons). Attributes indicate the station names 
+(in the row/column order they appear), and their geographical coordinates. 
+In addition, the type of joint probability, as coded in argument \code{prob.type} is indicated in the global 
+attribute \code{"joint_prob_type"}.
 }
 \description{
 Computes different joint (precipitation) probabilities between stations
@@ -90,14 +93,14 @@ dd <- jointProbMat.VALUE(stationObj,
                          output = "MI")
                          
 # Draw matrix - requires lattice!
-mat <- matrix(ncol = ncol(ww), nrow = nrow(ww))
-mat[upper.tri(mat)] <- ww[upper.tri(ww)]
-mat[lower.tri(mat)] <- dd[upper.tri(dd)]
-station.labels <- attr(ww, "station_names")
+mat <- matrix(ncol = ncol(ww[[1]]), nrow = nrow(ww[[1]]))
+mat[upper.tri(mat)] <- ww[[1]][upper.tri(ww[[1]])]
+mat[lower.tri(mat)] <- dd[[1]][upper.tri(dd[[1]])]
+station.labels <- attr(ww[[1]], "station_names")
 scales.list <- list(x = list(labels = station.labels, rot = 90,
-                           at = seq(1,ncol(ww),1), cex = .5),
+                           at = seq(1,ncol(ww[[1]]),1), cex = .5),
                     y = list(labels = station.labels,
-                             at = seq(1,ncol(ww),1), cex = .5))
+                             at = seq(1,ncol(ww[[1]]),1), cex = .5))
 # lattice::levelplot(mat, xlab = "P(DRY,DRY)", ylab = "P(WET,WET)",
 # main = "Mutual Information Matrix", scales = scales.list)
 }
