@@ -146,8 +146,7 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
                   seas <- switch(season[j],"annual" = 1:12,"DJF" = c(12,1,2),"MAM" = 3:5,"JJA" = 6:8,"SON" = 9:11)
                   sea.o <- subsetVALUE(st.o, season = seas)
                   sea.p <- subsetVALUE(st.p, season = seas)
-                  
-
+            
                   for (pr in 1:n.process) {
                         if (pr > 1) {
                               process.dates = strptime(processes[which(processes[processNames[pr - 1]] == 1),"dates"],'%Y-%m-%d',tz = 'UTC')
@@ -162,12 +161,11 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
                         }
                         
                         # Vectorization ---
-                        obs <- as.matrix(drop(sea.o$Data))
-                        prd <- as.matrix(drop(sea.p$Data))
+                        obs <- as.matrix(drop(seaP.o$Data))
+                        prd <- as.matrix(drop(seaP.p$Data))
                         if (n.mem > 1) prd <- t(prd)
-                        dates.obs <- sea.o$Dates$start
-                        dates.pred <- sea.p$Dates$start
-                        sea.o <- sea.p <- NULL
+                        dates.obs <- seaP.o$Dates$start
+                        dates.pred <- seaP.p$Dates$start
                         # NA filter --------
                         aux.list <- lapply(1:ncol(prd), function(x) preprocessVALUE(obs[,1], prd[,x], dates.obs, dates.pred, na.prop))
                         for (k in 1:n.metric) {
