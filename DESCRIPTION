@@ -10,7 +10,7 @@ Suggests:
     lattice
 Type: Package
 Title: Climate data validation in the framework of the COST action VALUE
-Version: 1.2-2
+Version: 1.2-3
 Date: 2016-04-11
 Authors@R: as.person(c(
     "Santander Meteorology Group [aut]",      
