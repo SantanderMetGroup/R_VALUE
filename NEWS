@@ -1,6 +1,6 @@
 R.VALUE
 =======
-
+* index.freq replaces former index.freq* functions
 * Enabled several seasons on same request in jointProbMat.VALUE
 * Documentation updates
 
