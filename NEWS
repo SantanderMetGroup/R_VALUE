@@ -1,8 +1,9 @@
 R.VALUE
 =======
 * index.freq replaces former index.freq* functions
+* Added index.spell.mean to compute mean duration of spells (formerly only user-defined percentiles were available)
 * Enabled several seasons on same request in jointProbMat.VALUE
-* Documentation updates
+* Other minor enhancements and documentation updates
 
 
 
