@@ -1,10 +1,8 @@
 R.VALUE
 =======
-* Bug fix in annual spellmax computation
-* New argument 'n.mem' in validation wrapper to control the number of realizations to be computed.
-* New argument 'threshold.type' in spell indices to indicate quantile-based thresholds in addition to absolute.
-* Enhancement in the internal 'getIntersect' in order to handle unsorted time series prior to validation.
-* Other minor documentation updates and improvements.
+
+* Enabled several seasons on same request in jointProbMat.VALUE
+* Documentation updates
 
 
 
