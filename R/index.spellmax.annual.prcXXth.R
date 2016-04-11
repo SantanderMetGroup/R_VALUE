@@ -2,7 +2,9 @@
 #' @description Computes a user-defined percentile for the duration of spells (above/below) a given threshold, on an annual basis.
 #' @template templateIndexParams
 #' @template templateDates
-#' @param threshold A float number defining the threshold considered. Default to 1 
+#' @param threshold A float number defining the threshold considered. Default to 1
+#' @param threshold.type Is the value of \code{threshold} an absolute value or a quantile [0-1]?.
+#'  Two possible values: \code{"abs"} and \code{"prob"} respectively. Default to \code{"abs"}.
 #' @param condition Inequality operator to be applied considering the given threshold.
 #'  \code{"GT"} = greater than the value of \code{threshold}, \code{"GE"} = greater or equal,
 #'   \code{"LT"} = lower than, \code{"LE"} = lower or equal than
@@ -14,16 +16,17 @@
 #'  are computed on consecutive records.
 #' @export
 
-index.spellmax.annual.prcXXth <- function(ts, dates, threshold = 1, condition = c("GT", "GE", "LT", "LE"), prob = .5) {
+index.spellmax.annual.prcXXth <- function(ts, dates, threshold = 1, threshold.type = "abs", condition = c("GT", "GE", "LT", "LE"), prob = .5) {
       condition <- match.arg(condition, choices = c("GT", "GE", "LT", "LE"))
+      threshold.type <- match.arg(threshold.type, choices = c("abs","prob"))
       ineq <- switch(condition,
                      "GT" = ">",
                      "GE" = ">=",
                      "LT" = "<",
                      "LE" = "<=")
-      # date format yyyy-mm-dd hh:mm:ss is assumed
-      # this speeds up the POSIXlt function which uses the slow strptime function
-      # providing a format and timezone to POSIXlt helps but this approach is faster
+      if (threshold.type == "prob") {
+            threshold <- quantile(ts, probs = threshold, type = 7, na.rm = TRUE)
+      }
       yrs <- substr(dates,1,4)
       dates <- as.Date(dates, format = "%Y-%m-%d %H:%M:%S", tz = "UTC")
       uyrs <- unique(yrs)
@@ -37,11 +40,13 @@ index.spellmax.annual.prcXXth <- function(ts, dates, threshold = 1, condition = 
                   c(0, length(aux))
             }
             spell.list <- lapply(2:length(ind2), function(y) {
-                  aux <- ts[(ind2[y - 1] + 1):ind2[y]]
-                  rle.obj <- eval(parse(text = paste("rle(aux", ineq, "threshold)")))
+                  aux2 <- aux[(ind2[y - 1] + 1):ind2[y]]
+                  rle.obj <- eval(parse(text = paste("rle(aux2", ineq, "threshold)")))
                   rle.obj$lengths[rle.obj$values == TRUE]
             })
             max(do.call("c", spell.list), na.rm = TRUE)
       })
-      quantile(annual.values, probs = prob, type = 7, na.rm = TRUE)
+      q <- quantile(annual.values, probs = prob, type = 7, na.rm = TRUE)
+      if (is.na(q)) q <- 0
+      return(q)
 }

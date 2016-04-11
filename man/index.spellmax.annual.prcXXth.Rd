@@ -4,8 +4,9 @@
 \alias{index.spellmax.annual.prcXXth}
 \title{Annual spell length percentiles}
 \usage{
-index.spellmax.annual.prcXXth(ts, dates, threshold = 1, condition = c("GT",
-  "GE", "LT", "LE"), prob = 0.5)
+index.spellmax.annual.prcXXth(ts, dates, threshold = 1,
+  threshold.type = "abs", condition = c("GT", "GE", "LT", "LE"),
+  prob = 0.5)
 }
 \arguments{
 \item{ts}{A vector containing the data}
@@ -15,6 +16,9 @@ index.spellmax.annual.prcXXth(ts, dates, threshold = 1, condition = c("GT",
  VALUE objects (either stations or predictions) through the element \code{object$Dates$start}.}
 
 \item{threshold}{A float number defining the threshold considered. Default to 1}
+
+\item{threshold.type}{Is the value of \code{threshold} an absolute value or a quantile [0-1]?.
+Two possible values: \code{"abs"} and \code{"prob"} respectively. Default to \code{"abs"}.}
 
 \item{condition}{Inequality operator to be applied considering the given threshold.
 \code{"GT"} = greater than the value of \code{threshold}, \code{"GE"} = greater or equal,

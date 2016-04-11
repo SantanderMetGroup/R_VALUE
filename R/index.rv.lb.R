@@ -12,9 +12,9 @@
 
 index.rv.lb <- function(ts, prob = 20, annual.index = TRUE) {
       meanObj <- NA
-      max.x <- tapply(ts, INDEX = annual.index, FUN = max, na.rm = TRUE)
-      if (any(is.finite(max.x))) {
-            estim <- fgev(max.x[which(is.finite(max.x))], prob = 1 - 1/prob, std.err = FALSE)
+      min.x <- tapply(ts, INDEX = annual.index, FUN = min, na.rm = TRUE)
+      if (any(is.finite(min.x))) {
+            estim <- fgev(min.x[which(is.finite(min.x))], prob = 1 - 1/prob, std.err = FALSE)
             meanObj <- estim$param[1]
       }
       return(meanObj)

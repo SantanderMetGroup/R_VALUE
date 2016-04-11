@@ -27,6 +27,9 @@
 #'  after that the index values are aggregated to compute the measure. The only additional option currently used
 #'   is \code{"mean"}, for cases when the realizations are averaged before computing the index. 
 #'  Ignored for observations and deterministic predictions.
+#' @param n.mem Number of members to be considered for validation. Default (\code{n.mem = NULL}) to all members,
+#' (or 1 in case of deterministic predictions). Note that the number of members selected are used for \code{member.aggregation},
+#' independently of whether this aggregation is performed before or after.
 #' @param index.fun A character vector with the name of the R function that computes the index.
 #' @param measure.fun A character vector with the name of the R function that computes the measure.
 #' @param index.args A list with additional arguments passed to \code{index.fun}. It contains a key-value list for each additional argument.
@@ -90,6 +93,7 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
                        names = NULL,
                        season = c("annual", "DJF", "MAM", "JJA", "SON"),
                        member.aggregation = "none",
+                       n.mem = NULL,
                        index.fun = NULL,
                        measure.fun = NULL,
                        index.args = NULL,
@@ -112,7 +116,12 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
       p <- int$prd
       int <- NULL
       message("[", Sys.time(), "] OK")
-      
+      # Number of members to be considered
+      n.mem <- if (!is.null(n.mem)) {
+            min(c(dim(p$Data)[1], n.mem))      
+      } else {
+            dim(p$Data)[1]      
+      }
       # Member aggregation (the array is re-assigned the member dimension after the aggregation)
       if (member.aggregation != "none" & dim(p$Data)[1] > 1) {
             message("[", Sys.time(), "] Aggregating members...")
@@ -126,13 +135,16 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
             message("[", Sys.time(), "] OK")
       }
       n.st <- dim(o$Data)[3]
-      n.mem <- dim(p$Data)[1]
       n.metric <- length(metric)
       n.seas <- length(season)
       n.process <- 1 + length(processNames)
-      index.arr <- array(dim = c(n.st, n.seas, n.metric, n.process), dimnames = list("station_id" = o$Metadata$station_id,"season" = season, "metric_name" = names, "process_name" = c("total",processNames)))
+      index.arr <- array(dim = c(n.st, n.seas, n.metric, n.process), dimnames = list("station_id" = o$Metadata$station_id,
+                                                                          "season" = season,
+                                                                          "metric_name" = names,
+                                                                          "process_name" = c("total",processNames)))
       attr(index.arr, "var") <- o$Variable$varName
       attr(index.arr, "member.aggregation") <- member.aggregation
+      attr(index.arr, "n.mem") <- n.mem
       attr(index.arr, "max.na.prop") <- na.prop
       attr(index.arr, "index.fun") <- index.fun
       attr(index.arr, "index.args") <- index.args
@@ -231,11 +243,30 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
 #' @param obs Value object of observations
 #' @param prd Value object of predictions
 #' @return A list with obj and pred intersected
-#' @author S. Herrera, D. San-Martin
+#' @author S. Herrera, D. San-Martin, J Bedia
+#' @details The function ensures that all records are in choronological order, by reordering -if necessary- the time dimension.
+#' Dates are ordered as characters, without performing the conversion to date object, which has proven time-consuming when 
+#' repeatedly evaluated.
 #' @keywords internal
 
-getIntersect <- function(obs, prd){
+getIntersect <- function(obs, prd) {
       obj <- list()
+      # sorted.obs  <- sort(obs$Dates$start, index.return = TRUE)$ix
+      dimNames <- lapply(list(obs, prd), function(x) attr(x[["Data"]], "dimensions"))
+      # Sorting predictions
+      prd.ind  <- sort(prd$Dates$start, index.return = TRUE)$ix
+      if (any(diff(prd.ind) != 1)) {
+            prd[["Dates"]] <- sapply(c("start","end"), function(x) prd$Dates[[x]][prd.ind], simplify = FALSE, USE.NAMES = TRUE)
+            prd[["Data"]] <- asub(prd[["Data"]], idx = prd.ind, dims = grep("^time$", dimNames[[2]]), drop = FALSE)
+            attr(prd[["Data"]], "dimensions") <- dimNames[[2]]
+      }
+      # Sorting observation dates
+      obs.ind  <- sort(obs$Dates$start, index.return = TRUE)$ix
+      if (any(diff(obs.ind) != 1)) {
+            obs[["Dates"]] <- sapply(c("start","end"), function(x) obs$Dates[[x]][obs.ind], simplify = FALSE, USE.NAMES = TRUE)
+            obs[["Data"]] <- asub(obs[["Data"]], idx = obs.ind, dims = grep("^time$", dimNames[[1]]), drop = FALSE)
+            attr(obs[["Data"]], "dimensions") <- dimNames[[1]]
+      }
       commonStartDates <- intersect(obs$Dates$start,prd$Dates$start)
       commonEndDates <- intersect(obs$Dates$end,prd$Dates$end)
       commonStations <- intersect(attr(obs$xyCoords, "dimnames")[[1]],attr(prd$xyCoords, "dimnames")[[1]])
