@@ -3,7 +3,8 @@ R.VALUE
 * index.freq replaces former index.freq* functions
 * Return values unified in one single function (index.rv)
 * Added index.spell.mean to compute mean duration of spells (formerly only user-defined percentiles were available)
-* Seasonal cycle removal option implemented in the validation wrapper
+* Seasonal cycle removal option implemented in the validation wrapper. Activated by argument 'deseason' passed by the measure/index function, indicating the window width for moving average.
+* Bug fix in deseason.VALUE
 * Enabled several seasons on same request in jointProbMat.VALUE
 * Added new example built-in dataset with deterministic precipitation predictions.
 * Renamed built-in datasets to indicate the name of the variable.
