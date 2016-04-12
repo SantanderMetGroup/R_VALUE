@@ -60,6 +60,7 @@ MI = 0 if the two events are independent.
  MI is more general and determines how similar the joint distribution p(X,Y) is to the products
   of factored marginal distribution p(X)p(Y). Mutual information is nonnegative (i.e. \emph{MI(X,Y) >= 0}) 
   and symmetric (i.e. \emph{MI(X,Y) = MI(Y,X)}).
+Note that when the joint probability is zero the returned value of MI is NaN.
 }
 \examples{
 \dontrun{

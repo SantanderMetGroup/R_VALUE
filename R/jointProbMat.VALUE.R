@@ -48,6 +48,7 @@
 #'  MI is more general and determines how similar the joint distribution p(X,Y) is to the products
 #'   of factored marginal distribution p(X)p(Y). Mutual information is nonnegative (i.e. \emph{MI(X,Y) >= 0}) 
 #'   and symmetric (i.e. \emph{MI(X,Y) = MI(Y,X)}).
+#' Note that when the joint probability is zero the returned value of MI is NaN.
 #' @return A list of 2D matrices. The length of the list corresponds to the periods indicated in the \code{season} 
 #' argument (default to 5, annual and the four standard WMO seasons). Attributes indicate the station names 
 #' (in the row/column order they appear), and their geographical coordinates. 
