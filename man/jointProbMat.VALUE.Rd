@@ -19,7 +19,7 @@ Default to NULL, meaning that the correlation matrix is done on the observations
 \code{c("annual", "DJF", "MAM", "JJA", "SON")}}
 
 \item{aggr.type}{Type of aggregation in the case of multiple realizations. Should the aggregation of 
-multiple members be performed \code{"before"} (default) or \code{"after"} computing the correlations?. Ignored
+multiple members be performed \code{"after"} (the default) or \code{"before"} computing the joint probabilities?. Ignored
  in the case of observations and deterministic predictions.}
 
 \item{prob.type}{Character vector indicating the type of probability to be computed. Currently accepted values are:
@@ -57,9 +57,9 @@ In order to avoid this, the mutual information of
 two random variables is a measure of the mutual dependence between the two variables.
 MI = 0 if the two events are independent.
 
-Not limited to real-valued random variables like the correlation coefficient,
  MI is more general and determines how similar the joint distribution p(X,Y) is to the products
-  of factored marginal distribution p(X)p(Y)
+  of factored marginal distribution p(X)p(Y). Mutual information is nonnegative (i.e. \emph{MI(X,Y) >= 0}) 
+  and symmetric (i.e. \emph{MI(X,Y) = MI(Y,X)}).
 }
 \examples{
 \dontrun{

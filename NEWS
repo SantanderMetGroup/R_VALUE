@@ -5,7 +5,9 @@ R.VALUE
 * Added index.spell.mean to compute mean duration of spells (formerly only user-defined percentiles were available)
 * Seasonal cycle removal option implemented in the validation wrapper
 * Enabled several seasons on same request in jointProbMat.VALUE
-* Other minor bug fices, enhancements and documentation updates
+* Added new example built-in dataset with deterministic precipitation predictions.
+* Renamed built-in datasets to indicate the name of the variable.
+* Other minor bug fixes, enhancements and documentation updates
 
 
 
