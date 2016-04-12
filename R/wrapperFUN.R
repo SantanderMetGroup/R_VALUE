@@ -184,11 +184,11 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
                         }
                         
                         # Vectorization ---
-                        obs <- as.matrix(drop(sea.o$Data))
-                        prd <- as.matrix(drop(sea.p$Data))
+                        obs <- as.matrix(drop(seaP.o$Data))
+                        prd <- as.matrix(drop(seaP.p$Data))
                         if (n.mem > 1) prd <- t(prd)
-                        dates.obs <- sea.o$Dates$start
-                        dates.pred <- sea.p$Dates$start
+                        dates.obs <- seaP.o$Dates$start
+                        dates.pred <- seaP.p$Dates$start
                         sea.o <- sea.p <- NULL
                         # NA filter --------
                         aux.list <- lapply(1:ncol(prd), function(x) preprocessVALUE(obs[,1], prd[,x], dates.obs, dates.pred, na.prop))
