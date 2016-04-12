@@ -105,14 +105,15 @@ jointProbMat.VALUE <- function(stationObj,
                                max.na.prop = 0.25,
                                use.ff = FALSE) {
       season <- match.arg(season, choices = c("annual", "DJF", "MAM", "JJA", "SON"), several.ok = TRUE)
+      aggr.type <- match.arg(aggr.type, choices = c("after", "before"))
       prob.type <- match.arg(prob.type, choices = c("DD", "DW", "WW", "WD"))
+      output <- match.arg(output, choices = c("MI","jointProb"))
       ineq1 <- substr(prob.type, 1, 1)
       ineq2 <- substr(prob.type, 2, 2)
       ineqs <- sapply(c(ineq1, ineq2), function(x) switch(x, "D" = "<", "W" = ">="))
       exprPB <- paste0("sum(x", ineqs[2], "threshold,na.rm=TRUE) / length(which(!is.na(x)))") # Calculates P(B) matrix
       expr1 <- paste("which(mat[i,,j]", ineqs[1], "threshold)") # index for conditioning
       expr2 <- paste("which(mat[i,ind,k]", ineqs[2], "threshold)") # index for conditioning
-      aggr.type <- match.arg(aggr.type, choices = c("before", "after"))
       o <- stationObj
       stationObj <- NULL
       if (!is.null(predictions.file)) {
