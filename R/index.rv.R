@@ -18,7 +18,7 @@ index.rv <- function(ts, prob = 20, annual.index = TRUE, tail) {
             fun <- "max"
             prob <- 1/prob
       } else {
-            fun <- "mean"
+            fun <- "min"
             prob <- 1 - 1/prob
       }
       x <- tapply(ts, INDEX = annual.index, FUN = fun, na.rm = TRUE)
