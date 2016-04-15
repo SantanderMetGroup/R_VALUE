@@ -181,7 +181,6 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
                               seaP.o <- sea.o
                               seaP.p <- sea.p
                         }
-                        sea.o <- sea.p <- NULL
                         # Vectorization ---
                         obs <- as.matrix(drop(seaP.o$Data))
                         prd <- as.matrix(drop(seaP.p$Data))
