@@ -5,7 +5,7 @@
 \title{Correlation}
 \usage{
 measure.cor(indexObs = NULL, indexPrd = NULL, obs, prd,
-  method = c("pearson", "kendall", "spearman"))
+  method = c("pearson", "kendall", "spearman"), deseason = NULL)
 }
 \arguments{
 \item{indexObs}{index computed from the observations}
@@ -17,6 +17,10 @@ measure.cor(indexObs = NULL, indexPrd = NULL, obs, prd,
 \item{prd}{A vector of predictions}
 
 \item{method}{Type of correlation applied. Options: \code{c("pearson","kendall","spearman")}.}
+
+\item{deseason}{Default to \code{NULL}, and ignored. Only used if removal of the seasonal cycle is to be done.
+In this case, this is an integer number indicating the width, in days, of the window used for moving average computation
+ of the reference daily climatology. This argument is passed to \code{\link{deseason.VALUE}} via \code{\link{wrapperFUN}}.}
 }
 \value{
 A float number corresponding to the correlation coefficient of choice between the predicted and observed series.

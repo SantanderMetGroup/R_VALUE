@@ -19,7 +19,7 @@ Default to NULL, meaning that the correlation matrix is done on the observations
 \code{c("annual", "DJF", "MAM", "JJA", "SON")}}
 
 \item{aggr.type}{Type of aggregation in the case of multiple realizations. Should the aggregation of 
-multiple members be performed \code{"before"} (default) or \code{"after"} computing the correlations?. Ignored
+multiple members be performed \code{"after"} (the default) or \code{"before"} computing the joint probabilities?. Ignored
  in the case of observations and deterministic predictions.}
 
 \item{prob.type}{Character vector indicating the type of probability to be computed. Currently accepted values are:
@@ -36,8 +36,11 @@ For the joint probabilities use \code{"jointProb"}. See details.}
 memory problems. Recommended when working with large stochastic prediction datasets in resource-limited machines.}
 }
 \value{
-A 2D matrix. Attributes indicate the station names (in the row/column order they appear), and their
-geographical coordinates. In addition, the type of joint probability, as coded in argument \code{prob.type} is indicated in attribute \code{"joint_prob_type"}.
+A list of 2D matrices. The length of the list corresponds to the periods indicated in the \code{season} 
+argument (default to 5, annual and the four standard WMO seasons). Attributes indicate the station names 
+(in the row/column order they appear), and their geographical coordinates. 
+In addition, the type of joint probability, as coded in argument \code{prob.type} is indicated in the global 
+attribute \code{"joint_prob_type"}.
 }
 \description{
 Computes different joint (precipitation) probabilities between stations
@@ -52,16 +55,12 @@ in each of the stations (e.g. the joint for web values would be smaller in dry c
 so the analysis of dependencies will be modulated by the different climatologies.
 In order to avoid this, the mutual information of 
 two random variables is a measure of the mutual dependence between the two variables.
-     
-If the two events occur together exactly as frequently as one would
-expect by chance, the ratio inside the log is equal to 1, giving a value of zero;
- if they occur more frequently than one would expect by chance, the ratio is greater than 1
- so MI > 0; and conversely if they occur less frequently than one would expect by chance, the ratio
-is less than 1 so MI < 0. 
+MI = 0 if the two events are independent.
 
-Not limited to real-valued random variables like the correlation coefficient,
  MI is more general and determines how similar the joint distribution p(X,Y) is to the products
-  of factored marginal distribution p(X)p(Y)
+  of factored marginal distribution p(X)p(Y). Mutual information is nonnegative (i.e. \emph{MI(X,Y) >= 0}) 
+  and symmetric (i.e. \emph{MI(X,Y) = MI(Y,X)}).
+Note that when the joint probability is zero the returned value of MI is NaN.
 }
 \examples{
 \dontrun{
@@ -90,14 +89,14 @@ dd <- jointProbMat.VALUE(stationObj,
                          output = "MI")
                          
 # Draw matrix - requires lattice!
-mat <- matrix(ncol = ncol(ww), nrow = nrow(ww))
-mat[upper.tri(mat)] <- ww[upper.tri(ww)]
-mat[lower.tri(mat)] <- dd[upper.tri(dd)]
-station.labels <- attr(ww, "station_names")
+mat <- matrix(ncol = ncol(ww[[1]]), nrow = nrow(ww[[1]]))
+mat[upper.tri(mat)] <- ww[[1]][upper.tri(ww[[1]])]
+mat[lower.tri(mat)] <- dd[[1]][upper.tri(dd[[1]])]
+station.labels <- attr(ww[[1]], "station_names")
 scales.list <- list(x = list(labels = station.labels, rot = 90,
-                           at = seq(1,ncol(ww),1), cex = .5),
+                           at = seq(1,ncol(ww[[1]]),1), cex = .5),
                     y = list(labels = station.labels,
-                             at = seq(1,ncol(ww),1), cex = .5))
+                             at = seq(1,ncol(ww[[1]]),1), cex = .5))
 # lattice::levelplot(mat, xlab = "P(DRY,DRY)", ylab = "P(WET,WET)",
 # main = "Mutual Information Matrix", scales = scales.list)
 }

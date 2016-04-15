@@ -106,8 +106,8 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
       metric <- match.arg(arg = metric, choices = c("obs", "pred", "measure"), several.ok = TRUE)
       season <- match.arg(arg = season, choices = c("annual", "DJF", "MAM", "JJA", "SON"), several.ok = TRUE)
       suffix <- "\\.R$|\\.r$"
-      index.fun <- if (!is.null(index.fun) && grepl(suffix, index.fun)) gsub(suffix, "", index.fun)
-      measure.fun <- if (!is.null(measure.fun) && grepl(suffix, measure.fun)) gsub(suffix, "", measure.fun)
+      if (!is.null(index.fun) && grepl(suffix, index.fun)) index.fun <- gsub(suffix, "", index.fun)
+      if (!is.null(measure.fun) && grepl(suffix, measure.fun)) measure.fun <- gsub(suffix, "", measure.fun)
       message("[", Sys.time(), "] Intersecting obs and pred...")
       o <- dimFix(o)
       p <- dimFix(p)
@@ -133,6 +133,16 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
             attr(p$Data, "dimensions") <- dimNames
             # attr(p$Data, "member.aggr.fun") <- member.aggregation
             message("[", Sys.time(), "] OK")
+      }
+      # Seasonal cycle removal ----------------
+      window.width <- NULL
+      if ('deseason' %in% names(measure.args) && !is.null(measure.args[['deseason']])) window.width <- measure.args[['deseason']]
+      if ('deseason' %in% names(index.args) && !is.null(index.args[['deseason']])) window.width <- index.args[['deseason']]
+      if (!is.null(window.width)) {
+            message("[", Sys.time(),"] Removing seasonal cycle...")
+            o <- suppressMessages(deseason.VALUE(o, window.width, na.prop))
+            p <- suppressMessages(deseason.VALUE(p, window.width, na.prop))
+            message("[", Sys.time(),"] OK")
       }
       n.st <- dim(o$Data)[3]
       n.metric <- length(metric)
@@ -171,7 +181,7 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
                               seaP.o <- sea.o
                               seaP.p <- sea.p
                         }
-                        
+                        sea.o <- sea.p <- NULL
                         # Vectorization ---
                         obs <- as.matrix(drop(seaP.o$Data))
                         prd <- as.matrix(drop(seaP.p$Data))

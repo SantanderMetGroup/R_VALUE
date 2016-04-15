@@ -46,8 +46,6 @@
 #' legend("bottomright", legend = widths, lty = 1, col = (1:3)+1, title = "window.width")
 #' }
 
-
-
 deseason.VALUE <- function(valueObj, window.width = 31, max.na.prop = .25) {
       valueObj <- dimFix(valueObj)
       valueObj <- na.filter.VALUE(valueObj, max.na.prop)
@@ -67,7 +65,7 @@ deseason.VALUE <- function(valueObj, window.width = 31, max.na.prop = .25) {
                   # Remove cycle
                   for (k in 1:length(ref)) {
                         ind <- which(doy == unique(doy)[k])
-                        x[ind] <- x[ind] - ref[k]
+                        x[ind] <- mat[,ind,j] - ref[k]
                   }
                   valueObj$Data[i,,j] <- x
             }

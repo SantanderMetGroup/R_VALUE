@@ -45,7 +45,7 @@
 #' @author J. Bedia 
 #' @family loading
 #' @examples \dontrun{
-#' obs.dataset <- file.path(find.package("R.VALUE"), "VALUE_ECA_86_v1.zip")
+#' obs.dataset <- file.path(find.package("R.VALUE"), "example_datasets", "VALUE_ECA_86_v2.zip")
 #' # All data
 #' obs <- loadValueStations(dataset = obs.dataset, var = "tmean")
 #' # Selection by lon-lat
@@ -164,7 +164,7 @@ loadValueStations <- function(dataset, var, stationID = NULL, lonLim = NULL, lat
 #' @return A list with index positions of the requested data and a 2D matrix
 #' of XY coordinates
 #' 
-#' @author J. Bedia \email{joaquin.bedia@@gmail.com}
+#' @author J. Bedia 
 #' 
 #' @keywords internal
 
@@ -198,7 +198,7 @@ getLatLonDomainValueStations <- function(lonLim, latLim, lons, lats) {
 #' @param season A vector of months defining the season selected
 #' @param years A vector of (continuous) year selection
 #' @return A list with a vector of time index positions and the corresponding POSIXlt dates
-#' @author J. Bedia \email{joaquin.bedia@@gmail.com}
+#' @author J. Bedia 
 #' @keywords internal
 
 getTimeDomainValueStations <- function(timeDates, season, years) {
