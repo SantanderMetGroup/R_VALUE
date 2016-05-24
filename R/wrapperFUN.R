@@ -39,6 +39,7 @@
 #' @param processes processes
 #' @param processNames Labels identifying the processes
 #' @param na.prop Maximum allowable proportion of missing data. Default to 0.9
+#' @note This function is not envisaged to be directly called by the user. It is internally called by the validation portal.
 #' @return A 3D array with labelled dimensions station, season and metric
 #' @importFrom abind abind
 #' @export
@@ -51,41 +52,18 @@
 #'                       full.names = TRUE)
 #' # Load predictions
 #' p <- loadValuePredictions(o, predictions.file = prdfile)
-#' # Create argument list for computing mean bias:
-#' c1 = list()
-#' c1$metric = c("obs", "pred", "measure")
-#' c1$names = c("obsMean", "predMean","meanBias")
-#' c1$season = c("annual", "DJF", "MAM", "JJA", "SON")
-#' c1$member.aggregation = "none"
-#' c1$index.fun = "index.mean.R"
-#' c1$measure.fun = "measure.bias.R"
-#' c1$index.args = NULL
-#' c1$measure.args = NULL
-#' c1$o = o
-#' c1$p = p
-#' c1$na.prop = .9
-#' 
-#' # Call validation wrapper
-#' a <- do.call("wrapperFUN", c1)
-#' str(a)
-#' # Example stochastic
-#' prdfile <- list.files(file.path(find.package("R.VALUE"), "example_datasets"),
-#'                       pattern = "predictions_portal_exp1a_stochastic",
-#'                       full.names = TRUE)
-#' # Load predictions
-#' p <- loadValuePredictions(o, predictions.file = prdfile)
-#' c1$p = p
-#' 
-#' # Member-wise index calculation:
-#' c1$member.aggregation = "none"
-#' b <- do.call("wrapperFUN", c1)
-#' str(b)
-#' # Note the attribute 'member.aggregation'
-#' 
-#' # Member aggregation before computing the index (deterministic component):
-#' c1$member.aggregation = "mean"
-#' b1 <- do.call("wrapperFUN", c1)
-#' str(b1)
+#' # Example: computing correlation. Seasonal cycle removal is applied
+#' vno <- wrapperFUN(metric = c('measure'),
+#'                   names = c('measure'),
+#'                   season = c('annual','DJF','MAM','JJA','SON'),
+#'                   member.aggregation = 'none',
+#'                   index.fun = NULL,
+#'                   measure.fun = 'measure.cor.R',
+#'                   index.args = NULL,
+#'                   measure.args = list('method' = 'pearson','deseason' = TRUE),
+#'                   o = o,
+#'                   p = p)
+#' str(vno)
 #' }
 
 wrapperFUN <- function(metric = c("obs", "pred", "measure"),
