@@ -47,7 +47,7 @@
 #' obs.file <- file.path(find.package("R.VALUE"), "example_datasets", "VALUE_ECA_86_v2.zip")
 #' o <- loadValueStations(obs.file, var = "tmin")
 #' prdfile <- list.files(file.path(find.package("R.VALUE"), "example_datasets"),
-#'                       pattern = "predictions_portal_exp1a_deterministic",
+#'                       pattern = "example_predictions_tmin_portal_exp1a_deterministic",
 #'                       full.names = TRUE)
 #' # Load predictions
 #' p <- loadValuePredictions(o, predictions.file = prdfile)
@@ -88,7 +88,6 @@
 #' str(b1)
 #' }
 
-
 wrapperFUN <- function(metric = c("obs", "pred", "measure"),
                        names = NULL,
                        season = c("annual", "DJF", "MAM", "JJA", "SON"),
@@ -123,15 +122,19 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
             dim(p$Data)[1]      
       }
       # Member aggregation (the array is re-assigned the member dimension after the aggregation)
+      n.mem.new <- n.mem
       if (member.aggregation != "none" & dim(p$Data)[1] > 1) {
             message("[", Sys.time(), "] Aggregating members...")
             dimNames <- attr(p$Data, "dimensions")
+            mar <- grep("member", attr(p$Data, "dimensions"), invert = TRUE)
+            p$Data <- asub(p$Data, dims = grep("member", dimNames), idx = 1:n.mem)
             p$Data <- apply(p$Data,
-                            MARGIN = grep("member", attr(p$Data, "dimensions"), invert = TRUE),
+                            MARGIN = mar,
                             FUN = member.aggregation, na.rm = TRUE)
             p$Data <- unname(abind(p$Data, NULL, along = 0))    
             attr(p$Data, "dimensions") <- dimNames
             # attr(p$Data, "member.aggr.fun") <- member.aggregation
+            n.mem.new <- 1
             message("[", Sys.time(), "] OK")
       }
       # Seasonal cycle removal ----------------
@@ -184,7 +187,7 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
                         # Vectorization ---
                         obs <- as.matrix(drop(seaP.o$Data))
                         prd <- as.matrix(drop(seaP.p$Data))
-                        if (n.mem > 1) prd <- t(prd)
+                        if (n.mem.new > 1) prd <- t(prd)
                         dates.obs <- seaP.o$Dates$start
                         dates.pred <- seaP.p$Dates$start
                         # NA filter --------
@@ -201,8 +204,8 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
                                           } else {
                                                 indexObs <- indexPrd <- NULL
                                           }
-                                          aux <- rep(NA, n.mem)
-                                          for (l in 1:n.mem) {
+                                          aux <- rep(NA, n.mem.new)
+                                          for (l in 1:n.mem.new) {
                                                 arg.list <- list("indexObs" = indexObs,"indexPrd" = indexPrd,"obs" = aux.list[[l]]$obs,"prd" = aux.list[[l]]$pred)
                                                 if (!is.null(measure.args)) {
                                                       arg.list <- c(arg.list,measure.args)
@@ -211,8 +214,8 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
                                           }
                                           index.arr[i,j,k,pr] <- mean(aux, na.rm = TRUE)
                                     } else {# index -----
-                                          aux <- rep(NA, n.mem)
-                                          for (l in 1:n.mem) {  
+                                          aux <- rep(NA, n.mem.new)
+                                          for (l in 1:n.mem.new) {  
                                                 ind <- grep(metric[k], names(aux.list[[l]]))
                                                 arg.list <- list("ts" = aux.list[[l]][[ind]])
                                                 if (!is.null(index.args)) {
