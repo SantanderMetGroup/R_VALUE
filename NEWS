@@ -1,8 +1,6 @@
 R.VALUE
 =======
-* Bug fix in member subsetting in wrapperFUN
-* Added new measure Brier score for binary events (measure.bs)
-* Added new index (index.wetAmount.prcXXth)
+* Bug fix in  na.strings  parsing loading predictions
 * Other minor bug fixes, enhancements and documentation updates
 
 
