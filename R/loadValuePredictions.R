@@ -23,8 +23,7 @@
 #' @param tz Optional. A time zone specification to be used for the conversion of dates. See more details in 
 #' \code{\link{loadValueStations}}.
 #' @param na.strings Optional. A character vector of strings which are to be interpreted as \code{\link{NA}} values.
-#'  Blank fields are also considered to be missing values in logical, integer, numeric and complex fields. This argument
-#'  is passed to read.csv. Note that numeric values of -9999 will be also coerced to NAs.
+#'  Blank fields are also considered to be missing values in logical, integer, numeric and complex fields. This argument is passed to read.csv. 
 #' @return A predictions object. This is equivalent to the stations object (see \code{\link{loadValueStations}}),
 #' but the data element may vary its shape to include the \code{"member"} dimension in case of stochastic
 #' predictions with several realizations. Also, a global attribute \code{"datatype"} is set, and assigned 
@@ -43,13 +42,13 @@
 #' # Loading deterministic predictions
 #' pred.file1 <- file.path(find.package("R.VALUE"),
 #'                         "example_datasets",
-#'                         "example_predictions_portal_exp1a_deterministic.zip")
+#'                         "example_predictions_tmin_portal_exp1a_deterministic.zip")
 #' pred <- loadValuePredictions(obs, pred.file1)
 #' str(pred$Data) # 2D array
 #' # Loading stochastic predictions (several realizations)
 #' pred.file2 <- file.path(find.package("R.VALUE"),
 #'                         "example_datasets",
-#'                         "example_predictions_portal_exp1a_stochastic.zip")
+#'                         "example_predictions_tmin_portal_exp1a_stochastic.zip")
 #' pred2 <- loadValuePredictions(obs, pred.file2)
 #' str(pred2$Data) # 3D array with 'member' dimension
 #' }
@@ -114,10 +113,11 @@ loadValuePredictions <- function(stationObj, predictions.file, tz = "", na.strin
       } else {
             c("member", "time", "station")
       }
-      aux <- unname(aux) 
+      aux <- unname(aux)
+      aux[which(aux == suppressWarnings(as.numeric(na.strings)), arr.ind = TRUE)] <- NA
       attr(aux, "dimensions") <- dimensions
       stationObj$Data <- aux
-      rm(aux)
+      aux <- NULL
       gc()
       stationObj$Dates <- timeBoundsValue(timePars$timeDates, tz)
       ind.st <- na.omit(match(header[-1], stationObj$Metadata$station_id))
