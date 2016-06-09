@@ -4,14 +4,14 @@
 \alias{corrMat.VALUE}
 \title{Correlation matrix for paper Figures 4 and 5 on spatial validation}
 \usage{
-corrMat.VALUE(stationObj, predictions.file = NULL, season = c("annual",
-  "DJF", "MAM", "JJA", "SON"), method = "pearson", type = "after",
+corrMat.VALUE(stationObj, predictionObj = NULL, season = c("annual", "DJF",
+  "MAM", "JJA", "SON"), method = "pearson", type = "after",
   max.na.prop = 0.25, deseason = TRUE, window.width = 31)
 }
 \arguments{
 \item{stationObj}{An R-VALUE object containing station data (as returned by \code{\link{loadValueStations}}).}
 
-\item{predictions.file}{Path to the file storing the predictions (passed to \code{\link{loadValuePredictions}}).
+\item{predictionObj}{A R-VALUE predictions object as loaded by \code{\link{loadValuePredictions}}.
 Default to NULL, meaning that the correlation matrix is done on the observations.}
 
 \item{season}{Character string indicating the target season. Accepted values are 
@@ -44,6 +44,7 @@ Computes the cross correlation matrices between stations that serve as input for
 
 A (circular) moving average daily climatology can be automatically calculated for each data series, considering 
 a specific window width (31 days by default, centered around lag 0). This is used for removing the seasonal cycle. 
+Alternatively, the \code{predictionObj} or \code{stationObj} can be passed to the function adter applying \code{\link{deseason.VALUE}}.
 
 \strong{Missing data treatment}
 
