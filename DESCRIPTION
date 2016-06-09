@@ -5,7 +5,8 @@ Imports:
     utils,
     abind,
     evd,
-    ff
+    ff,
+    RCurl
 Suggests:
     lattice
 Type: Package
