@@ -24,6 +24,9 @@
 #' \code{\link{loadValueStations}}.
 #' @param na.strings Optional. A character vector of strings which are to be interpreted as \code{\link{NA}} values.
 #'  Blank fields are also considered to be missing values in logical, integer, numeric and complex fields. This argument is passed to read.csv. 
+#' @param n.mem Optional An integer value greater than zero indicating the number of members to be loaded. Default to \code{NULL},
+#' so all the realizations are loaded. If n.mem is specified, the first \code{n.mem} members will be returned
+#' (i.e., from the 1st to the n.mem-th).
 #' @return A predictions object. This is equivalent to the stations object (see \code{\link{loadValueStations}}),
 #' but the data element may vary its shape to include the \code{"member"} dimension in case of stochastic
 #' predictions with several realizations. Also, a global attribute \code{"datatype"} is set, and assigned 
@@ -51,9 +54,15 @@
 #'                         "example_predictions_tmin_portal_exp1a_stochastic.zip")
 #' pred2 <- loadValuePredictions(obs, pred.file2)
 #' str(pred2$Data) # 3D array with 'member' dimension
+#' # Selecting the first 2 members using 'n.mem':
+#' pred3 <- loadValuePredictions(obs, pred.file2, n.mem=2)
+#' str(pred3$Data) # 3D array with 'member' dimension of length 2
 #' }
 
-loadValuePredictions <- function(stationObj, predictions.file, tz = "", na.strings = "NA") {
+loadValuePredictions <- function(stationObj, predictions.file, tz = "", na.strings = "NA", n.mem = NULL) {
+      if (!is.null(n.mem)) {
+            stopifnot(n.mem >= 1)
+      }
       message("[", Sys.time(), "] Loading prediction data ...", sep = "")
       stationObj$Data <- NULL
       season <- getSeason.VALUE(stationObj$Dates$start)
@@ -71,6 +80,14 @@ loadValuePredictions <- function(stationObj, predictions.file, tz = "", na.strin
             })
             zipFileContents  <- zipFileContents[present.files]
             n.members <- length(zipFileContents)
+            if (!is.null(n.mem)) {
+                  if (n.mem > n.members) {
+                        warning("'n.mem' greater than actual number of realizations. The argument was ignored")
+                        n.mem <- n.members
+                  } else {
+                        n.members <- n.mem
+                  }
+            }      
             timeString <- read.csv(unz(dataset, zipFileContents[1]), colClasses = "character")[ , 1]
             timeDates <- string2date(timeString, tz)
             timeString <- NULL
