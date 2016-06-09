@@ -5,7 +5,7 @@
 \title{Load VALUE predictions data}
 \usage{
 loadValuePredictions(stationObj, predictions.file, tz = "",
-  na.strings = "NA")
+  na.strings = "NA", n.mem = NULL)
 }
 \arguments{
 \item{stationObj}{A station data object returned by \code{\link{loadValueStations}}. See details.}
@@ -17,6 +17,10 @@ loadValuePredictions(stationObj, predictions.file, tz = "",
 
 \item{na.strings}{Optional. A character vector of strings which are to be interpreted as \code{\link{NA}} values.
 Blank fields are also considered to be missing values in logical, integer, numeric and complex fields. This argument is passed to read.csv.}
+
+\item{n.mem}{Optional An integer value greater than zero indicating the number of members to be loaded. Default to \code{NULL},
+so all the realizations are loaded. If n.mem is specified, the first \code{n.mem} members will be returned
+(i.e., from the 1st to the n.mem-th).}
 }
 \value{
 A predictions object. This is equivalent to the stations object (see \code{\link{loadValueStations}}),
@@ -50,6 +54,9 @@ pred.file2 <- file.path(find.package("R.VALUE"),
                         "example_predictions_tmin_portal_exp1a_stochastic.zip")
 pred2 <- loadValuePredictions(obs, pred.file2)
 str(pred2$Data) # 3D array with 'member' dimension
+# Selecting the first 2 members using 'n.mem':
+pred3 <- loadValuePredictions(obs, pred.file2, n.mem=2)
+str(pred3$Data) # 3D array with 'member' dimension of length 2
 }
 }
 \seealso{

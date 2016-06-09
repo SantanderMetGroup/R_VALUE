@@ -1,6 +1,7 @@
 R.VALUE
 =======
-* Bug fix in  na.strings  parsing loading predictions
+* Included `n.mem` argument in `loadValuePredictions` for member subsets
+* Added startup macro printing on-screen version information and performing version check
 * Other minor bug fixes, enhancements and documentation updates
 
 
