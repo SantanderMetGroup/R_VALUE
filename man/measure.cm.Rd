@@ -8,7 +8,7 @@ L. Sachs and J. Hedderich (2006). Angewandte Statistik. Springer.
 }
 \usage{
 measure.cm(indexObs = NULL, indexPrd = NULL, obs = NULL, prd = NULL,
-  Nbins = 100, what = c("CvM", "pval", "KSdiff"))
+  Nbins = 100, what = c("CvM", "pval", "KSdiff"), threshold = NULL)
 }
 \arguments{
 \item{indexObs}{index computed from the observations}
@@ -24,6 +24,9 @@ measure.cm(indexObs = NULL, indexPrd = NULL, obs = NULL, prd = NULL,
 \item{what}{Measure to be returned. This can be the Cramer von Misses index (\code{"CvM"}), 
 the p-value (\code{"pvalue"}) of the test or the maximum absolute difference between the observed and predicted
  distributions (\code{"KSdiff"}). Default to \code{"CvM"}.}
+
+\item{threshold}{Optional. Numeric value indicating the threshold above which to compute the measure.
+Mainly used for precipitation, tipically to use only the wet days in the analysis (i.e.: \code{threshold = 1}).}
 }
 \value{
 A floating number with the measure indicated in \code{what} argument.

@@ -60,7 +60,7 @@
 #' stationObj <- loadValueStations(obs.file, var = "precip")
 #' # Wet-wet probability (precip >= 1mm)
 #' ww <- jointProbMat.VALUE(stationObj,
-#'                         predictions.file = NULL,
+#'                         predictionObj = NULL,
 #'                         season = "annual",
 #'                         threshold = 1,
 #'                         max.na.prop = 1,
@@ -71,7 +71,7 @@
 #'
 #' # Dry-dry joint probability (precip < 1mm)
 #' dd <- jointProbMat.VALUE(stationObj,
-#'                          predictions.file = NULL,
+#'                          predictionObj = NULL,
 #'                          season = "annual",
 #'                          threshold = 1,
 #'                          max.na.prop = 1,

@@ -57,11 +57,12 @@
 #' obs.file <- file.path(find.package("R.VALUE"),"example_datasets","VALUE_ECA_86_v2.zip")
 #' stationObj <- loadValueStations(obs.file, "precip")
 #' predictions.file <- file.path(find.package("R.VALUE"),"example_datasets",
-#'                                   "example_predictions_portal_exp1a_deterministic.zip")
+#'                                   "example_predictions_precip_portal_exp1a_deterministic.zip")
+#' prd <- loadValuePredictions(stationObj, predictions.file)                                  
 #' # Correlation matrix of annual data:                                  
-#' annual <- corrMat.VALUE(stationObj, predictions.file, season = "annual")
+#' annual <- corrMat.VALUE(stationObj, prd, season = "annual")
 #' # Correlation matrix for winter and summer:
-#' djfjja <- corrMat.VALUE(stationObj, predictions.file, season = c("DJF","JJA"))
+#'djfjja <- corrMat.VALUE(stationObj, prd, season = c("DJF","JJA"))
 #' }
 
 corrMat.VALUE <- function(stationObj,

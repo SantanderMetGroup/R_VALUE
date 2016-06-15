@@ -65,7 +65,7 @@ obs.file <- file.path(find.package("R.VALUE"), "example_datasets", "VALUE_53_ECA
 stationObj <- loadValueStations(obs.file, var = "precip")
 # Wet-wet probability (precip >= 1mm)
 ww <- jointProbMat.VALUE(stationObj,
-                        predictions.file = NULL,
+                        predictionObj = NULL,
                         season = "annual",
                         threshold = 1,
                         max.na.prop = 1,
@@ -76,7 +76,7 @@ ww <- jointProbMat.VALUE(stationObj,
 
 # Dry-dry joint probability (precip < 1mm)
 dd <- jointProbMat.VALUE(stationObj,
-                         predictions.file = NULL,
+                         predictionObj = NULL,
                          season = "annual",
                          threshold = 1,
                          max.na.prop = 1,
