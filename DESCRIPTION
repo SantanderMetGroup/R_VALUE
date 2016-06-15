@@ -5,13 +5,13 @@ Imports:
     utils,
     abind,
     evd,
-    ff
+    RCurl
 Suggests:
     lattice
 Type: Package
 Title: Climate data validation in the framework of the COST action VALUE
-Version: 1.3-6
-Date: 2016-06-08
+Version: 1.4-0
+Date: 2016-06-15
 Authors@R: as.person(c(
     "Santander Meteorology Group [aut]",      
     "Predictia Intelligent Data Solutions [ctb]",

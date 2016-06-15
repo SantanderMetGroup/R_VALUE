@@ -6,12 +6,17 @@
 #' @param what Measure to be returned. This can be the Cramer von Misses index (\code{"CvM"}), 
 #' the p-value (\code{"pvalue"}) of the test or the maximum absolute difference between the observed and predicted
 #'  distributions (\code{"KSdiff"}). Default to \code{"CvM"}.
+#' @param threshold Optional. Numeric value indicating the threshold above which to compute the measure.
+#' Mainly used for precipitation, tipically to use only the wet days in the analysis (i.e.: \code{threshold = 1}).
 #' @source L. Sachs and J. Hedderich (2006). Angewandte Statistik. Springer.  
 #' @return A floating number with the measure indicated in \code{what} argument.
 #' @export
 
 
-measure.cm <- function(indexObs = NULL, indexPrd = NULL, obs = NULL, prd = NULL, Nbins = 100, what = c("CvM", "pval", "KSdiff")) {
+measure.cm <- function(indexObs = NULL, indexPrd = NULL, obs = NULL, prd = NULL,
+                       Nbins = 100,
+                       what = c("CvM", "pval", "KSdiff"),
+                       threshold = NULL) {
       if (length(obs) <= 1) {
             stop("Observed time series is needed")
       }
@@ -19,6 +24,11 @@ measure.cm <- function(indexObs = NULL, indexPrd = NULL, obs = NULL, prd = NULL,
             stop("Predicted time series is needed")
       }
       what <- match.arg(what, choices = c("CvM", "pval", "KSdiff"))
+      if (!is.null(threshold)) {
+          stopifnot(is.numeric(threshold))
+          obs <- obs[obs > threshold]
+          prd <- prd[prd > threshold]
+      }
       out <- NA
       if (any(is.finite(obs)) && any(is.finite(prd))) {
             seq.all <- range(c(obs, prd), na.rm = TRUE)

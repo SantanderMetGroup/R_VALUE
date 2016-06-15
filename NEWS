@@ -1,6 +1,11 @@
 R.VALUE
 =======
-* Bug fix in  na.strings  parsing loading predictions
+
+* Input arguments to `corrMat.VALUE` and `jointProbMat.VALUE` modified for improved efficiency
+* Included `n.mem` argument in `loadValuePredictions` for member subsets
+* Included threshold argument in `measure.cm` (e.g. to compute on wet days only)
+* Removed import from package `ff`, so far not needed 
+* Added startup macro printing on-screen version information and performing version check
 * Other minor bug fixes, enhancements and documentation updates
 
 

@@ -19,7 +19,7 @@
 #' @title Correlation matrix for paper Figures 4 and 5 on spatial validation
 #' @description Computes the cross correlation matrices between stations that serve as input for plotting functions
 #' @param stationObj An R-VALUE object containing station data (as returned by \code{\link{loadValueStations}}).
-#' @param predictions.file Path to the file storing the predictions (passed to \code{\link{loadValuePredictions}}).
+#' @param predictionObj A R-VALUE predictions object as loaded by \code{\link{loadValuePredictions}}.
 #'  Default to NULL, meaning that the correlation matrix is done on the observations.
 #' @param season Character string indicating the target season. Accepted values are 
 #' \code{c("annual", "DJF", "MAM", "JJA", "SON")}. Several choices in the same request are accepted (all are computed by default).
@@ -38,6 +38,7 @@
 #' 
 #' A (circular) moving average daily climatology can be automatically calculated for each data series, considering 
 #' a specific window width (31 days by default, centered around lag 0). This is used for removing the seasonal cycle. 
+#' Alternatively, the \code{predictionObj} or \code{stationObj} can be passed to the function adter applying \code{\link{deseason.VALUE}}.
 #' 
 #' \strong{Missing data treatment}
 #' 
@@ -56,15 +57,16 @@
 #' obs.file <- file.path(find.package("R.VALUE"),"example_datasets","VALUE_ECA_86_v2.zip")
 #' stationObj <- loadValueStations(obs.file, "precip")
 #' predictions.file <- file.path(find.package("R.VALUE"),"example_datasets",
-#'                                   "example_predictions_portal_exp1a_deterministic.zip")
+#'                                   "example_predictions_precip_portal_exp1a_deterministic.zip")
+#' prd <- loadValuePredictions(stationObj, predictions.file)                                  
 #' # Correlation matrix of annual data:                                  
-#' annual <- corrMat.VALUE(stationObj, predictions.file, season = "annual")
+#' annual <- corrMat.VALUE(stationObj, prd, season = "annual")
 #' # Correlation matrix for winter and summer:
-#' djfjja <- corrMat.VALUE(stationObj, predictions.file, season = c("DJF","JJA"))
+#'djfjja <- corrMat.VALUE(stationObj, prd, season = c("DJF","JJA"))
 #' }
 
 corrMat.VALUE <- function(stationObj,
-                          predictions.file = NULL,
+                          predictionObj = NULL,
                           season = c("annual", "DJF", "MAM", "JJA", "SON"),
                           method = "pearson",
                           type = "after",
@@ -76,10 +78,10 @@ corrMat.VALUE <- function(stationObj,
       type <- match.arg(type, choices = c("after", "before"))
       o <- dimFix(stationObj)
       stationObj <- NULL
-      if (!is.null(predictions.file)) {
-            message("[", Sys.time(), "] - Loading predictions...")
-            o <- suppressWarnings(dimFix(loadValuePredictions(o, predictions.file)))
-            message("[", Sys.time(), "] - Done.")            
+      if (!is.null(predictionObj)) {
+            ## message("[", Sys.time(), "] - Loading predictions...")
+            o <- suppressWarnings(dimFix(predictionObj))
+            ## message("[", Sys.time(), "] - Done.")            
       }
       n.mem <- dim(o$Data)[1]
       # Member aggregation before

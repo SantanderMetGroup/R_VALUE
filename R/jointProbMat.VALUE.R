@@ -19,8 +19,8 @@
 #' @title Joint probability analysis
 #' @description Computes different joint (precipitation) probabilities between stations 
 #' @param stationObj An R-VALUE object containing station data (as returned by \code{\link{loadValueStations}}).
-#' @param predictions.file Path to the file storing the predictions (passed to \code{\link{loadValuePredictions}}).
-#'  Default to NULL, meaning that the correlation matrix is done on the observations.
+#' @param predictionObj A R-VALUE predictions object as loaded by \code{\link{loadValuePredictions}}.
+#'  Default to NULL, meaning that the matrix of joint probabilities is done on the observations.
 #' @param season Character string indicating the target season. Accepted values are 
 #' \code{c("annual", "DJF", "MAM", "JJA", "SON")}
 #' @param aggr.type Type of aggregation in the case of multiple realizations. Should the aggregation of 
@@ -32,8 +32,6 @@
 #' For the joint probabilities use \code{"jointProb"}. See details.
 #' @param threshold Threshold above which values are used/discarded (i.e., values greater or equal than \code{threshold} are considered as Wet).
 #' @param max.na.prop Maximum allowed proportion of missing data (Default to 0.25). See details
-#' @param use.ff Optional. If set to \code{TRUE}, the loaded stations/predictions array is written to disk using the \pkg{ff} package in order to avoid 
-#' memory problems. Recommended when working with large stochastic prediction datasets in resource-limited machines.
 #' @details The typical way to analyze dependencies is comparing the joint $P(wet_{i},wet_{j})$ (i.e. \code{output="jointProb"})
 #' and the product of marginals $P(wet_{i}) * P(wet_{j})$. The difference is zero only in case that
 #' $wet_i$ and $wet_j$ are independent and the larger the value, the more dependent they are.
@@ -56,14 +54,13 @@
 #' attribute \code{"joint_prob_type"}.   
 #' @author J. Bedia 
 #' @export
-#' @importFrom ff as.ff
 #' @references \url{https://en.wikipedia.org/wiki/Mutual_information}
 #' @examples \dontrun{
 #' obs.file <- file.path(find.package("R.VALUE"), "example_datasets", "VALUE_53_ECAD_Germany_v1.zip")
 #' stationObj <- loadValueStations(obs.file, var = "precip")
 #' # Wet-wet probability (precip >= 1mm)
 #' ww <- jointProbMat.VALUE(stationObj,
-#'                         predictions.file = NULL,
+#'                         predictionObj = NULL,
 #'                         season = "annual",
 #'                         threshold = 1,
 #'                         max.na.prop = 1,
@@ -74,7 +71,7 @@
 #'
 #' # Dry-dry joint probability (precip < 1mm)
 #' dd <- jointProbMat.VALUE(stationObj,
-#'                          predictions.file = NULL,
+#'                          predictionObj = NULL,
 #'                          season = "annual",
 #'                          threshold = 1,
 #'                          max.na.prop = 1,
@@ -97,14 +94,13 @@
 #' }
 
 jointProbMat.VALUE <- function(stationObj,
-                               predictions.file = NULL,
+                               predictionObj = NULL,
                                season = c("annual", "DJF", "MAM", "JJA", "SON"),
                                aggr.type = c("after","before"),
                                prob.type = c("DD", "DW", "WW", "WD"),
                                output = c("MI","jointProb"),
                                threshold = 1,
-                               max.na.prop = 0.25,
-                               use.ff = FALSE) {
+                               max.na.prop = 0.25) {
       season <- match.arg(season, choices = c("annual", "DJF", "MAM", "JJA", "SON"), several.ok = TRUE)
       aggr.type <- match.arg(aggr.type, choices = c("after", "before"))
       prob.type <- match.arg(prob.type, choices = c("DD", "DW", "WW", "WD"))
@@ -117,10 +113,10 @@ jointProbMat.VALUE <- function(stationObj,
       expr2 <- paste("which(mat[i,ind,k]", ineqs[2], "threshold)") # index for conditioning
       o <- stationObj
       stationObj <- NULL
-      if (!is.null(predictions.file)) {
-            message("[", Sys.time(), "] - Loading predictions...")
-            o <- suppressWarnings(loadValuePredictions(o, predictions.file))
-            message("[", Sys.time(), "] - Done.")            
+      if (!is.null(predictionObj)) {
+            # message("[", Sys.time(), "] - Loading predictions...")
+            o <- suppressWarnings(dimFix(predictionObj))
+            # message("[", Sys.time(), "] - Done.")            
       }
       mat.list <- lapply(1:length(season),  function(x) {
             sea <- switch(season[x], 
@@ -141,11 +137,7 @@ jointProbMat.VALUE <- function(stationObj,
                   n.mem <- dim(o$Data)[1]
             }
             n.stations <- dim(o$Data)[3]
-            mat <- if (use.ff) {
-                  as.ff(o$Data)
-            } else {
-                  o$Data
-            }
+            mat <- o$Data
             o$Data <- NULL
             # Joint probability ------------------------
             message("[", Sys.time(), "] - Calculating probabilities for ", season[x], "...")
@@ -172,7 +164,6 @@ jointProbMat.VALUE <- function(stationObj,
                   jpmat[which(jpmat < 0)] <- 0 # small negatives may appear due to rounding errors
                   return(jpmat)
             })
-            if (use.ff) close(mat)
             arr <- do.call("abind", c(jp.list, along = -1L))
             jp.list <- NULL
             # Member aggregation "after"

@@ -4,16 +4,16 @@
 \alias{jointProbMat.VALUE}
 \title{Joint probability analysis}
 \usage{
-jointProbMat.VALUE(stationObj, predictions.file = NULL, season = c("annual",
+jointProbMat.VALUE(stationObj, predictionObj = NULL, season = c("annual",
   "DJF", "MAM", "JJA", "SON"), aggr.type = c("after", "before"),
   prob.type = c("DD", "DW", "WW", "WD"), output = c("MI", "jointProb"),
-  threshold = 1, max.na.prop = 0.25, use.ff = FALSE)
+  threshold = 1, max.na.prop = 0.25)
 }
 \arguments{
 \item{stationObj}{An R-VALUE object containing station data (as returned by \code{\link{loadValueStations}}).}
 
-\item{predictions.file}{Path to the file storing the predictions (passed to \code{\link{loadValuePredictions}}).
-Default to NULL, meaning that the correlation matrix is done on the observations.}
+\item{predictionObj}{A R-VALUE predictions object as loaded by \code{\link{loadValuePredictions}}.
+Default to NULL, meaning that the matrix of joint probabilities is done on the observations.}
 
 \item{season}{Character string indicating the target season. Accepted values are 
 \code{c("annual", "DJF", "MAM", "JJA", "SON")}}
@@ -31,9 +31,6 @@ For the joint probabilities use \code{"jointProb"}. See details.}
 \item{threshold}{Threshold above which values are used/discarded (i.e., values greater or equal than \code{threshold} are considered as Wet).}
 
 \item{max.na.prop}{Maximum allowed proportion of missing data (Default to 0.25). See details}
-
-\item{use.ff}{Optional. If set to \code{TRUE}, the loaded stations/predictions array is written to disk using the \pkg{ff} package in order to avoid 
-memory problems. Recommended when working with large stochastic prediction datasets in resource-limited machines.}
 }
 \value{
 A list of 2D matrices. The length of the list corresponds to the periods indicated in the \code{season} 
@@ -68,7 +65,7 @@ obs.file <- file.path(find.package("R.VALUE"), "example_datasets", "VALUE_53_ECA
 stationObj <- loadValueStations(obs.file, var = "precip")
 # Wet-wet probability (precip >= 1mm)
 ww <- jointProbMat.VALUE(stationObj,
-                        predictions.file = NULL,
+                        predictionObj = NULL,
                         season = "annual",
                         threshold = 1,
                         max.na.prop = 1,
@@ -79,7 +76,7 @@ ww <- jointProbMat.VALUE(stationObj,
 
 # Dry-dry joint probability (precip < 1mm)
 dd <- jointProbMat.VALUE(stationObj,
-                         predictions.file = NULL,
+                         predictionObj = NULL,
                          season = "annual",
                          threshold = 1,
                          max.na.prop = 1,
