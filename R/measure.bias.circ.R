@@ -5,7 +5,7 @@
 #' @author D. San-Martin
 #' @export
 
-measure.biasCirc <- function(indexObs = NULL, indexPrd = NULL, obs = NULL, prd = NULL) {
+measure.bias.circ <- function(indexObs = NULL, indexPrd = NULL, obs = NULL, prd = NULL) {
       distance <- (abs(indexObs - indexPrd) * -1) %% 365
       if (indexObs < indexPrd) {
             distance <- distance * -1
