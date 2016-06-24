@@ -4,7 +4,8 @@
 \alias{index.annual.cycle}
 \title{Annual cycle statistics}
 \usage{
-index.annual.cycle(ts, dates, type = c("min", "max", "amp", "relamp"))
+index.annual.cycle(ts, dates, type = c("phase", "min", "max", "amp", "relamp",
+  "asymmetry"))
 }
 \arguments{
 \item{ts}{A vector containing the data}
@@ -14,15 +15,24 @@ index.annual.cycle(ts, dates, type = c("min", "max", "amp", "relamp"))
  VALUE objects (either stations or predictions) through the element \code{object$Dates$start}.}
 
 \item{type}{Character string indicating the statistic. Currently implemented options are \code{"min"},
-\code{"max"}, \code{"amp"} for amplitude, and \code{"relamp"} for relative amplitude (in \%).}
+\code{"max"}, \code{"amp"} for amplitude, \code{"relamp"} for relative amplitude (in \%),
+\code{"phase"} for amplitude of the filtered time series and \code{"asymmetry"} to calculate the
+difference in days between maximum and minimum of the filtered cycle (see Details for the last two types).}
 }
 \value{
-A float number with the corresponding statistis.
+A float number with the corresponding statistics.
 }
 \description{
 Computes several annual cycle statistics
 }
+\details{
+\strong{Time series filter}
+
+The \code{type = "phase"} and \code{"asymmetry"} options apply a circular moving average, with a window width of 31 days
+ and centered on lag-0, and then return the day of the year (julian day [1-366]) reaching either the maximum or the number 
+of days between maximum and minimum respectively.
+}
 \author{
-Sven Kotlarski, S. Herrera, J. Bedia, D. San Martin
+Sven Kotlarski, S. Herrera, J. Bedia, D. San Martin, D. Maraun
 }
 
