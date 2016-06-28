@@ -19,20 +19,25 @@
 
 index.annual.cycle <- function(ts, dates, type = c("phase","min", "max", "amp", "relamp", "asymmetry")) {
       type <- match.arg(type, choices = c("phase", "min", "max", "amp", "relamp", "asymmetry"))
-      doy <- substr(dates,6,10)
+      doy <- substr(dates, 6, 10)
       ref <- tapply(ts, INDEX = doy, FUN = mean, na.rm = TRUE)
-      if (type == "phase" | type == "asymmetry") {
-            ref <- filter(ref, 1/31 * rep(1, 31), method = "convolution", sides = 2, circular = TRUE)
-            if (type == "asymmetry") nmonth <- length(unique(substr(dates,6,7)))
+      if (length(ref) >= 31) {
+            if (type == "phase" | type == "asymmetry") {
+                  ref <- filter(ref, 1/31 * rep(1, 31), method = "convolution", sides = 2, circular = TRUE)
+                  if (type == "asymmetry") nmonth <- length(unique(substr(dates,6,7)))
+            }
+            out <- switch(type,
+                   "min" = min(ref, na.rm = TRUE),
+                   "max" = max(ref, na.rm = TRUE),
+                   "amp" = max(ref, na.rm = TRUE) - min(ref, na.rm = TRUE),
+                   "relamp" = (max(ref, na.rm = TRUE) - min(ref, na.rm = TRUE)) * 100 / mean(ref, na.rm = TRUE),
+                   "phase" = which.max(ref),
+                   "asymmetry" = ((abs(which.max(ref) - which.min(ref)) * -1) %% 365) / nmonth
+            )
+      } else {
+            out <- NA
       }
-      switch(type,
-             "min" = min(ref, na.rm = TRUE),
-             "max" = max(ref, na.rm = TRUE),
-             "amp" = max(ref, na.rm = TRUE) - min(ref, na.rm = TRUE),
-             "relamp" = (max(ref, na.rm = TRUE) - min(ref, na.rm = TRUE))*100 / mean(ref, na.rm = TRUE),
-             "phase" = which.max(ref),
-             "asymmetry" = ((abs(which.max(ref) - which.min(ref)) * -1) %% 365) / nmonth
-      )
+      return(out)
 }
 
 

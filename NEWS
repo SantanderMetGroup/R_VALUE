@@ -1,7 +1,8 @@
 R.VALUE
 =======
 
-* New function `aggregateVALUE` for object aggregation (currently just montly aggregations are implemented)
+* New function `aggregateVALUE` for object aggregation (only monthly aggregations are currently implemented)
+* `index.annual.cycle` returning NA in monthly predictions
 * Other minor bug fixes, enhancements and documentation updates
 
 
