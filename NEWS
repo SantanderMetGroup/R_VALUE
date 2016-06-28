@@ -1,8 +1,8 @@
 R.VALUE
 =======
 
-* New argument values `type="phase"` and `type="assymetry"` in `index.annual.cycle`
-* New measure for circular bias calculation
+* New function `aggregateVALUE` for object aggregation (only monthly aggregations are currently implemented)
+* `index.annual.cycle` returning NA in monthly predictions
 * Other minor bug fixes, enhancements and documentation updates
 
 
