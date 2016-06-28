@@ -1,4 +1,4 @@
-measure.bias.circ2 <- function(indexObs = NULL, indexPrd = NULL, obs = NULL, prd = NULL) {
+measure.bias.circ <- function(indexObs = NULL, indexPrd = NULL, obs = NULL, prd = NULL) {
       if(is.null(indexObs) | is.null(indexPrd)){
             return(NA)
       }
