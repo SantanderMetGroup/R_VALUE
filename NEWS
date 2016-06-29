@@ -1,8 +1,9 @@
 R.VALUE
 =======
 
+* Modification in the asymmetry index calculation in `index.annual.cycle`
 * New option for monthly anomaly calculation of monthly datasets in `deseason.VALUE`
-* Other minor bug fixes, enhancements and documentation updates
+* Other enhancements and documentation updates
 
 
 
