@@ -24,7 +24,6 @@ index.annual.cycle <- function(ts, dates, type = c("phase","min", "max", "amp", 
       if (length(ref) >= 31) {
             if (type == "phase" | type == "asymmetry") {
                   ref <- filter(ref, 1/31 * rep(1, 31), method = "convolution", sides = 2, circular = TRUE)
-                  if (type == "asymmetry") nmonth <- length(unique(substr(dates,6,7)))
             }
             out <- switch(type,
                    "min" = min(ref, na.rm = TRUE),
@@ -32,7 +31,7 @@ index.annual.cycle <- function(ts, dates, type = c("phase","min", "max", "amp", 
                    "amp" = max(ref, na.rm = TRUE) - min(ref, na.rm = TRUE),
                    "relamp" = (max(ref, na.rm = TRUE) - min(ref, na.rm = TRUE)) * 100 / mean(ref, na.rm = TRUE),
                    "phase" = which.max(ref),
-                   "asymmetry" = ((abs(which.max(ref) - which.min(ref)) * -1) %% 365) / nmonth
+                   "asymmetry" = ((which.max(ref) - which.min(ref)) %% 365) / 365
             )
       } else {
             out <- NA
