@@ -6,7 +6,16 @@
 #' @export
 
 measure.bias.circ <- function(indexObs = NULL, indexPrd = NULL, obs = NULL, prd = NULL) {
-      distance <- (abs(indexObs - indexPrd) * -1) %% 365
+      if (is.null(indexObs) | is.null(indexPrd)) {
+            return(NA)
+      }
+      if (is.na(indexObs) | is.na(indexPrd)) {
+            return(NA)
+      }
+      distance <- abs(indexPrd - indexObs) %% 365
+      if (distance > 365/2) {
+            distance = 365 - distance
+      }
       if (indexObs < indexPrd) {
             distance <- distance * -1
       }

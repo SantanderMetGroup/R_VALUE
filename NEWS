@@ -1,9 +1,9 @@
 R.VALUE
 =======
 
-* New function `aggregateVALUE` for object aggregation (only monthly aggregations are currently implemented)
-* `index.annual.cycle` returning NA in monthly predictions
-* Other minor bug fixes, enhancements and documentation updates
+* Modification in the asymmetry index calculation in `index.annual.cycle`
+* New option for monthly anomaly calculation of monthly datasets in `deseason.VALUE`
+* Other enhancements and documentation updates
 
 
 
