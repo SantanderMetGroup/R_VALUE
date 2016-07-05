@@ -5,7 +5,7 @@
 \title{Annual cycle statistics}
 \usage{
 index.annual.cycle(ts, dates, type = c("phase", "min", "max", "amp", "relamp",
-  "asymmetry"))
+  "asymmetry"), window.width = 61)
 }
 \arguments{
 \item{ts}{A vector containing the data}
@@ -18,6 +18,9 @@ index.annual.cycle(ts, dates, type = c("phase", "min", "max", "amp", "relamp",
 \code{"max"}, \code{"amp"} for amplitude, \code{"relamp"} for relative amplitude (in \%),
 \code{"phase"} for amplitude of the filtered time series and \code{"asymmetry"} to calculate the
 difference in days between maximum and minimum of the filtered cycle (see Details for the last two types).}
+
+\item{window.width}{Integer number indicating the width, in days, of the window used for
+moving average computation of the reference daily climatology. Default to 61 days. See details.}
 }
 \value{
 A float number with the corresponding statistics.
@@ -28,9 +31,8 @@ Computes several annual cycle statistics
 \details{
 \strong{Time series filter}
 
-The \code{type = "phase"} and \code{"asymmetry"} options apply a circular moving average, with a window width of 31 days
- and centered on lag-0, and then return the day of the year (julian day [1-366]) reaching either the maximum or the number 
-of days between maximum and minimum respectively.
+A (circular) moving average daily climatology is calculated for each data series, considering 
+a user-defined window width centered around lag 0.
 }
 \author{
 Sven Kotlarski, S. Herrera, J. Bedia, D. San Martin, D. Maraun
