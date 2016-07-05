@@ -1,8 +1,7 @@
 R.VALUE
 =======
 
-* Modification in the asymmetry index calculation in `index.annual.cycle`
-* New option for monthly anomaly calculation of monthly datasets in `deseason.VALUE`
+* Added a window.width parameter to `index.annual.cycle`, that is applied for all indices therein.
 * Other enhancements and documentation updates
 
 
