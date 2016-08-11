@@ -1,7 +1,7 @@
 index.internal.var <- function(ts, dates, type = c("monthly","interannual")) {
   type <- match.arg(type, choices = c("monthly", "interannual"))
   if (type=="monthly"){
-    mon <- substr(dates, 6,7)
+    mon <- substr(dates, 1,7)
     ref <- var(tapply(ts, INDEX = mon, FUN = mean, na.rm = TRUE))
   }
   if (type=="interannual"){
