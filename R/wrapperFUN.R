@@ -123,6 +123,10 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
             message("[", Sys.time(),"] Removing seasonal cycle...")
             o <- suppressMessages(deseason.VALUE(o, window.width, na.prop))
             p <- suppressMessages(deseason.VALUE(p, window.width, na.prop))
+            int <- getIntersect(o,p)
+            o <- int$obs
+            p <- int$prd
+            int <- NULL
             message("[", Sys.time(),"] OK")
       }
       n.st <- dim(o$Data)[3]
