@@ -19,12 +19,14 @@ measure.cor <- function(indexObs = NULL, indexPrd = NULL, obs, prd, dates,
       if (length(prd) <= 1) {
             stop("Predicted time series is needed")
       }
-      if (aggregation == "annual"){
+      if(is.null(aggregation)){
+           cor(obs, prd, use = "pairwise.complete.obs", method = method)    
+      }else if(aggregation == "annual"){
            index <- substr(dates, 1,4)
            obsY <- tapply(obs, INDEX = index, FUN = mean, na.rm = TRUE)
            prdY <- tapply(prd, INDEX = index, FUN = mean, na.rm = TRUE)
            cor(obsY, prdY, use = "pairwise.complete.obs", method = method)    
-      }else if (aggregation == "seasonal"){
+      }else if(aggregation == "seasonal"){
            year <- substr(dates, 1,4)
            season <- substr(dates, 6,7)
            ixWinter <- which(season %in% c("12","01","02"))
@@ -39,7 +41,5 @@ measure.cor <- function(indexObs = NULL, indexPrd = NULL, obs, prd, dates,
            obsS <- tapply(obs, INDEX = index, FUN = mean, na.rm = TRUE)
            prdS <- tapply(prd, INDEX = index, FUN = mean, na.rm = TRUE)
            cor(obsS, prdS, use = "pairwise.complete.obs", method = method)
-      }else{
-           cor(obs, prd, use = "pairwise.complete.obs", method = method)    
       }
 }
