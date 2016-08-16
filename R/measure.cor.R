@@ -12,7 +12,7 @@
 
 measure.cor <- function(indexObs = NULL, indexPrd = NULL, obs, prd, dates,
                         method = c("pearson", "kendall", "spearman"),
-                        deseason = NULL) {
+                        deseason = NULL, aggregation = NULL) {
       if (length(obs) <= 1) {
             stop("Observed time series is needed")
       }
