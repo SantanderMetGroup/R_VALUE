@@ -10,7 +10,7 @@
 #' @export
 
 
-measure.cor <- function(indexObs = NULL, indexPrd = NULL, obs, prd,
+measure.cor <- function(indexObs = NULL, indexPrd = NULL, obs, prd, dates,
                         method = c("pearson", "kendall", "spearman"),
                         deseason = NULL) {
       if (length(obs) <= 1) {
@@ -19,5 +19,27 @@ measure.cor <- function(indexObs = NULL, indexPrd = NULL, obs, prd,
       if (length(prd) <= 1) {
             stop("Predicted time series is needed")
       }
-      cor(obs, prd, use = "pairwise.complete.obs", method = method)
+      if (aggregation == "annual"){
+           index <- substr(dates, 1,4)
+           obsY <- tapply(obs, INDEX = index, FUN = mean, na.rm = TRUE)
+           prdY <- tapply(prd, INDEX = index, FUN = mean, na.rm = TRUE)
+           cor(obsY, prdY, use = "pairwise.complete.obs", method = method)    
+      }else if (aggregation == "seasonal"){
+           year <- substr(dates, 1,4)
+           season <- substr(dates, 6,7)
+           ixWinter <- which(season %in% c("12","01","02"))
+           ixSpring <- which(season %in% c("03","04","05"))
+           ixSummer <- which(season %in% c("06","07","08"))
+           ixAutumn <- which(season %in% c("09","10","11"))
+           season[ixWinter] <- "01"
+           season[ixSpring] <- "02"
+           season[ixSummer] <- "03"
+           season[ixAutumn] <- "04"
+           index = paste(year,season,sep='')
+           obsS <- tapply(obs, INDEX = index, FUN = mean, na.rm = TRUE)
+           prdS <- tapply(prd, INDEX = index, FUN = mean, na.rm = TRUE)
+           cor(obsS, prdS, use = "pairwise.complete.obs", method = method)
+      }else{
+           cor(obs, prd, use = "pairwise.complete.obs", method = method)    
+      }
 }

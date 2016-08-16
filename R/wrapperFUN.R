@@ -188,6 +188,9 @@ wrapperFUN <- function(metric = c("obs", "pred", "measure"),
                                                 if (!is.null(measure.args)) {
                                                       arg.list <- c(arg.list,measure.args)
                                                 }
+                                                if ("dates" %in% names(arg.list)) {
+                                                      arg.list$dates <- aux.list[[l]]$dates
+                                                }
                                                 aux[l] <- do.call(measure.fun, args = arg.list, quote = TRUE)   
                                           }
                                           index.arr[i,j,k,pr] <- mean(aux, na.rm = TRUE)
