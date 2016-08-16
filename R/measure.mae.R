@@ -6,7 +6,7 @@
 #' @export
 
 
-measure.mae <- function(indexObs = NULL, indexPrd = NULL, obs = NULL, prd = NULL) {
+measure.mae <- function(indexObs = NULL, indexPrd = NULL, obs = NULL, prd = NULL, dates) {
       if (length(obs) <= 1) {
             stop("Observed time series is needed")
       }

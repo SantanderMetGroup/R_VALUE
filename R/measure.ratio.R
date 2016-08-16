@@ -6,6 +6,6 @@
 #' @return A float number corresponding to the ratio.
 #' @export
 
-measure.ratio <- function(indexObs = NULL, indexPrd = NULL, obs = NULL, prd = NULL) {
+measure.ratio <- function(indexObs = NULL, indexPrd = NULL, obs = NULL, prd = NULL, dates) {
       indexPrd / indexObs
 }

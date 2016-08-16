@@ -11,7 +11,7 @@
 #' @export
 
 
-measure.bs <- function(indexObs = NULL, indexPrd = NULL, obs, prd,
+measure.bs <- function(indexObs = NULL, indexPrd = NULL, obs, prd, dates,
                        threshold = 0,
                        condition) {
       if (length(obs) <= 1) {

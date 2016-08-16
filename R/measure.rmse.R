@@ -5,7 +5,7 @@
 #' @return A float number corresponding to the root mean square error between the predicted and observed series.
 #' @export
 
-measure.rmse <- function(indexObs = NULL, indexPrd = NULL, obs = NULL, prd = NULL) {
+measure.rmse <- function(indexObs = NULL, indexPrd = NULL, obs = NULL, prd = NULL, dates) {
       if (length(obs) <= 1) {
             stop("Observed time series is needed")
       }

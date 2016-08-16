@@ -13,7 +13,7 @@
 #' @export
 
 
-measure.cm <- function(indexObs = NULL, indexPrd = NULL, obs = NULL, prd = NULL,
+measure.cm <- function(indexObs = NULL, indexPrd = NULL, obs = NULL, prd = NULL, dates,
                        Nbins = 100,
                        what = c("CvM", "pval", "KSdiff"),
                        threshold = NULL) {
