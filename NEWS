@@ -1,7 +1,7 @@
 R.VALUE
 =======
 
-* Added a window.width parameter to `index.annual.cycle`, that is applied for all indices therein.
+* Added KS score measure
 * Other enhancements and documentation updates
 
 

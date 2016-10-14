@@ -8,7 +8,7 @@ L. Sachs and J. Hedderich (2006). Angewandte Statistik. Springer.
 }
 \usage{
 measure.cm(indexObs = NULL, indexPrd = NULL, obs = NULL, prd = NULL,
-  Nbins = 100, what = c("CvM", "pval", "KSdiff"), threshold = NULL)
+  dates, Nbins = 100, what = c("CvM", "pval", "KSdiff"), threshold = NULL)
 }
 \arguments{
 \item{indexObs}{index computed from the observations}

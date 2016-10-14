@@ -4,8 +4,9 @@
 \alias{measure.cor}
 \title{Correlation}
 \usage{
-measure.cor(indexObs = NULL, indexPrd = NULL, obs, prd,
-  method = c("pearson", "kendall", "spearman"), deseason = NULL)
+measure.cor(indexObs = NULL, indexPrd = NULL, obs, prd, dates,
+  method = c("pearson", "kendall", "spearman"), deseason = NULL,
+  aggregation = NULL)
 }
 \arguments{
 \item{indexObs}{index computed from the observations}
