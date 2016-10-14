@@ -5,7 +5,7 @@
 \title{Relative bias}
 \usage{
 measure.bias.rel(indexObs = NULL, indexPrd = NULL, obs = NULL,
-  prd = NULL)
+  prd = NULL, dates)
 }
 \arguments{
 \item{indexObs}{index computed from the observations}

@@ -4,7 +4,8 @@
 \alias{measure.rmse}
 \title{Root mean square error}
 \usage{
-measure.rmse(indexObs = NULL, indexPrd = NULL, obs = NULL, prd = NULL)
+measure.rmse(indexObs = NULL, indexPrd = NULL, obs = NULL, prd = NULL,
+  dates)
 }
 \arguments{
 \item{indexObs}{index computed from the observations}

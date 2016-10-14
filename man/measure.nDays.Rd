@@ -4,7 +4,7 @@
 \alias{measure.nDays}
 \title{N days}
 \usage{
-measure.nDays(indexObs = NULL, indexPrd = NULL, obs, prd)
+measure.nDays(indexObs = NULL, indexPrd = NULL, obs, prd, dates)
 }
 \arguments{
 \item{indexObs}{index computed from the observations}
