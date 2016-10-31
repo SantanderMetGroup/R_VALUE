@@ -15,6 +15,8 @@ measure.bias.rel(indexObs = NULL, indexPrd = NULL, obs = NULL,
 \item{obs}{A vector of observations}
 
 \item{prd}{A vector of predictions}
+
+\item{dates}{dates}
 }
 \value{
 A float number corresponding to the bias.

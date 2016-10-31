@@ -14,6 +14,8 @@ measure.nDays(indexObs = NULL, indexPrd = NULL, obs, prd, dates)
 \item{obs}{A vector of observations}
 
 \item{prd}{A vector of predictions}
+
+\item{dates}{dates}
 }
 \value{
 An integer corresponding to the counts

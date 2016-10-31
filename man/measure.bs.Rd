@@ -16,6 +16,8 @@ measure.bs(indexObs = NULL, indexPrd = NULL, obs, prd, dates,
 
 \item{prd}{A vector of predictions}
 
+\item{dates}{dates}
+
 \item{threshold}{A float number defining the threshold considered. Default to 0 (for temperature).}
 
 \item{condition}{Inequality operator to be applied considering the given threshold.

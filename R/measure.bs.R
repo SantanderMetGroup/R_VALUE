@@ -1,6 +1,7 @@
 #' @title Brier score
 #' @description Function to compute the Brier score. 
 #' @template templateMeasureParams
+#' @param dates dates
 #' @param threshold A float number defining the threshold considered. Default to 0 (for temperature).
 #' @param condition Inequality operator to be applied considering the given threshold.
 #' \code{"GT"} = greater than the value of \code{threshold}, \code{"GE"} = greater or equal,

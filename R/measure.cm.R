@@ -2,6 +2,7 @@
 #' @description Function to compare the observed and predicted distribution using the Cramer von Misses index.
 #' @author Ole Roessler \email{ole.roessler@@giub.unibe.ch}, J. Bedia, D. San-Mart\'in, S. Herrera
 #' @template templateMeasureParams
+#' @param dates dates
 #' @param Nbins Number of bins used for discretization. Default to 100.
 #' @param what Measure to be returned. This can be the Cramer von Misses index (\code{"CvM"}), 
 #' the p-value (\code{"pvalue"}) of the test or the maximum absolute difference between the observed and predicted
