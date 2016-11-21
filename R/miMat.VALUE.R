@@ -109,7 +109,7 @@ miMat.VALUE <- function(stationObj,
             ineq2 <- substr(prob.type, 2, 2)
             ineqs <- sapply(c(ineq1, ineq2), function(x) switch(x, "D" = "<", "W" = ">="))
             if (is.null(prob)) {
-                  expr.PrA <- paste0("sum(A", ineqs[1], "threshold)/length(A)")
+                  expr.PrA <- paste0("sum(A", ineqs[1], "threshold, na.rm = TRUE)/length(A)")
                   expr.PrB <- paste0("sum(B", ineqs[1], "threshold, na.rm = TRUE)/length(B)")
                   expr.AgivenB <- paste0("A[which(B", ineqs[2], "threshold)]")
                   expr.PrAgivenB <- paste0("sum(AgivenB", ineqs[1], "threshold,na.rm=TRUE)/length(AgivenB)")
