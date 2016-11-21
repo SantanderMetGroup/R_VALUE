@@ -57,8 +57,9 @@
 #' obs.file <- file.path(find.package("R.VALUE"), "example_datasets", "VALUE_53_ECAD_Germany_v1.zip")
 #' stationObj <- loadValueStations(obs.file, var = "precip")
 #' # Mutual information (By default, computes the
-#' # joint probabilities for each pair of stations for Dry-Dry, Dry-Wet, Wet-Wet and Wet-Dry), and applies the MI formula
-#' # (See References)
+#' # joint probabilities for each pair of stations for Dry-Dry, Dry-Wet,
+#' # Wet-Wet and Wet-Dry), and applies the MI formula (See References)
+#' 
 #' mi.matrix <- miMat.VALUE(stationObj,
 #'                   predictionObj = NULL,
 #'                   season = "annual",
@@ -72,7 +73,8 @@
 #'                     y = list(labels = station.labels,
 #'                              at = seq(1,ncol(mi.matrix[[1]]),1), cex = .5))
 #' # requires lattice package
-#' # lattice::levelplot(mi.matrix[[1]], ylab = "", xlab = "", main = "Mutual Information Matrix", scales = scales.list)
+#' # lattice::levelplot(mi.matrix[[1]], ylab = "", xlab = "",
+#'                      main = "Mutual Information Matrix", scales = scales.list)
 #' 
 #' # If 'prob' is given, then the same as before, but considering
 #' # threshold exceedances rather that occurrence. Example using the threshold exceedance p90:
@@ -85,7 +87,8 @@
 #'                              prob = .9)
 #'                              
 #' # requires lattice package
-#' # lattice::levelplot(mi.matrix.p90[[1]], ylab = "", xlab = "", main = "Mutual Information Matrix", scales = scales.list)
+#' # lattice::levelplot(mi.matrix.p90[[1]], ylab = "", xlab = "",
+#'                      main = "Mutual Information Matrix", scales = scales.list)
 #' }
 
 miMat.VALUE <- function(stationObj,
