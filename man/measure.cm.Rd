@@ -19,6 +19,8 @@ measure.cm(indexObs = NULL, indexPrd = NULL, obs = NULL, prd = NULL,
 
 \item{prd}{A vector of predictions}
 
+\item{dates}{dates}
+
 \item{Nbins}{Number of bins used for discretization. Default to 100.}
 
 \item{what}{Measure to be returned. This can be the Cramer von Misses index (\code{"CvM"}), 

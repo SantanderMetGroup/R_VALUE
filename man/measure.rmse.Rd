@@ -15,6 +15,8 @@ measure.rmse(indexObs = NULL, indexPrd = NULL, obs = NULL, prd = NULL,
 \item{obs}{A vector of observations}
 
 \item{prd}{A vector of predictions}
+
+\item{dates}{dates}
 }
 \value{
 A float number corresponding to the root mean square error between the predicted and observed series.

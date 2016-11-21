@@ -1,7 +1,8 @@
 R.VALUE
 =======
 
-* Added KS score measure
+* New function for mutual information precipitation `miMat.VALUE`
+* Implemented joint threshold exceedance probabilities/mutual information
 * Other enhancements and documentation updates
 
 

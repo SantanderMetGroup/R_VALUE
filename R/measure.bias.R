@@ -3,6 +3,7 @@
 #' The measure depends on the index mean.
 #' @author J. Bedia, D. San-Mart\'in, S. Herrera
 #' @template templateMeasureParams
+#' @param dates dates
 #' @return A float number corresponding to the bias.
 #' @export
 

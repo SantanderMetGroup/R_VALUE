@@ -64,7 +64,9 @@ mon <- aggregateVALUE(stationObj, aggr.m = list(FUN = "mean", na.rm = TRUE))
 anom <- deseason.VALUE(mon, monthly = TRUE, monthly.clim.fun = "mean", na.rm = TRUE)
 plot(mon$Data, ty = 'b')
 lines(anom$Data[1,,], col = "red", ty = "b")
-legend("topright", legend = c("monthly tmin", "monthly tmin anomalies"), lty = 1, col = c("black","red"))
+legend("topright",
+       legend = c("monthly tmin", "monthly tmin anomalies"),
+       lty = 1, col = c("black","red"))
 }
 }
 \author{

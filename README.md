@@ -13,6 +13,8 @@ A direct method for installing the most recent stable release requires the packa
 devtools::install_github("SantanderMetGroup/R_VALUE")
 ```
 
+Alternatively, you can download the sources from the [releases tab](https://github.com/SantanderMetGroup/R_VALUE/releases)
+
 Once, installed, for a quick overview:
 
 ```r

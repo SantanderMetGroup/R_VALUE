@@ -28,6 +28,9 @@
 #'  in the case of observations and deterministic predictions.
 #' @param prob.type Character vector indicating the type of probability to be computed. Currently accepted values are:
 #' \code{"DD"} for dry-dry, \code{"DW"} for dry-wet, \code{"WW"} for wet-wet and \code{"WD"} for wet-dry.
+#' @param prob Default to NULL (unused). Otherwise, a float number in the range (0,1) defining the quantile threshold to be calculated.
+#' If \code{prob} is used, the joint exceedance probabilities will be calculated (i.e., the probability of an occurrence above the \code{prob} percentile
+#' in location A given the same exceedance in location B).
 #' @param output Character string indicating the type of measure to be retained. Default to \code{"MI"} for the mutual information criterion.
 #' For the joint probabilities use \code{"jointProb"}. See details.
 #' @param threshold Threshold above which values are used/discarded (i.e., values greater or equal than \code{threshold} are considered as Wet).
@@ -66,7 +69,6 @@
 #'                         max.na.prop = 1,
 #'                         aggr.type = "after",
 #'                         prob.type = "WW",
-#'                         use.ff = FALSE,
 #'                         output = "MI")
 #'
 #' # Dry-dry joint probability (precip < 1mm)
@@ -77,7 +79,6 @@
 #'                          max.na.prop = 1,
 #'                          aggr.type = "after",
 #'                          prob.type = "DD",
-#'                          use.ff = FALSE,
 #'                          output = "MI")
 #'                          
 #' # Draw matrix - requires lattice!
@@ -98,25 +99,39 @@ jointProbMat.VALUE <- function(stationObj,
                                season = c("annual", "DJF", "MAM", "JJA", "SON"),
                                aggr.type = c("after","before"),
                                prob.type = c("DD", "DW", "WW", "WD"),
+                               prob = NULL, 
                                output = c("MI","jointProb"),
                                threshold = 1,
                                max.na.prop = 0.25) {
       season <- match.arg(season, choices = c("annual", "DJF", "MAM", "JJA", "SON"), several.ok = TRUE)
       aggr.type <- match.arg(aggr.type, choices = c("after", "before"))
       prob.type <- match.arg(prob.type, choices = c("DD", "DW", "WW", "WD"))
+      if (!is.null(prob)) {
+            if (length(prob) > 1) stop("Invalid 'prob' definition")
+            if (prob <= 0 || prob >= 1) stop("Invalid 'prob' definition")
+            if (prob.type != "WW") warning("A 'prob' value has been introduced\nNote that joint threshold exceedances can be only calculated for wet-wet probabilities (prob.type=\"WW\")")
+            prob.type <- "WW"
+      }
       output <- match.arg(output, choices = c("MI","jointProb"))
       ineq1 <- substr(prob.type, 1, 1)
       ineq2 <- substr(prob.type, 2, 2)
       ineqs <- sapply(c(ineq1, ineq2), function(x) switch(x, "D" = "<", "W" = ">="))
-      exprPB <- paste0("sum(x", ineqs[2], "threshold,na.rm=TRUE) / length(which(!is.na(x)))") # Calculates P(B) matrix
-      expr1 <- paste("which(mat[i,,j]", ineqs[1], "threshold)") # index for conditioning
-      expr2 <- paste("which(mat[i,ind,k]", ineqs[2], "threshold)") # index for conditioning
+      if (is.null(prob)) {
+            exprPB <- paste0("sum(x", ineqs[2], "threshold,na.rm=TRUE) / length(which(!is.na(x)))") # Calculates P(B) matrix
+            expr1 <- paste("which(mat[i,,j]", ineqs[1], "threshold)") # index for conditioning
+            expr2 <- paste("which(mat[i,ind,k]", ineqs[2], "threshold)") # index for conditioning
+      } else {## For a given threshold exceedance
+            exprPB <- paste0("sum(x > quantile(x[x > threshold], probs = ",
+                             prob, ", na.rm = TRUE), na.rm = TRUE) / length(which(!is.na(x)))")  ## Probability of exceedance in B
+            expr1 <- paste0("which(mat[i,,j] > quantile(mat[i,,j][mat[i,,j] > threshold], probs = ",
+                            prob, ", na.rm = TRUE))") # index for conditioning on B
+            expr2 <- paste0("which(mat[i,ind,k] > quantile(mat[i,ind,k][mat[i,ind,k] > threshold], probs = ",
+                            prob, ", na.rm = TRUE))") # index for conditioning on A
+      }
       o <- stationObj
       stationObj <- NULL
       if (!is.null(predictionObj)) {
-            # message("[", Sys.time(), "] - Loading predictions...")
             o <- suppressWarnings(dimFix(predictionObj))
-            # message("[", Sys.time(), "] - Done.")            
       }
       mat.list <- lapply(1:length(season),  function(x) {
             sea <- switch(season[x], 
@@ -179,6 +194,7 @@ jointProbMat.VALUE <- function(stationObj,
       names(mat.list) <- season
       attr(mat.list, "joint_prob_type") <- prob.type
       attr(mat.list, "joint_prob_output") <- output
+      attr(mat.list, "joint_prob_threshold_exceedance") <- prob
       message("[", Sys.time(), "] - Finished.")
       return(mat.list)
 }

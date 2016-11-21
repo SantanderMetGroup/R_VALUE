@@ -1,6 +1,7 @@
 #' @title Circular bias
 #' @description Function to compute the bias considering circular series
 #' @template templateMeasureParams
+#' @param dates dates
 #' @return A float number corresponding to the circular bias.
 #' @author D. San-Martin
 #' @export

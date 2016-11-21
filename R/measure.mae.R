@@ -2,6 +2,7 @@
 #' @description Function to compute the mean absolute difference between the observed and predicted time series.
 #' @author Daniel San-Mart\'in \email{daniel@@predictia.es}, J. Bedia, D. San-Mart\'in, S. Herrera
 #' @template templateMeasureParams
+#' @param dates dates
 #' @return A float number corresponding to the mean absolute difference between the predicted and observed series.
 #' @export
 

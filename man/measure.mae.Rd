@@ -15,6 +15,8 @@ measure.mae(indexObs = NULL, indexPrd = NULL, obs = NULL, prd = NULL,
 \item{obs}{A vector of observations}
 
 \item{prd}{A vector of predictions}
+
+\item{dates}{dates}
 }
 \value{
 A float number corresponding to the mean absolute difference between the predicted and observed series.
