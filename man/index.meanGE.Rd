@@ -24,4 +24,3 @@ The function is envisaged for calculating the mean precipitation of wet days, ex
 \author{
 J. Bedia
 }
-

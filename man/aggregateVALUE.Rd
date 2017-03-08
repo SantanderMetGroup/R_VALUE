@@ -37,4 +37,3 @@ tmin.DJF.monthlyMedian <- aggregateVALUE(tmin.DJF.daily,
 \author{
 J. Bedia
 }
-

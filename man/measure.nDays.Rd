@@ -26,4 +26,3 @@ Function to count the sample size (number of days) used in the calculation of th
 \author{
 J. Bedia, D. San-Martin
 }
-

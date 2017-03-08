@@ -24,4 +24,3 @@ Wet days are internally defined as those exceeding the 1mm threshold
 \author{
 J. Bedia
 }
-

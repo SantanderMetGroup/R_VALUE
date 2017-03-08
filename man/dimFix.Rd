@@ -19,4 +19,3 @@ Inverse of drop to complete all dimensions of the Data array
 J. Bedia
 }
 \keyword{internal}
-

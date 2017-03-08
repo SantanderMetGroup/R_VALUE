@@ -94,10 +94,9 @@ mi.matrix.p90 <- miMat.VALUE(stationObj,
                      main = "Mutual Information Matrix", scales = scales.list)
 }
 }
-\author{
-J. Bedia
-}
 \references{
 \url{https://en.wikipedia.org/wiki/Mutual_information}
 }
-
+\author{
+J. Bedia
+}

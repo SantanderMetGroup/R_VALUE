@@ -27,4 +27,3 @@ Function to compute the mean absolute difference between the observed and predic
 \author{
 Daniel San-Mart\'in \email{daniel@predictia.es}, J. Bedia, D. San-Mart\'in, S. Herrera
 }
-

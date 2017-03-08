@@ -30,10 +30,9 @@ A float number corresponding to the BS.
 \description{
 Function to compute the Brier score.
 }
-\author{
-J. Bedia
-}
 \references{
 https://en.wikipedia.org/wiki/Brier_score
 }
-
+\author{
+J. Bedia
+}

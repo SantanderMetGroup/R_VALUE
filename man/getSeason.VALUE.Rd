@@ -19,4 +19,3 @@ Retrieves the season encompassed by a station or field object
 juaco
 }
 \keyword{internal}
-

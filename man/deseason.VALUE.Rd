@@ -72,4 +72,3 @@ legend("topright",
 \author{
 J. Bedia
 }
-

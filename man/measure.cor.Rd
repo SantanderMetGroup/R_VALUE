@@ -37,4 +37,3 @@ Function to compute the temporal correlation between the observed and predicted 
 J. Bedia, D. San-Martin, S. Herrera
 }
 \keyword{internal}
-

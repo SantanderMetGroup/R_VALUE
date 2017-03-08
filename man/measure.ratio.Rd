@@ -28,4 +28,3 @@ The measure depends on the index mean.
 \author{
 J. Bedia, D. San-Mart\'in, S. Herrera
 }
-

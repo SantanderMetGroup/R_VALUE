@@ -19,4 +19,3 @@ Annual and seasonal proportion of variance in low frequency
 \author{
 Douglas Maraun \email{dmaraun@geomar.de}
 }
-

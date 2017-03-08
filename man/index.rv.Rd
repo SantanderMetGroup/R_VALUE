@@ -25,4 +25,3 @@ Function to compute return values
 \author{
 Neyko Neykov, S. Herrera, J. Bedia
 }
-

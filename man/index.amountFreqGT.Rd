@@ -20,4 +20,3 @@ Function to compute the amount from events above a predefined threshold.
 \author{
 Neyko Neykov, J. Bedia, D. San-Martin, S. Herrera
 }
-

@@ -20,4 +20,3 @@ Function to compute the estimated autocorrelation function at pre-defined lags.
 \author{
 Neyko Neykov \email{neyko.neykov@meteo.bg}, J. Bedia, D. San-Mart\'in, S. Herrera
 }
-

@@ -28,8 +28,8 @@ and assign year 2001 to the preceding December. Similarly, the next December 200
 
 The function should no be used to extract the actual years vector
 }
+
 \author{
 juaco
 }
 \keyword{internal}
-

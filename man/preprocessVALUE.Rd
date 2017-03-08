@@ -30,4 +30,3 @@ The function performs missing data filtering, temporal matching and (optionally)
 J. Bedia
 }
 \keyword{internal}
-

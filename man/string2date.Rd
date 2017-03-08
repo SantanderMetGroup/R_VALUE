@@ -24,4 +24,3 @@ Currently the VALUE format is intended for daily data of the form YYYMMDD. Howev
  @keywords internal
  @author juaco
 }
-

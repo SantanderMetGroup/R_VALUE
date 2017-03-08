@@ -23,4 +23,3 @@ The function assumes that all dimensions are present (i.e., function dimFix has 
 \author{
 J Bedia
 }
-
