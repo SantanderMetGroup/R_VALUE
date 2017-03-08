@@ -27,4 +27,3 @@ Function to compute the root mean square error between the observed and predicte
 \author{
 Daniel San-Mart\'in \email{daniel@predictia.es}, J. Bedia, D. San-Mart\'in, S. Herrera
 }
-

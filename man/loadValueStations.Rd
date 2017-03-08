@@ -67,6 +67,7 @@ must take care of variable units and eventual conversions when necessary.
  the closest station will be chosen, and a note on-screen will inform about the distance from the selected point
  to the chosen station.
 }
+
 \examples{
 \dontrun{
 obs.dataset <- file.path(find.package("R.VALUE"), "example_datasets", "VALUE_ECA_86_v2.zip")
@@ -87,9 +88,6 @@ djf <- loadValueStations(dataset = obs.dataset, var = "tmin", season = c(12, 1, 
 # Note that winter 1991 encompasses Dec 1990 + Jan 1991 + Feb 1991 (year-crossing season)
 }
 }
-\author{
-J. Bedia
-}
 \references{
 VALUE's standard ASCII format reference: 
 \url{http://meteo.unican.es/work/loadeR/wiki/Rmd_html/OformatStationData.html} 
@@ -98,4 +96,6 @@ VALUE's standard ASCII format reference:
 \seealso{
 Other loading: \code{\link{loadValuePredictions}}
 }
-
+\author{
+J. Bedia
+}

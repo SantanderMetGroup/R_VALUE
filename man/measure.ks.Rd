@@ -24,4 +24,3 @@ Function to compute the (two-sided) Kolmogorov-Smirnov (KS) score between the ob
 \author{
 J. Bedia
 }
-

@@ -23,4 +23,3 @@ Function to compute the sample quantiles for the given probabilities.
 \author{
 Neyko Neykov \email{neyko.neykov@meteo.bg}, J. Bedia, D. San-Mart\'in, S. Herrera
 }
-

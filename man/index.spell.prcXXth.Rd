@@ -39,4 +39,3 @@ The function requires the date information in order to ensure that spells
 \author{
 N. Neykov, S. Herrera, J. Bedia
 }
-

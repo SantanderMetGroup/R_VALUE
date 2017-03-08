@@ -27,4 +27,3 @@ Function to compute the relative/absolute amount of days below/above a predefine
 \author{
 Douglas Maraun, J. Bedia, D. San-Martin, S. Herrera
 }
-

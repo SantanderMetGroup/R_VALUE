@@ -37,4 +37,3 @@ a user-defined window width centered around lag 0.
 \author{
 Sven Kotlarski, S. Herrera, J. Bedia, D. San Martin, D. Maraun
 }
-

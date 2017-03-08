@@ -18,4 +18,3 @@ A list with components start and end, of POSIXct dates
 Compute start/end verification time bounds from a vector of dates.
 }
 \keyword{internal}
-

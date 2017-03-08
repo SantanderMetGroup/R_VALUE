@@ -18,4 +18,3 @@ Function to compute the arithmetic mean index.
 \author{
 Ole Roessler \email{ole.roessler@giub.unibe.ch}, J. Bedia, D. San-Mart\'in, S. Herrera
 }
-

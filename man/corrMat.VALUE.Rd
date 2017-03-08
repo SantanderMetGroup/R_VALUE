@@ -69,4 +69,3 @@ djfjja <- corrMat.VALUE(stationObj, prd, season = c("DJF","JJA"))
 \author{
 J. Bedia
 }
-

@@ -62,4 +62,3 @@ str(pred3$Data) # 3D array with 'member' dimension of length 2
 \seealso{
 Other loading: \code{\link{loadValueStations}}
 }
-

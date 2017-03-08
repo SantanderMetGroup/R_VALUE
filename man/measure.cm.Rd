@@ -39,4 +39,3 @@ Function to compare the observed and predicted distribution using the Cramer von
 \author{
 Ole Roessler \email{ole.roessler@giub.unibe.ch}, J. Bedia, D. San-Mart\'in, S. Herrera
 }
-

@@ -1,8 +1,7 @@
 R.VALUE
 =======
 
-* New function for mutual information precipitation `miMat.VALUE`
-* Implemented joint threshold exceedance probabilities/mutual information
+* New function for filtered annual cycle index
 * Other enhancements and documentation updates
 
 

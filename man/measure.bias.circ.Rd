@@ -27,4 +27,3 @@ Function to compute the bias considering circular series
 \author{
 D. San-Martin
 }
-

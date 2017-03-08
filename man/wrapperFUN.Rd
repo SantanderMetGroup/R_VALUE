@@ -81,4 +81,3 @@ str(vno)
 \author{
 J. Bedia, D. San Martin, M. Tuni
 }
-

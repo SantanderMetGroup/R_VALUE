@@ -65,4 +65,3 @@ the \code{years} argument must be introduced accordingly.
 \author{
 J. Bedia
 }
-

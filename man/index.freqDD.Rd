@@ -20,4 +20,3 @@ Function to compute the dry-dry probability index.
 \author{
 Neyko Neykov \email{neyko.neykov@meteo.bg}, J. Bedia, D. San-Mart\'in, S. Herrera
 }
-

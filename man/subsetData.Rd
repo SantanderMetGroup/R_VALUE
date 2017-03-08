@@ -25,4 +25,3 @@ Time and stations subsetting
 S. Herrera
 }
 \keyword{internal}
-

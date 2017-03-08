@@ -26,4 +26,3 @@ repeatedly evaluated.
 S. Herrera, D. San-Martin, J Bedia
 }
 \keyword{internal}
-

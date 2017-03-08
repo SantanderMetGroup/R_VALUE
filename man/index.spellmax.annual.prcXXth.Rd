@@ -40,4 +40,3 @@ The function requires the date information in order to ensure that spells
 \author{
 J. Bedia, J.M. Gutierrez
 }
-
