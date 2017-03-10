@@ -8,7 +8,7 @@
 #' the slope coefficient is significant (1) or not (0) at the given \code{sig.level}.
 #' @param sig.level Significance level. Default to 0.95. 
 #' @return A numeric value with either the slope coefficient (for \code{output = "coef"})
-#' or whether it is significant or not (\code{output = "sig"}) at the specified \code{sig.level}
+#' or whether it is significant (1) or not (0) (\code{output = "sig"}) at the specified \code{sig.level}
 #' @export
 #' @importFrom stats lm coef confint.lm
 
