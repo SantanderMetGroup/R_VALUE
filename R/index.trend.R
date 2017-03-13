@@ -11,16 +11,21 @@
 #' or whether it is significant (1) or not (0) (\code{output = "sig"}) at the specified \code{sig.level}
 #' @export
 #' @importFrom stats lm coef confint.lm
+#' @importFrom RcppEigen fastLm
 
 index.trend <- function(ts, dates, output = c("coef","sig"), sig.level = 0.95) {
       output <- match.arg(output, choices = c("coef","sig"))
       INDEX <- getYearsAsINDEX.VALUE(dates)
+      ind <- which(!is.na(INDEX))
       y <- tapply(ts, INDEX = INDEX, FUN = mean, na.rm = TRUE)
-      mod <- lm(y ~ unique(INDEX))
+      mod <- RcppEigen::fastLm(y ~ as.integer(names(y)), subset = ind)
       if (output == "coef") {
             unname(coef(mod)[2])
       } else {
-            ifelse(sign(prod(confint.lm(mod, parm = 2, level = sig.level))) == 1, 1, 0)
+            q <- mod$se[2] * qnorm(1 - (1 - sig.level) / 2) # SE x 1.96 (0.975 quantile of the normal distrib)
+            ub <- coef(mod)[2] + q
+            lb <- coef(mod)[2] - q
+            ifelse(sign(prod(ub, lb)) == 1, 1, 0)
       }
 }
 
