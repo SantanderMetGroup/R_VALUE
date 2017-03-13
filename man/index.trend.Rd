@@ -21,7 +21,7 @@ the slope coefficient is significant (1) or not (0) at the given \code{sig.level
 }
 \value{
 A numeric value with either the slope coefficient (for \code{output = "coef"})
-or whether it is significant or not (\code{output = "sig"}) at the specified \code{sig.level}
+or whether it is significant (1) or not (0) (\code{output = "sig"}) at the specified \code{sig.level}
 }
 \description{
 Computes slope and significance of the interannual linear trend
