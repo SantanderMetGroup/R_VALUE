@@ -1,7 +1,7 @@
 R.VALUE
 =======
 
-* Minor bug fix and significant speedup of trend index
+* Introduced "type = min" in index.annual.cycle.filtered
 
 
 

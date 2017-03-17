@@ -4,15 +4,14 @@
 #' @template templateIndexParams
 #' @template templateDates
 #' @param peak = 1 or 2
-#' @param type A character string indicating max (default) or phase (days)
+#' @param type A character string indicating max (default) or min phase (days)
 #' @param thresh Threshold that defines weak maxima (relative to amplitude of annual cycle)
 #' @return A float number corresponding to the amplitude or the (phase) day of the maxima
 #' @export
 
 index.annual.cycle.filtered <- function(ts, dates, peak = 1, type = 'max', thresh = .05) {
       doy <- substr(dates, 6, 10)
-      ref <- tapply(ts, INDEX = doy, FUN = mean, na.rm = TRUE)
-      anncyc <- filter(ref, 1/61 * rep(1, 61), method = "convolution", sides = 2, circular = TRUE)
+      anncyc <- filter(ts, 1/61 * rep(1, 61), method = "convolution", sides = 2, circular = TRUE)
       T <- length(anncyc)
       t <- 1:T
       sh1 <- sin(t/T*2*pi)
@@ -29,29 +28,29 @@ index.annual.cycle.filtered <- function(ts, dates, peak = 1, type = 'max', thres
       
       ## to ease identification of maxima at beginning/end of year
       acdum <- c(ac[n],ac,ac[1])
-      amp <- max(ac)-min(ac)
+      amp <- max(ac) - min(ac)
       
       ## position (day of year), type (-1: min, 1: max) and magnitude of maxima/minima
       mmp <- mmt <- mmv <- NA
       nm <- 0
       
-      for(i in 1+1:n){    
-            if(acdum[i-1]<acdum[i] & acdum[i+1]<acdum[i]){ ##max
-                  nm <- nm+1
-                  mmp[nm] <- i-1
+      for (i in 1 + 1:n) {    
+            if (acdum[i - 1] < acdum[i] & acdum[i + 1] < acdum[i]) { ##max
+                  nm <- nm + 1
+                  mmp[nm] <- i - 1
                   mmt[nm] <- 1
                   mmv[nm] <- ac[mmp[nm]]
             }
-            if(acdum[i-1]>acdum[i] & acdum[i+1]>acdum[i]){ ##max
-                  nm <- nm+1
-                  mmp[nm] <- i-1
+            if (acdum[i - 1] > acdum[i] & acdum[i+1] > acdum[i]) { ##max
+                  nm <- nm + 1
+                  mmp[nm] <- i - 1
                   mmt[nm] <- -1
                   mmv[nm] <- ac[mmp[nm]]
             }    
       }  
       ## merge double peaks
-      if(nm>2){    
-            if(abs(ac[mmp[2]]-ac[mmp[nm]])<thresh*amp & abs(mean(c(ac[mmp[2]],ac[mmp[nm]]))-ac[mmp[1]])<thresh*amp){
+      if (nm > 2) {    
+            if (abs(ac[mmp[2]] - ac[mmp[nm]])<thresh*amp & abs(mean(c(ac[mmp[2]],ac[mmp[nm]]))-ac[mmp[1]])<thresh*amp){
                   mmt[1] <- 1
                   mmt[nm] <- 0
                   mmt[2] <- 0
@@ -123,21 +122,27 @@ index.annual.cycle.filtered <- function(ts, dates, peak = 1, type = 'max', thres
       }else{
             pmax <- mmp[which(mmv==max(mmv))]
       }
-      # browser()
-      if(peak == 1) {
+      if(peak == 1){
             if(type == 'phase'){
                   return(pmax[1])
-            }else{
+            }else if(type == 'max'){
                   return(ac[pmax[1]])
+            }else if(type == 'min'){
+                  return(min(ac))
+            }else if(type == 'amp'){
+                  return(ac[pmax[1]]-min(ac))
             }
       }else if(peak==2){
             if(length(pmax)<2){
                   return(NA)
-            }
-            if(type=='phase'){
+            }else if(type=='phase'){
                   return(pmax[2])
-            }else{
+            }else if(type=='max'){
                   return(ac[pmax[2]])
+            }else if(type=='min'){
+                  return(min(ac))
+            }else if(type == 'amp'){
+                  return(ac[pmax[2]]-min(ac))
             }
       }
 }
