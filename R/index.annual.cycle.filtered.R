@@ -4,7 +4,7 @@
 #' @template templateIndexParams
 #' @template templateDates
 #' @param peak = 1 or 2
-#' @param type A character string indicating max (default) or min phase (days)
+#' @param type A character string indicating max (default), min phase (days), amp (amplitude) or amprel (relative amplitude)
 #' @param thresh Threshold that defines weak maxima (relative to amplitude of annual cycle)
 #' @return A float number corresponding to the amplitude or the (phase) day of the maxima
 #' @export
@@ -131,6 +131,8 @@ index.annual.cycle.filtered <- function(ts, dates, peak = 1, type = 'max', thres
                   return(min(ac))
             }else if(type == 'amp'){
                   return(ac[pmax[1]]-min(ac))
+            }else if(type == 'ampr'){
+                  return((ac[pmax[1]]-min(ac))/ac[pmax[1]])
             }
       }else if(peak==2){
             if(length(pmax)<2){
@@ -143,6 +145,8 @@ index.annual.cycle.filtered <- function(ts, dates, peak = 1, type = 'max', thres
                   return(min(ac))
             }else if(type == 'amp'){
                   return(ac[pmax[2]]-min(ac))
+            }else if(type == 'ampr'){
+                  return((ac[pmax[2]]-min(ac))/ac[pmax[2]])
             }
       }
 }
