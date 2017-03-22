@@ -16,7 +16,7 @@ index.annual.cycle.filtered(ts, dates, peak = 1, type = "max",
 
 \item{peak}{= 1 or 2}
 
-\item{type}{A character string indicating max (default) or min phase (days)}
+\item{type}{A character string indicating max (default), min phase (days), amp (amplitude) or amprel (relative amplitude)}
 
 \item{thresh}{Threshold that defines weak maxima (relative to amplitude of annual cycle)}
 }
