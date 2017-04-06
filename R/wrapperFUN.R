@@ -1,6 +1,6 @@
 #     wrapperFUN.R Wrapper function to launch the validation
 #     
-#     Copyright (C) 2016 Santander Meteorology Group (http://www.meteo.unican.es)
+#     Copyright (C) 2017 Santander Meteorology Group (http://www.meteo.unican.es)
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 #' @param metric Character vector.
 #' @param names Character vector of the same length than \code{metric}. Names of the indices/measures to be applied
 #' @param season Character vector defining the target season(s). Default to annual + 4 standard seasons.
-#' @param member.aggregation Character vector of length one. What aggregation function should be applied to multipe realizations
+#' @param member.aggregation Character vector of length one. What aggregation function should be applied to multiple realizations
 #' before computing the indices?. Default to \code{"none"}, meaning that the indices are computed in a member-wise basis, and only
 #'  after that the index values are aggregated to compute the measure. The only additional option currently used
 #'   is \code{"mean"}, for cases when the realizations are averaged before computing the index. 

@@ -6,9 +6,9 @@
 #' @param t.aggr Character. Temporal aggregation options. Current accepted values are either \code{"annual"} or \code{"seasonal"}.
 #' @param timescale Integer. Approximate filtering time scale (according to the \code{t.aggr} units).
 #' @param detrend Logical. Whether the aggregated time series should be linearly detrended prior to filtering
-#' @param plot Logical, for internal use only. Should the original and filtered series be plotted?
+#' @param plot Logical, for internal use only. Should the original (aggregated) and filtered series be plotted?
 #' @return A float number corresponding to the correlation coefficient of choice between the predicted and observed series.
-#' @author D. Maraun 
+#' @author D. Maraun, J. Bedia
 #' @keywords internal
 #' @importFrom signal hamming
 #' @importFrom RcppEigen fastLm
@@ -52,8 +52,8 @@ measure.corlongterm <- function(indexObs = NULL, indexPrd = NULL, obs, prd, date
             ylim <- range(c(obsAg, prdAg), na.rm = TRUE)
             plot(obsAg, type = "l", ylim = ylim, lty = 2)
             lines(prdAg, col = "blue", lty = 2)
-            lines(obsAgfilt,lwd = 2)
-            lines(prdAgfilt,lwd = 2, col = "blue")
+            lines(obsAgfilt, lwd = 2)
+            lines(prdAgfilt, lwd = 2, col = "blue")
             legend("topleft", c("obs", "pred", "obs.filt", "pred.filt"),
                    lty = c(2,2,1,1), lwd = c(1,1,2,2), col = c(1,4,1,4))
       }
