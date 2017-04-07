@@ -13,7 +13,7 @@ Suggests:
 Type: Package
 Title: Climate data validation in the framework of the COST action VALUE
 Version: 1.4.20
-Date: 2017-04-06
+Date: 2017-04-07
 Authors@R: as.person(c(
     "Santander Meteorology Group [aut]",      
     "Predictia Intelligent Data Solutions [ctb]",
