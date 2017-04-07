@@ -2,10 +2,10 @@
 % Please edit documentation in R/index.annual.cycle.filtered.R
 \name{index.annual.cycle.filtered}
 \alias{index.annual.cycle.filtered}
-\title{Filtered annual cycle}
+\title{Filtered annual cycle maxima statistics}
 \usage{
-index.annual.cycle.filtered(ts, dates, peak = 1, type = "max",
-  thresh = 0.05)
+index.annual.cycle.filtered(ts, dates, type = "phase", peak = 1,
+  thresh = 0.1)
 }
 \arguments{
 \item{ts}{A vector containing the data}
@@ -14,11 +14,11 @@ index.annual.cycle.filtered(ts, dates, peak = 1, type = "max",
 (i.e., \code{format = "\%Y-\%m-\%d"} as in \code{\link{strptime}}). This is directly passed by the
  VALUE objects (either stations or predictions) through the element \code{object$Dates$start}.}
 
-\item{peak}{= 1 or 2}
+\item{type}{A character string indicating max \code{"phase"} (days, default), \code{"amp"} (amplitude) or \code{"amprel"} (relative amplitude)}
 
-\item{type}{A character string indicating max (default), min phase (days), amp (amplitude) or amprel (relative amplitude)}
+\item{peak}{= 1 or 2 (maximum or secondary maximum - higher order peaks are ignored)}
 
-\item{thresh}{Threshold that defines weak maxima (relative to amplitude of annual cycle)}
+\item{thresh}{Threshold that defines weak and double maxima (relative to amplitude of annual cycle)}
 }
 \value{
 A float number corresponding to the amplitude or the (phase) day of the maxima
@@ -27,5 +27,6 @@ A float number corresponding to the amplitude or the (phase) day of the maxima
 Returns the amplitude or the location of the maxima of the annual cycle
 }
 \author{
-Douglas Maraun, J. Bedia, D. San-Martin, JM. Gutierrez
+D. Maraun, J. Bedia, D. San-Martin, J.M. Gutierrez
 }
+\keyword{internal}

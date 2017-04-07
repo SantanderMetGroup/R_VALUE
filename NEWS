@@ -1,7 +1,8 @@
 R.VALUE
 =======
 
-* Introduced relative amplitude in index.annual.cycle.filtered
+* Changes in index.annual.cycle.filtered
+* New long term correlation measure function
 
 
 
