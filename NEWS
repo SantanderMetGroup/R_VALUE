@@ -1,8 +1,7 @@
 R.VALUE
 =======
 
-* Changes in index.annual.cycle.filtered
-* New long term correlation measure function
+* Insert tryCatch in measure.corlongterm to handle defective predictions
 
 
 

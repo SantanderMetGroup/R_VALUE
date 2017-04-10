@@ -46,8 +46,16 @@ measure.corlongterm <- function(indexObs = NULL, indexPrd = NULL, obs, prd, date
             prdAg <- prdAg - predict(fastLm(prdAg ~ t))
       }
       ## Filtering of aggregated time series
-      obsAgfilt <- stats::filter(obsAg, hamming(timescale) / sum(hamming(timescale)))
-      prdAgfilt <- stats::filter(prdAg, hamming(timescale) / sum(hamming(timescale)))
+      obsAgfilt <- tryCatch(expr = stats::filter(obsAg, hamming(timescale) / sum(hamming(timescale))),
+                            error = function(er) {
+                                  er <- NA
+                                  return(er)
+                            })
+      prdAgfilt <- tryCatch(stats::filter(prdAg, hamming(timescale) / sum(hamming(timescale))),
+                            error = function(er) {
+                                  er <- NA
+                                  return(er)
+                            })
       if (plot) {
             ylim <- range(c(obsAg, prdAg), na.rm = TRUE)
             plot(obsAg, type = "l", ylim = ylim, lty = 2)
