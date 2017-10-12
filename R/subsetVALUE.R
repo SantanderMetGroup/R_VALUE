@@ -132,10 +132,10 @@ subsetVALUE.season <- function(valueObj, season = NULL) {
       # providing a format and timezone to POSIXlt helps but this approach is faster
       yrs <- as.numeric(substr(valueObj$Dates$start,1,4))
       mon <- as.numeric(substr(valueObj$Dates$start,6,7))
-      season0 <- unique(mon)
+      season0 <- as.integer(unique(mon))
       if (!all(season %in% season0)) stop("Month selection outside original season values")
       time.ind <- which(mon %in% season)
-      if (!identical(season, sort(season))) {
+      if (!identical(season, season0)) {
             # Quita los primeros meses del primer año
             mp <- season[(which(diff(season) < 1) + 1):length(season)]
             a <- which(mon %in% mp & yrs == unique(yrs[1]))

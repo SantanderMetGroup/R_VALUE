@@ -74,10 +74,10 @@
 #'                              at = seq(1,ncol(mi.matrix[[1]]),1), cex = .5))
 #' # requires lattice package
 #' # lattice::levelplot(mi.matrix[[1]], ylab = "", xlab = "",
-#'                      main = "Mutual Information Matrix", scales = scales.list)
+#' #                      main = "Mutual Information Matrix", scales = scales.list)
 #' 
 #' # If 'prob' is given, then the same as before, but considering
-#' # threshold exceedances rather that occurrence. Example using the threshold exceedance p90:
+#' # threshold exceedances instead of occurrence. Example using the threshold exceedance p90:
 #' 
 #' mi.matrix.p90 <- miMat.VALUE(stationObj,
 #'                              predictionObj = NULL,
