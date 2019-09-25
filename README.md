@@ -5,6 +5,8 @@ The main objective of the [VALUE](http://www.value-cost.eu) COST action is the v
 
 The package includes R functions used to read the observational datasets (and output downscaled predictions) in [VALUE data format](http://www.value-cost.eu/WG2/stationdataformat) as well as the auxiliary (and wrapper) functions used by the [VALUE validation portal](http://www.value-cost.eu/validationportal) to compute these indices. The data structures are integrated with other climate data access and analysis tools namely [loadeR](https://github.com/SantanderMetGroup/loadeR), for local and remote data access (for instance to the Santander MetGroup User Data Gateway, [UDG](http://www.meteo.unican.es/en/dataservices)) and [downscaleR](https://github.com/SantanderMetGroup/downscaleR), a R package for bias correction and statistical downscaling.
 
+[climate4R.value](https://github.com/SantanderMetGroup/climate4R.value) provides a wrapper of this package for integration into the [climate4R framework](https://github.com/SantanderMetGroup/climate4R).
+
 ### Package installation
 
 A direct method for installing the most recent stable release requires the package `devtools`. Within R, just type:
