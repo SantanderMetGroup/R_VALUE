@@ -1,3 +1,9 @@
+THIS PACKAGE IS DEPRECATED
+==========================
+
+Please visit the [VALUE package repository](https://github.com/SantanderMetGroup/VALUE) for an up-to-date set of indices and measures, implementing and extending the VALUE validation framework  
+
+<!--
 The R.VALUE package
 ===================
 
