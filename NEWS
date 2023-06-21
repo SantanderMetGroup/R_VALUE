@@ -1,7 +1,8 @@
 R.VALUE
 =======
 
-* Insert tryCatch in measure.corlongterm to handle defective predictions
+* Bug fix in subsetValue
+* Minor documentation updates
 
 
 
