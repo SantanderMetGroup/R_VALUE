@@ -89,7 +89,7 @@ loadValueStations <- function(dataset, var, stationID = NULL, lonLim = NULL, lat
       ## Longitude and latitude
       lons <- aux[ , grep("^longitude$", names(aux), ignore.case = TRUE)]
       lats <- aux[ , grep("^latitude$", names(aux), ignore.case = TRUE)]
-      if (!is.null(lonLim)) {
+      if (!is.null(lonLim) | !is.null(latLim)) {
             latLon <- getLatLonDomainValueStations(lonLim, latLim, lons, lats)
             if (length(latLon$stInd) == 0) {
                   stop("No stations were found in the selected spatial domain", call. = FALSE)
